@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CocinaInteligente</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="menu_gallery">Galeria</string>
+    <string name="menu_home">Inicio</string>
+    <string name="menu_send">Enviar</string>
+    <string name="menu_share">Compartir</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Herramientas</string>
+    <string name="navigation_drawer_close">Cerrar navegación</string>
+    <string name="navigation_drawer_open">Abrir navegación</string>
+    <string name="login_email">Correo electrónico</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_button">Iniciar sesión</string>
+</resources>

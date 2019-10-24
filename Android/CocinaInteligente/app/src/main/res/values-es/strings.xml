@@ -13,4 +13,6 @@
     <string name="login_email">Correo electrónico</string>
     <string name="login_password">Contraseña</string>
     <string name="login_button">Iniciar sesión</string>
+    <string name="menu_about">Sobre nosotros</string>
+    <string name="menu_preferences">Preferencias</string>
 </resources>

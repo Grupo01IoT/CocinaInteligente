@@ -2,24 +2,31 @@ package es.upv.epsg.igmagi.cocinainteligente.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.io.IOException;
 import java.io.InputStream;
 
-public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+import es.upv.epsg.igmagi.cocinainteligente.ui.home.HomeFragment;
+
+public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
     ImageView bmImage;
 
     public DownloadImageTask(ImageView bmImage) {
         this.bmImage = bmImage;
     }
 
-    protected Bitmap doInBackground(String... urls) {
-        String urldisplay = urls[0];
+
+    @Override
+    protected Bitmap doInBackground(Uri... uris) {
+        Uri urldisplay = uris[0];
         Bitmap mIcon11 = null;
         try {
-            InputStream in = new java.net.URL(urldisplay).openStream();
+            InputStream in = new java.net.URL(urldisplay.toString()).openStream();
             mIcon11 = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());

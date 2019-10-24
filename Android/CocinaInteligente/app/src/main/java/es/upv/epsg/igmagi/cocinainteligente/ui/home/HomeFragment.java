@@ -1,37 +1,26 @@
 package es.upv.epsg.igmagi.cocinainteligente.ui.home;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.auth.FirebaseUser;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import es.upv.epsg.igmagi.cocinainteligente.LoginActivity;
-import es.upv.epsg.igmagi.cocinainteligente.MainActivity;
+import es.upv.epsg.igmagi.cocinainteligente.Adapter.TabsAdapter;
 import es.upv.epsg.igmagi.cocinainteligente.R;
-import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
 public class HomeFragment extends Fragment {
 
@@ -39,41 +28,45 @@ public class HomeFragment extends Fragment {
     private ImageView image;
     private TextView name, email, phone, id;
 
+    private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
+    private Uri imgLink = mAuth.getPhotoUrl();
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(this, new Observer<String>() {
+        // create ContextThemeWrapper from the original Activity Context with the custom theme
+        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
+        // clone the inflater using the ContextThemeWrapper
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+
+        View root = localInflater.inflate(R.layout.fragment_home, container, false);
+
+        TabLayout tabLayout = (TabLayout) root.findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Home"));
+        tabLayout.addTab(tabLayout.newTab().setText("About"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        final ViewPager viewPager =(ViewPager)root.findViewById(R.id.view_pager);
+        TabsAdapter tabsAdapter = new TabsAdapter(this.getFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(tabsAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText("Bienvenido: " +
-                        FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
             }
-        });
-
-        image = root.findViewById(R.id.photo);
-        name = root.findViewById(R.id.name);
-        email = root.findViewById(R.id.email);
-        phone = root.findViewById(R.id.phone);
-        id = root.findViewById(R.id.id);
-        new DownloadImageTask(image).execute(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
-        name.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        phone.setText(FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
-        id.setText(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        Button cerrar = root.findViewById(R.id.button);
-        cerrar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getParentFragment().getContext(), LoginActivity.class));
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 
         return root;
     }
+
 
 }

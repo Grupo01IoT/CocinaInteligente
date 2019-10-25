@@ -44,7 +44,9 @@ public class ProfileFragment extends Fragment {
         email = root.findViewById(R.id.email);
         verified = root.findViewById(R.id.verified);
         id = root.findViewById(R.id.id);
-        new DownloadImageTask(image).execute(mAuth.getPhotoUrl());
+
+        imgLink = (imgLink == null) ? Uri.parse("https://cdn1.iconfinder.com/data/icons/fs-icons-ubuntu-by-franksouza-/256/goa-account-msn.png") :imgLink;
+        new DownloadImageTask(image).execute(imgLink);
         name.setText(mAuth.getDisplayName());
         email.setText(mAuth.getEmail());
         verified.setText("Verified: " + mAuth.isEmailVerified());

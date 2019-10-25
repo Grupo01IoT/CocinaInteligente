@@ -1,5 +1,7 @@
 package es.upv.epsg.igmagi.cocinainteligente;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ImageView profilePicture;
     private TextView profileName, profileEmail;
+    private Uri imageUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "ADS", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -58,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        new DownloadImageTask(profilePicture).execute(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
+        imageUrl = (imageUrl == null) ? Uri.parse("https://cdn1.iconfinder.com/data/icons/fs-icons-ubuntu-by-franksouza-/256/goa-account-msn.png") :imageUrl;
+        new DownloadImageTask(profilePicture).execute(imageUrl);
         profileName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         profileEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }

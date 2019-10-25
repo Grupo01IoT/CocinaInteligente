@@ -1,11 +1,11 @@
-package es.upv.epsg.igmagi.cocinainteligente.Adapter;
+package es.upv.epsg.igmagi.cocinainteligente.adapter;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import es.upv.epsg.igmagi.cocinainteligente.ui.AboutFragment;
 import es.upv.epsg.igmagi.cocinainteligente.ui.ProfileFragment;
-import es.upv.epsg.igmagi.cocinainteligente.ui.home.HomeFragment;
 
 /**
  * Created by tutlane on 19-12-2017.
@@ -30,7 +30,7 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
                 ProfileFragment home = new ProfileFragment();
                 return home;
             case 1:
-                ProfileFragment about = new ProfileFragment();
+                AboutFragment about = new AboutFragment();
                 return about;
             default:
                 return null;

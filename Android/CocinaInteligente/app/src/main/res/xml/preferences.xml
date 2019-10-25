@@ -1,0 +1,30 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Notifications">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="currencyNotificationOnOff"
+            android:title="Prueba" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Prueba">
+        <Preference
+            android:key="about"
+            android:title="About" />
+        <Preference
+            android:key="disclaimer"
+            android:title="Disclaimer" />
+        <Preference
+            android:key="help"
+            android:title="Help" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="General">
+        <Preference
+            android:key="spreadWord"
+            android:title="Pref" />
+        <Preference
+            android:key="rateUs"
+            android:title="Rate" />
+        <Preference
+            android:key="feedback"
+            android:title="feedback" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -19,7 +19,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import es.upv.epsg.igmagi.cocinainteligente.Adapter.TabsAdapter;
+import es.upv.epsg.igmagi.cocinainteligente.adapter.TabsAdapter;
 import es.upv.epsg.igmagi.cocinainteligente.R;
 
 public class HomeFragment extends Fragment {
@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
         View root = localInflater.inflate(R.layout.fragment_home, container, false);
 
         TabLayout tabLayout = (TabLayout) root.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Home"));
+        tabLayout.addTab(tabLayout.newTab().setText("Profile"));
         tabLayout.addTab(tabLayout.newTab().setText("About"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         final ViewPager viewPager =(ViewPager)root.findViewById(R.id.view_pager);

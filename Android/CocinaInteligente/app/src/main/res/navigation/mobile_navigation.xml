@@ -10,7 +10,16 @@
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
-
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.AboutFragment"
+        android:label="@string/menu_about"
+        tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/nav_preferences"
+        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.PreferencesFragment"
+        android:label="@string/menu_preferences"
+        tools:layout="@layout/fragment_preferences" />
     <fragment
         android:id="@+id/nav_gallery"
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.gallery.GalleryFragment"

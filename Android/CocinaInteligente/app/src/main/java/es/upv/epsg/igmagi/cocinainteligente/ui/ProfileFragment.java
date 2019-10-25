@@ -90,8 +90,7 @@ public class ProfileFragment extends Fragment {
                                 );
                     }
                 });
-
-                new DownloadImageTask(i).execute(mAuth.getPhotoUrl());
+                new DownloadImageTask(i).execute(imgLink);
 
             }
         });

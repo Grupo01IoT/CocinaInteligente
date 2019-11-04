@@ -41,7 +41,7 @@
                     android:layout_width="85dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/verrecetas"
+                    android:background="@drawable/verrecetaslite"
                     android:text="Ver recetas" />
 
                 <Button
@@ -49,7 +49,7 @@
                     android:layout_width="85dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/crearrecetas"
+                    android:background="@drawable/crearrecetaslite"
                     android:text="Hacer una receta" />
             </LinearLayout>
 
@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/crearrecetas"
+                    android:background="@drawable/crearrecetaslite"
                     android:text="Button" />
 
                 <Button
@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/verrecetas"
+                    android:background="@drawable/verrecetaslite"
                     android:text="Button" />
             </LinearLayout>
 

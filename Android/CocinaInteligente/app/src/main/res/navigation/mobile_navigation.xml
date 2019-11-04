@@ -45,6 +45,23 @@
         tools:layout="@layout/fragment_share" />
 
     <fragment
+        android:id="@+id/logout"
+        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.home.HomeFragment"
+        android:label="@string/menu_logout"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/login"
+        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.home.HomeFragment"
+        android:label="@string/menu_login"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
         android:id="@+id/nav_send"
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.send.SendFragment"
         android:label="@string/menu_send"

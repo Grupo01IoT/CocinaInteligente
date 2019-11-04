@@ -45,7 +45,7 @@ public class ProfileFragment extends Fragment {
         verified = root.findViewById(R.id.verified);
         id = root.findViewById(R.id.id);
 
-        imgLink = (imgLink == null) ? Uri.parse("https://cdn1.iconfinder.com/data/icons/fs-icons-ubuntu-by-franksouza-/256/goa-account-msn.png") :imgLink;
+        imgLink = (imgLink == null) ? Uri.parse("https://cdn1.iconfinder.com/data/icons/fs-icons-ubuntu-by-franksouza-/256/goa-account-msn.png") : imgLink;
         new DownloadImageTask(image).execute(imgLink);
         name.setText(mAuth.getDisplayName());
         email.setText(mAuth.getEmail());
@@ -64,8 +64,8 @@ public class ProfileFragment extends Fragment {
                 Window window = d.getWindow();
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 ImageView i = d.findViewById(R.id.profilePict);
-                final EditText n = d.findViewById(R.id.nameText);
-                final EditText e = d.findViewById(R.id.emailText);
+                final EditText n = d.findViewById(R.id.nameField);
+                final EditText e = d.findViewById(R.id.emailField);
                 Button b = d.findViewById(R.id.saveButton);
                 n.setText(name.getText());
                 e.setText(email.getText());
@@ -80,7 +80,7 @@ public class ProfileFragment extends Fragment {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                            @Override
                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                               if(task.isSuccessful()) {
+                                                               if (task.isSuccessful()) {
                                                                    name.setText(n.getText());
                                                                    email.setText(e.getText());
                                                                    d.cancel();
@@ -90,8 +90,8 @@ public class ProfileFragment extends Fragment {
                                 );
                     }
                 });
-                new DownloadImageTask(i).execute(imgLink);
 
+                new DownloadImageTask(i).execute(imgLink);
             }
         });
 

@@ -15,4 +15,10 @@
     <string name="login_button">Iniciar sesión</string>
     <string name="menu_about">Sobre nosotros</string>
     <string name="menu_preferences">Preferencias</string>
+    <string name="menu_logout">Cerrar sesión</string>
+    <string name="device_pair">Vincula tu dispositivo.</string>
+    <string name="menu_login">Iniciar sesión</string>
+    <string name="user_receipts">Ninguna receta</string>
+    <string name="user_welcome">"Bienvenido! "</string>
+    <string name="device_info">No tienes dispositivo vinculado!</string>
 </resources>

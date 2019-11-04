@@ -3,13 +3,16 @@ package es.upv.epsg.igmagi.cocinainteligente;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
@@ -21,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
@@ -30,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ImageView profilePicture;
     private TextView profileName, profileEmail;
-    private Uri imageUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+    private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
+    private Uri imageUrl = mAuth.getPhotoUrl();
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
+
 
         profilePicture = navigationView.getHeaderView(0).findViewById(R.id.imageView);
         profileName = navigationView.getHeaderView(0).findViewById(R.id.textView);
@@ -62,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        imageUrl = (imageUrl == null) ? Uri.parse("https://cdn1.iconfinder.com/data/icons/fs-icons-ubuntu-by-franksouza-/256/goa-account-msn.png") :imageUrl;
+        imageUrl = (imageUrl == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imageUrl;
         new DownloadImageTask(profilePicture).execute(imageUrl);
-        profileName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        profileEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        profileName.setText((mAuth.getDisplayName().equals("")) ? "Anonymous" : mAuth.getDisplayName());
+        profileEmail.setText((mAuth.getDisplayName().equals("")) ? "Empty email" : mAuth.getDisplayName());
     }
 
     @Override
@@ -74,10 +81,26 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mAuth.isAnonymous()) {
+            navigationView.getMenu().findItem(R.id.logout).setVisible(false);
+            navigationView.getMenu().findItem(R.id.login).setVisible(true);
+            // perform action when user is not logged in
+        } else {
+            navigationView.getMenu().findItem(R.id.logout).setVisible(true);
+            navigationView.getMenu().findItem(R.id.login).setVisible(false);
+            // perform action when user is already logged in
+        }
+
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }

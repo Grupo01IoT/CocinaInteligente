@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario != null) {
-            if(!usuario.isEmailVerified()){
+            if(!usuario.isEmailVerified() && !usuario.isAnonymous()){
                 usuario.sendEmailVerification();
                 Toast.makeText(this, usuario.getDisplayName()+ " verificia tu cuenta con el correo que te hemos enviado a: " +
                         usuario.getEmail(),Toast.LENGTH_LONG).show();
@@ -48,7 +48,10 @@ public class LoginActivity extends AppCompatActivity {
                     .setAvailableProviders(Arrays.asList(
                             new AuthUI.IdpConfig.AnonymousBuilder().build(),
                             new AuthUI.IdpConfig.EmailBuilder().setAllowNewAccounts(true).build(),
-                            new AuthUI.IdpConfig.GoogleBuilder().build())).build()
+                            new AuthUI.IdpConfig.GoogleBuilder().build()))
+                            .setTheme(R.style.LoginTheme)
+                            .setLogo(R.drawable.logo1)
+                            .build()
                     , RC_SIGN_IN);
         }
     }

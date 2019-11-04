@@ -9,19 +9,56 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_home" />
     </group>
+    <item android:title="Receipts">
+    <menu>
 
-    <item android:title="Profile">
+        <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_create"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/menu_preferences" />
+        <item
+            android:id="@+id/nav_show"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/menu_about" />
+        </group>
+
+    </menu>
+</item>
+
+        <item android:title="Settings">
         <menu>
-            <item
-                android:id="@+id/nav_preferences"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="@string/menu_preferences" />
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/menu_about" />
 
+            <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_preferences"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/menu_preferences" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/menu_about" />
+            </group>
         </menu>
-    </item>
+        </item>
+        <item android:title="Profile">
+            <menu>
+
+                <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_profile"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="@string/menu_profile" />
+                <item
+                    android:id="@+id/logout"
+                    android:icon="@drawable/ic_menu_logout"
+                    android:title="@string/menu_logout" />
+                <item
+                    android:id="@+id/login"
+                    android:icon="@drawable/ic_menu_logout"
+                    android:title="@string/menu_login" />
+                </group>
+            </menu>
+        </item>
 
 </menu>

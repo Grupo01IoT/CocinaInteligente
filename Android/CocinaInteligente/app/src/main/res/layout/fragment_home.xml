@@ -22,7 +22,7 @@
             <include
                 android:id="@+id/includeUser"
                 layout="@layout/fragment_home_user"
-                android:layout_width="416dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <include

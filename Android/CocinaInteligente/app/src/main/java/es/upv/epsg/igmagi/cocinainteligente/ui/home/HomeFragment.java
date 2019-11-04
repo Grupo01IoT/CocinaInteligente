@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
         View includeUser = root.findViewById(R.id.includeUser);
         ImageView test = includeUser.findViewById(R.id.imageView);
         TextView name = includeUser.findViewById(R.id.textName);
-        name.setText((mAuth.getDisplayName().equals("")) ? "Anonymous" : mAuth.getDisplayName());
+        name.setText((mAuth.isAnonymous()) ? "Anonymous" : mAuth.getDisplayName());
         imgLink = (imgLink == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imgLink;
         new DownloadImageTask(test).execute(imgLink);
 

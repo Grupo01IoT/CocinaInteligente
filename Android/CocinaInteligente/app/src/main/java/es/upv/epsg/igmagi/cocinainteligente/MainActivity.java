@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
         imageUrl = (imageUrl == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imageUrl;
         new DownloadImageTask(profilePicture).execute(imageUrl);
-        profileName.setText((mAuth.getDisplayName().equals("")) ? "Anonymous" : mAuth.getDisplayName());
-        profileEmail.setText((mAuth.getDisplayName().equals("")) ? "Empty email" : mAuth.getDisplayName());
+        profileName.setText((mAuth.isAnonymous()) ? "Anonymous" : mAuth.getDisplayName());
+        profileEmail.setText((mAuth.isAnonymous()) ? "Empty email" : mAuth.getEmail());
     }
 
     @Override

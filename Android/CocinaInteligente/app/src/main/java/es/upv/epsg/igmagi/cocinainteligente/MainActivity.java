@@ -44,18 +44,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+        // Including layout to activity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
-
+        //Getting objects inside the layout header
         profilePicture = navigationView.getHeaderView(0).findViewById(R.id.imageView);
         profileName = navigationView.getHeaderView(0).findViewById(R.id.textView);
         profileEmail = navigationView.getHeaderView(0).findViewById(R.id.textView2);
@@ -66,9 +60,12 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_preferences, R.id.nav_about)
                 .setDrawerLayout(drawer)
                 .build();
+        // From activity main drawer control.
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        //Setting the layout items
         imageUrl = (imageUrl == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imageUrl;
         new DownloadImageTask(profilePicture).execute(imageUrl);
         profileName.setText((mAuth.isAnonymous()) ? "Anonymous" : mAuth.getDisplayName());

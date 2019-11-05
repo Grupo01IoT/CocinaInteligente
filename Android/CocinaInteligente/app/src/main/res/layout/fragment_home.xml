@@ -32,47 +32,57 @@
                 android:layout_height="142dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:orientation="horizontal">
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/button3"
-                    android:layout_width="85dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/verrecetaslite"
-                    android:text="Ver recetas" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="325dp"
+                    android:layout_weight="0"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/button4"
-                    android:layout_width="85dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/crearrecetaslite"
-                    android:text="Hacer una receta" />
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/viewRecipesBtn"
+                        android:layout_width="85dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/crearrecetaslite"
+                        android:text="@string/menu_list" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/createRecipesBtn"
+                        android:layout_width="85dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/verrecetaslite"
+                        android:text="@string/menu_create" />
 
-                <Button
-                    android:id="@+id/button5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/crearrecetaslite"
-                    android:text="Button" />
+                </LinearLayout>
 
-                <Button
-                    android:id="@+id/button6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/verrecetaslite"
-                    android:text="Button" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="325dp"
+                    android:layout_weight="0"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/cocinalite"
+                        android:text="Tu cocina" />
+
+                    <Button
+                        android:id="@+id/button6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/vitroceramicalite"
+                        android:text="Tu vitroceramica" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>

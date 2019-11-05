@@ -15,39 +15,38 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import es.upv.epsg.igmagi.cocinainteligente.LoginActivity;
-import es.upv.epsg.igmagi.cocinainteligente.adapter.TabsAdapter;
 import es.upv.epsg.igmagi.cocinainteligente.R;
-import es.upv.epsg.igmagi.cocinainteligente.ui.ProfileFragment;
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private ImageView image;
-    private TextView name, email, phone, id;
+    private String TAG = "HomeFragment";
 
     private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
     private Uri imgLink = mAuth.getPhotoUrl();
+
+    //Esto se movera a un singleton del perfil en un futuro.
+    private long recipe = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,15 +56,46 @@ public class HomeFragment extends Fragment {
         final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
         // clone the inflater using the ContextThemeWrapper
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+        // getting the parent view for handle the fragment
         final View root = localInflater.inflate(R.layout.fragment_home, container, false);
 
+        //Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(mAuth.getUid());
+        Log.d(TAG, "Path data: " + docRef.getPath());
+
+        // getting the include of the User details
         View includeUser = root.findViewById(R.id.includeUser);
         ImageView test = includeUser.findViewById(R.id.imageView);
         TextView name = includeUser.findViewById(R.id.textName);
+        final TextView recipes = includeUser.findViewById(R.id.recipesText);
+        final ProgressBar pb = includeUser.findViewById(R.id.progressBar);
+        final TextView fidelity = includeUser.findViewById(R.id.fidelityText);
+        recipes.setText(this.recipe + " " + getResources().getString(R.string.user_receipts));
         name.setText((mAuth.isAnonymous()) ? "Anonymous" : mAuth.getDisplayName());
         imgLink = (imgLink == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imgLink;
         new DownloadImageTask(test).execute(imgLink);
 
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData().get("Recipes"));
+                        recipe = (long) document.getData().get("Recipes");
+
+                        recipes.setText(recipe + " " + getResources().getString(R.string.user_receipts));
+                        pb.setProgress(Integer.parseInt("" +(long)document.getData().get("Fidelity")));
+                        fidelity.setText((long)document.getData().get("Fidelity") + "%");
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
         includeUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +111,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // getting the include of the Device details
         View includeDevice = root.findViewById(R.id.includeDevice);
         Button button = includeDevice.findViewById(R.id.pairDevice);
         button.setOnClickListener(new View.OnClickListener() {
@@ -128,13 +159,16 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    //This onResume handle the log in/log out functions
     @Override
     public void onResume() {
         super.onResume();
 
-        String home = getResources().getString(R.string.menu_home);
+        String logout = getResources().getString(R.string.menu_logout);
+        String login = getResources().getString(R.string.menu_login);
+        String title = ((AppCompatActivity) getActivity()).getSupportActionBar().getTitle().toString();
 
-        if (!(((AppCompatActivity) getActivity()).getSupportActionBar().getTitle().toString().equals(home))) {
+        if (title.equals(logout) || title.equals(login)) {
 
             if (mAuth.isAnonymous()) {
                 final AlertDialog.Builder d = new AlertDialog.Builder(getContext());

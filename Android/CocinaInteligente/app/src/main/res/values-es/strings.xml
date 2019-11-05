@@ -16,9 +16,19 @@
     <string name="menu_about">Sobre nosotros</string>
     <string name="menu_preferences">Preferencias</string>
     <string name="menu_logout">Cerrar sesión</string>
-    <string name="device_pair">Vincula tu dispositivo.</string>
+    <string name="device_pair">Vincula tu dispositivo</string>
     <string name="menu_login">Iniciar sesión</string>
-    <string name="user_receipts">Ninguna receta</string>
+    <string name="user_receipts">Receta</string>
     <string name="user_welcome">"Bienvenido! "</string>
     <string name="device_info">No tienes dispositivo vinculado!</string>
+    <string name="menu_create">Crear una receta</string>
+    <string name="menu_list">Ver las recetas</string>
+    <string name="menu_profile">Perfil</string>
+    <string name="menu_board">Administrar dispositivo</string>
+    <string name="menu_not_paired">Ema</string>
+    <string name="menu_settings">Ajustes</string>
+    <string name="menu_recipes">Recetas</string>
+    <string name="menu_device">Dispositivo</string>
+    <string name="menu_other">Otros</string>
+    <string name="user_fidelity">"Fidelidad: "</string>
 </resources>

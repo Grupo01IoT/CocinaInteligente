@@ -6,48 +6,65 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_home"
             android:title="@string/menu_home" />
     </group>
-    <item android:title="Receipts">
-    <menu>
-
-        <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_create"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/menu_preferences" />
-        <item
-            android:id="@+id/nav_show"
-            android:icon="@drawable/ic_menu_share"
-            android:title="@string/menu_about" />
-        </group>
-
-    </menu>
-</item>
-
-        <item android:title="Settings">
+    <item android:title="@string/menu_recipes">
         <menu>
 
             <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_preferences"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/menu_preferences" />
-        <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/ic_menu_share"
-            android:title="@string/menu_about" />
+                <item
+                    android:id="@+id/nav_create"
+                    android:icon="@drawable/ic_menu_create"
+                    android:title="@string/menu_create" />
+                <item
+                    android:id="@+id/nav_show"
+                    android:icon="@drawable/ic_menu_list"
+                    android:title="@string/menu_list" />
+            </group>
+
+        </menu>
+    </item>
+    <item android:title="@string/menu_device">
+        <menu>
+
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_not_paired"
+                    android:icon="@drawable/ic_menu_not_paired"
+                    android:title="@string/device_pair" />
+                <item
+                    android:id="@+id/nav_view_device"
+                    android:icon="@drawable/ic_menu_board"
+                    android:title="@string/menu_board" />
+            </group>
+
+        </menu>
+    </item>
+
+
+    <item android:title="@string/menu_settings">
+        <menu>
+
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_preferences"
+                    android:icon="@drawable/ic_menu_manage"
+                    android:title="@string/menu_preferences" />
+                <item
+                    android:id="@+id/nav_about"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="@string/menu_about" />
             </group>
         </menu>
-        </item>
-        <item android:title="Profile">
-            <menu>
+    </item>
+    <item android:title="@string/menu_other">
+        <menu>
 
-                <group android:checkableBehavior="single">
+            <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_profile"
-                    android:icon="@drawable/ic_menu_share"
+                    android:icon="@drawable/ic_menu_account"
                     android:title="@string/menu_profile" />
                 <item
                     android:id="@+id/logout"
@@ -57,8 +74,8 @@
                     android:id="@+id/login"
                     android:icon="@drawable/ic_menu_logout"
                     android:title="@string/menu_login" />
-                </group>
-            </menu>
-        </item>
+            </group>
+        </menu>
+    </item>
 
 </menu>

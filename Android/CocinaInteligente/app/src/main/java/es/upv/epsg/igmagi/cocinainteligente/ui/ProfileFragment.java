@@ -2,10 +2,13 @@ package es.upv.epsg.igmagi.cocinainteligente.ui;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -22,6 +25,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.util.concurrent.ExecutionException;
 
 import es.upv.epsg.igmagi.cocinainteligente.LoginActivity;
 import es.upv.epsg.igmagi.cocinainteligente.R;
@@ -46,7 +51,7 @@ public class ProfileFragment extends Fragment {
         id = root.findViewById(R.id.id);
 
         imgLink = (imgLink == null) ? Uri.parse("https://cdn1.iconfinder.com/data/icons/fs-icons-ubuntu-by-franksouza-/256/goa-account-msn.png") : imgLink;
-        new DownloadImageTask(image).execute(imgLink);
+        new DownloadImageTask(image, getResources()).execute(imgLink);
         name.setText(mAuth.getDisplayName());
         email.setText(mAuth.getEmail());
         verified.setText("Verified: " + mAuth.isEmailVerified());
@@ -70,7 +75,6 @@ public class ProfileFragment extends Fragment {
                 n.setText(name.getText());
                 e.setText(email.getText());
 
-
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -90,8 +94,7 @@ public class ProfileFragment extends Fragment {
                                 );
                     }
                 });
-
-                new DownloadImageTask(i).execute(imgLink);
+                new DownloadImageTask(i,getResources()).execute(imgLink);
             }
         });
 

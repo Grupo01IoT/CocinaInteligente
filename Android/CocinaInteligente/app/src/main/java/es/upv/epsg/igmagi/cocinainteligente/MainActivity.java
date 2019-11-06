@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Setting the layout items
         imageUrl = (imageUrl == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imageUrl;
-        new DownloadImageTask(profilePicture).execute(imageUrl);
+        new DownloadImageTask(profilePicture, getResources()).execute(imageUrl);
         profileName.setText((mAuth.isAnonymous()) ? "Anonymous" : mAuth.getDisplayName());
         profileEmail.setText((mAuth.isAnonymous()) ? "Empty email" : mAuth.getEmail());
     }

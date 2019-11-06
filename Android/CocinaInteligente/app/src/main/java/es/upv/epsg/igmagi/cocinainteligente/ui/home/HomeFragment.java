@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment {
         recipes.setText(this.recipe + " " + getResources().getString(R.string.user_receipts));
         name.setText((mAuth.isAnonymous()) ? "Anonymous" : mAuth.getDisplayName());
         imgLink = (imgLink == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imgLink;
-        new DownloadImageTask(test).execute(imgLink);
+        new DownloadImageTask(test, getResources()).execute(imgLink);
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

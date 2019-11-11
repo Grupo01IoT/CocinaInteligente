@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/border"
+    android:orientation="vertical"
     android:padding="10dip">
 
     <LinearLayout
@@ -12,32 +13,16 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <androidx.cardview.widget.CardView
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="250dp">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                app:cardCornerRadius="250dp">
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitStart"
-                    android:src="@drawable/fui_ic_facebook_white_22dp" />
-
-            </androidx.cardview.widget.CardView>
-
-        </androidx.cardview.widget.CardView>
+            android:scaleType="fitStart"
+            app:srcCompat="@drawable/fui_ic_facebook_white_22dp" />
 
         <LinearLayout
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="118dp"
             android:layout_marginLeft="10dp"
             android:orientation="vertical">
 
@@ -76,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <TextView
@@ -101,6 +86,8 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2.5dp"
+                    android:layout_marginBottom="2.5dp"
                     android:progress="0" />
 
             </LinearLayout>

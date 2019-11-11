@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
             navigationView.getMenu().findItem(R.id.logout).setVisible(true);
             navigationView.getMenu().findItem(R.id.login).setVisible(false);
             // perform action when user is already logged in
+            //serdgfhjnk
         }
 
     }

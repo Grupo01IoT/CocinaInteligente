@@ -3,9 +3,43 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="currencyNotificationOnOff"
-            android:title="Prueba" />
+            android:title="Allow notifications" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="currencyVibrationOnOff"
+            android:title="Allow vibration" />
+
+        <EditTextPreference
+            android:defaultValue="100"
+            android:inputType="number"
+            android:key="InactivityNotification"
+            android:summary="How long before being notified in minutes"
+            android:title="Notifications for inactivity" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Prueba">
+
+    <PreferenceCategory android:title="My Kitchen">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="currencyAssistantOnOff"
+            android:title="Asistente de voz" />
+
+        <EditTextPreference
+            android:defaultValue="100"
+            android:inputType="number"
+            android:key="InactivityKitchen"
+            android:summary="How long before switching OFF the stove (in minutes)"
+            android:title="Stove on inactivity" />
+
+        <EditTextPreference
+            android:defaultValue="100"
+            android:inputType="number"
+            android:key="InactivityLight"
+            android:summary="How long before switching OFF the lights (in minutes)"
+            android:title="Lights on inactivity" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="General">
         <Preference
             android:key="about"
             android:title="About" />
@@ -15,16 +49,5 @@
         <Preference
             android:key="help"
             android:title="Help" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="General">
-        <Preference
-            android:key="spreadWord"
-            android:title="Pref" />
-        <Preference
-            android:key="rateUs"
-            android:title="Rate" />
-        <Preference
-            android:key="feedback"
-            android:title="feedback" />
     </PreferenceCategory>
 </PreferenceScreen>

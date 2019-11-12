@@ -31,6 +31,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -92,22 +94,7 @@ public class HomeFragment extends Fragment {
         includeUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfileFragment profilefragment = new ProfileFragment();
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment, profilefragment);
-                fragmentTransaction.hide(HomeFragment.this);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-
-                /*
-                FragmentManager fragmentManager2 = getFragmentManager();
-                FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
-                ProfileFragment fragment2 = new ProfileFragment();
-                fragmentTransaction2.addToBackStack("xyz");
-                fragmentTransaction2.hide(HomeFragment.this);
-                fragmentTransaction2.add(android.R.id.content, fragment2);
-                fragmentTransaction2.commit();
-                 */
+                Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_profile);
             }
         });
 
@@ -263,7 +250,7 @@ public class HomeFragment extends Fragment {
         String title = ((AppCompatActivity) getActivity()).getSupportActionBar().getTitle().toString();
 
         if(title.equals(pair)){
-
+            showPairingWindow();
         } else if (title.equals(logout) || title.equals(login)) {
 
             if (mAuth.isAnonymous()) {

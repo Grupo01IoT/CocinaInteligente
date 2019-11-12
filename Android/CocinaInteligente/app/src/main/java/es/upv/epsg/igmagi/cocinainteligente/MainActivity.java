@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         if (mAuth.isAnonymous()) {
             navigationView.getMenu().findItem(R.id.logout).setVisible(false);
             navigationView.getMenu().findItem(R.id.login).setVisible(true);

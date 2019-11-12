@@ -9,7 +9,12 @@
         android:id="@+id/nav_home"
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_profile"
+            app:destination="@+id/nav_profile" />
+    </fragment>
+
     <fragment
         android:id="@+id/nav_about"
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.AboutFragment"
@@ -66,4 +71,5 @@
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.send.SendFragment"
         android:label="@string/menu_send"
         tools:layout="@layout/fragment_send" />
+
 </navigation>

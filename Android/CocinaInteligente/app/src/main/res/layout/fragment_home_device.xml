@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/border"
+    android:padding="10dip">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="122dp">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha=".3"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/cocina" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:text="@string/device_info_paired"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </FrameLayout>
+
+</LinearLayout>

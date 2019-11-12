@@ -5,26 +5,36 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,8 +43,14 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import es.upv.epsg.igmagi.cocinainteligente.LoginActivity;
 import es.upv.epsg.igmagi.cocinainteligente.R;
+import es.upv.epsg.igmagi.cocinainteligente.ui.ProfileFragment;
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
 public class HomeFragment extends Fragment {
@@ -44,6 +60,8 @@ public class HomeFragment extends Fragment {
 
     private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
     private Uri imgLink = mAuth.getPhotoUrl();
+    private ViewFlipper includeDevice;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     //Esto se movera a un singleton del perfil en un futuro.
     private long recipe = 0;
@@ -53,16 +71,11 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         // create ContextThemeWrapper from the original Activity Context with the custom theme
-        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
         // clone the inflater using the ContextThemeWrapper
-        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
         // getting the parent view for handle the fragment
+        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
         final View root = localInflater.inflate(R.layout.fragment_home, container, false);
-
-        //Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(mAuth.getUid());
-        Log.d(TAG, "Path data: " + docRef.getPath());
 
         // getting the include of the User details
         View includeUser = root.findViewById(R.id.includeUser);
@@ -76,11 +89,38 @@ public class HomeFragment extends Fragment {
         imgLink = (imgLink == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imgLink;
         new DownloadImageTask(test, getResources()).execute(imgLink);
 
+        includeUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileFragment profilefragment = new ProfileFragment();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, profilefragment);
+                fragmentTransaction.hide(HomeFragment.this);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+                /*
+                FragmentManager fragmentManager2 = getFragmentManager();
+                FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
+                ProfileFragment fragment2 = new ProfileFragment();
+                fragmentTransaction2.addToBackStack("xyz");
+                fragmentTransaction2.hide(HomeFragment.this);
+                fragmentTransaction2.add(android.R.id.content, fragment2);
+                fragmentTransaction2.commit();
+                 */
+            }
+        });
+
+        //Firestore
+        DocumentReference docRef = db.collection("users").document(mAuth.getUid());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    if(checkDevices(document)){
+                        includeDevice.showNext();
+                    }
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData().get("Recipes"));
                         recipe = (long) document.getData().get("Recipes");
@@ -96,39 +136,15 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        includeUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*
-                FragmentManager fragmentManager2 = getFragmentManager();
-                FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
-                ProfileFragment fragment2 = new ProfileFragment();
-                fragmentTransaction2.addToBackStack("xyz");
-                fragmentTransaction2.hide(HomeFragment.this);
-                fragmentTransaction2.add(android.R.id.content, fragment2);
-                fragmentTransaction2.commit();
-                 */
-            }
-        });
 
         // getting the include of the Device details
-        View includeDevice = root.findViewById(R.id.includeDevice);
-        Button button = includeDevice.findViewById(R.id.pairDevice);
+        includeDevice = ((ViewFlipper) root.findViewById(R.id.viewFlipper1));
+        View nodevice = includeDevice.getCurrentView();
+        Button button = nodevice.findViewById(R.id.pairDevice);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAuth.isAnonymous()) {
-                    Snackbar.make(root, "Log in to pair your device", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                } else {
-                    final Dialog d = new Dialog(getParentFragment().getContext());
-                    //d.setContentView(R.layout.fragment_edit_profile);
-                    d.setTitle("Vincular dispositivo");
-                    d.show();
-
-                    Window window = d.getWindow();
-                    window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                }
+                showPairingWindow();
             }
         });
 
@@ -159,6 +175,83 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    private void showPairingWindow() {
+        if (mAuth.isAnonymous()) {
+            Snackbar.make(getView(), "Log in to pair your device", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        } else {
+            final Dialog d = new Dialog(getParentFragment().getContext());
+            d.setContentView(R.layout.fragment_pair);
+            d.setTitle("Vincular dispositivo");
+
+            final EditText id = d.findViewById(R.id.editText);
+            final Button pair = d.findViewById(R.id.pairDevice);
+            id.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.toString().equals("")) {
+                        pair.setEnabled(false);
+                    } else {
+                        pair.setEnabled(true);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            pair.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    db.collection("users").document(mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot document = task.getResult();
+                            ArrayList<String> group;
+                            if(checkDevices(document)){
+                                group = (ArrayList<String>) document.get("Devices");
+                                group.add(id.getText().toString());
+                            } else {
+                                group = new ArrayList<String>();
+                                group.add(id.getText().toString());
+                            }
+                            db.collection("users").document(mAuth.getUid())
+                                    .update("Devices", group)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void documentReference) {
+                                            Log.d(TAG, "DocumentSnapshot successfully written!");
+                                            includeDevice.showNext();
+                                            d.cancel();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w(TAG, "Error writing document", e);
+                                        }
+                                    });
+                        }
+                    });
+                }
+            });
+            d.show();
+
+            Window window = d.getWindow();
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+    }
+
+    private boolean checkDevices(DocumentSnapshot document){
+        return document.get("Devices") != null;
+    }
+
     //This onResume handle the log in/log out functions
     @Override
     public void onResume() {
@@ -166,9 +259,12 @@ public class HomeFragment extends Fragment {
 
         String logout = getResources().getString(R.string.menu_logout);
         String login = getResources().getString(R.string.menu_login);
+        String pair = getResources().getString(R.string.menu_pair);
         String title = ((AppCompatActivity) getActivity()).getSupportActionBar().getTitle().toString();
 
-        if (title.equals(logout) || title.equals(login)) {
+        if(title.equals(pair)){
+
+        } else if (title.equals(logout) || title.equals(login)) {
 
             if (mAuth.isAnonymous()) {
                 final AlertDialog.Builder d = new AlertDialog.Builder(getContext());

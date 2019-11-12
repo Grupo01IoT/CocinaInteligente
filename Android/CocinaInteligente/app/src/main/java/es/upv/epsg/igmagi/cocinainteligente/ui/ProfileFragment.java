@@ -61,7 +61,7 @@ public class ProfileFragment extends Fragment {
         editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog d = new Dialog(getParentFragment().getContext());
+                final Dialog d = new Dialog(getContext());
                 d.setContentView(R.layout.fragment_edit_profile);
                 d.setTitle("Editar perfil");
                 d.show();

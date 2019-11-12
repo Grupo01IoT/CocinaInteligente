@@ -25,11 +25,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <include
-                android:id="@+id/includeDevice"
-                layout="@layout/fragment_home_nodevice"
+            <ViewFlipper
+                android:id="@+id/viewFlipper1"
                 android:layout_width="match_parent"
-                android:layout_height="142dp" />
+                android:layout_height="142dp">
+
+
+                <include
+                    android:id="@+id/includeNoDevice"
+                    layout="@layout/fragment_home_nodevice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/includeDevice"
+                    layout="@layout/fragment_home_device"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </ViewFlipper>
 
             <LinearLayout
                 android:layout_width="fill_parent"

@@ -43,15 +43,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import es.upv.epsg.igmagi.cocinainteligente.LoginActivity;
+import es.upv.epsg.igmagi.cocinainteligente.MainActivity;
 import es.upv.epsg.igmagi.cocinainteligente.R;
+import es.upv.epsg.igmagi.cocinainteligente.model.Device;
+import es.upv.epsg.igmagi.cocinainteligente.model.User;
 import es.upv.epsg.igmagi.cocinainteligente.ui.ProfileFragment;
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
@@ -67,6 +75,12 @@ public class HomeFragment extends Fragment {
 
     //Esto se movera a un singleton del perfil en un futuro.
     private long recipe = 0;
+    private ProgressBar pb;
+    private TextView recipes;
+    private User user;
+    private TextView fidelity, name;
+    private ImageView photo;
+    private ArrayList<Device> devices;View includeUser;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -80,47 +94,17 @@ public class HomeFragment extends Fragment {
         final View root = localInflater.inflate(R.layout.fragment_home, container, false);
 
         // getting the include of the User details
-        View includeUser = root.findViewById(R.id.includeUser);
-        ImageView test = includeUser.findViewById(R.id.imageView);
-        TextView name = includeUser.findViewById(R.id.textName);
-        final TextView recipes = includeUser.findViewById(R.id.recipesText);
-        final ProgressBar pb = includeUser.findViewById(R.id.progressBar);
-        final TextView fidelity = includeUser.findViewById(R.id.fidelityText);
-        recipes.setText(this.recipe + " " + getResources().getString(R.string.user_receipts));
-        name.setText((mAuth.isAnonymous()) ? "Anonymous" : mAuth.getDisplayName());
-        imgLink = (imgLink == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imgLink;
-        new DownloadImageTask(test, getResources()).execute(imgLink);
+        includeUser = root.findViewById(R.id.includeUser);
+        photo = includeUser.findViewById(R.id.imageView);
+        name = includeUser.findViewById(R.id.textName);
+        recipes = includeUser.findViewById(R.id.recipesText);
+        pb = includeUser.findViewById(R.id.progressBar);
+        fidelity = includeUser.findViewById(R.id.fidelityText);
 
         includeUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_profile);
-            }
-        });
-
-        //Firestore
-        DocumentReference docRef = db.collection("users").document(mAuth.getUid());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if(checkDevices(document)){
-                        includeDevice.showNext();
-                    }
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData().get("Recipes"));
-                        recipe = (long) document.getData().get("Recipes");
-
-                        recipes.setText(recipe + " " + getResources().getString(R.string.user_receipts));
-                        pb.setProgress(Integer.parseInt("" +(long)document.getData().get("Fidelity")));
-                        fidelity.setText((long)document.getData().get("Fidelity") + "%");
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
             }
         });
 
@@ -135,6 +119,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        update();
         /*
         TabLayout tabLayout = (TabLayout) root.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Profile"));
@@ -160,6 +145,46 @@ public class HomeFragment extends Fragment {
         });
 */
         return root;
+    }
+
+    private void update() {
+        db.collection("users").document(mAuth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                //user = documentSnapshot.toObject(User.class);
+                //user.setUid(mAuth.getUid());
+                user = new User(documentSnapshot.getId(), documentSnapshot.getString("name"),
+                        documentSnapshot.getString("email"), documentSnapshot.getString("image"),
+                        documentSnapshot.getLong("fidelity"), documentSnapshot.getDate("joinDate"),
+                        (ArrayList<String>) documentSnapshot.get("recipes"),
+                        (ArrayList<String>) documentSnapshot.get("favouriteRecipes"),
+                        (ArrayList<String>) documentSnapshot.get("devices"));
+                refreshUser();
+                db.collection("devices").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()){
+                            if (user.devices.contains(snapshot.getId())) devices.add(snapshot.toObject(Device.class));
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void refreshUser() {
+        name.setText((mAuth.isAnonymous()) ? "Anonymous" : user.getName());
+        imgLink = (imgLink == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imgLink;
+        new DownloadImageTask(photo, getResources()).execute(imgLink);
+        if(user.getDevices().size()>0){
+            includeDevice.setDisplayedChild(1);
+        } else {
+            includeDevice.setDisplayedChild(0);
+        }
+        recipe = user.getRecipes().size();
+        recipes.setText(recipe + " " + getResources().getString(R.string.user_receipts));
+        pb.setProgress(Integer.parseInt("" +user.getFidelity()));
+        fidelity.setText(user.getFidelity() + "%");
     }
 
     private void showPairingWindow() {
@@ -202,14 +227,14 @@ public class HomeFragment extends Fragment {
                             DocumentSnapshot document = task.getResult();
                             ArrayList<String> group;
                             if(checkDevices(document)){
-                                group = (ArrayList<String>) document.get("Devices");
+                                group = (ArrayList<String>) document.get("devices");
                                 group.add(id.getText().toString());
                             } else {
                                 group = new ArrayList<String>();
                                 group.add(id.getText().toString());
                             }
                             db.collection("users").document(mAuth.getUid())
-                                    .update("Devices", group)
+                                    .update("devices", group)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void documentReference) {
@@ -236,14 +261,13 @@ public class HomeFragment extends Fragment {
     }
 
     private boolean checkDevices(DocumentSnapshot document){
-        return document.get("Devices") != null;
+        return document.get("devices") != null;
     }
 
     //This onResume handle the log in/log out functions
     @Override
     public void onResume() {
         super.onResume();
-
         String logout = getResources().getString(R.string.menu_logout);
         String login = getResources().getString(R.string.menu_login);
         String pair = getResources().getString(R.string.menu_pair);

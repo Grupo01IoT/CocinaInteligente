@@ -21,6 +21,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,11 +73,14 @@ public class LoginActivity extends AppCompatActivity {
 
                             // Create a new user with a first and last name
                             Map<String, Object> user = new HashMap<>();
-                            user.put("Email", mAuth.getEmail());
-                            user.put("Name", mAuth.getDisplayName());
-                            user.put("Fidelity", 0);
-                            user.put("Recipes", 0);
-                            user.put("Join Date", new Date());
+                            user.put("email", mAuth.getEmail());
+                            user.put("name", mAuth.getDisplayName());
+                            user.put("image", mAuth.getPhotoUrl().toString());
+                            user.put("fidelity", 0);
+                            user.put("recipes", new ArrayList<String>());
+                            user.put("favouriteReceips", new ArrayList<String>());
+                            user.put("devices", new ArrayList<String>());
+                            user.put("joinDate", new Date());
 
                             // Add a new document with a generated ID
                             db.collection("users")

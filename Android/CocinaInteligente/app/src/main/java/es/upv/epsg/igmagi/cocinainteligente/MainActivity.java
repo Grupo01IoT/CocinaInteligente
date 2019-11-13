@@ -1,40 +1,48 @@
 package es.upv.epsg.igmagi.cocinainteligente;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+
+import javax.annotation.Nullable;
+
+import es.upv.epsg.igmagi.cocinainteligente.model.Device;
+import es.upv.epsg.igmagi.cocinainteligente.model.User;
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private AppBarConfiguration mAppBarConfiguration;
     private ImageView profilePicture;
     private TextView profileName, profileEmail;
+
     private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
+
     private Uri imageUrl = mAuth.getPhotoUrl();
     NavigationView navigationView;
 
@@ -78,9 +86,14 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
+
     @Override
     protected void onResume() {
         super.onResume();
+
+        Log.d(TAG,"HOLASOYonRESUME");
+
         if (mAuth.isAnonymous()) {
             navigationView.getMenu().findItem(R.id.logout).setVisible(false);
             navigationView.getMenu().findItem(R.id.login).setVisible(true);
@@ -89,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
             navigationView.getMenu().findItem(R.id.logout).setVisible(true);
             navigationView.getMenu().findItem(R.id.login).setVisible(false);
             // perform action when user is already logged in
-            //serdgfhjnk
         }
 
     }

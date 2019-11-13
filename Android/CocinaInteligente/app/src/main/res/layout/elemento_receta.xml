@@ -1,0 +1,79 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="7dp"
+    android:background="@drawable/recipe_element_list"
+    android:padding="7dp">
+
+    <ImageView
+        android:id="@+id/foto"
+
+        android:layout_width="107dp"
+        android:layout_height="98dp"
+        android:adjustViewBounds="false"
+        android:contentDescription="fotografía"
+        android:scaleType="centerCrop"
+        android:src="@drawable/btnluzoff"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nombre"
+        android:layout_width="264dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:maxLines="2"
+        android:text="Nombres del laecei jodeefsfsdg"
+        android:textAllCaps="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/foto"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RatingBar
+        android:id="@+id/valoracion"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="94dp"
+        android:layout_height="20dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:rating="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/nombre"
+        app:layout_constraintTop_toBottomOf="@id/nombre"
+        app:layout_constraintVertical_bias="0.120000005" />
+
+    <TextView
+        android:id="@+id/puntuaciones"
+        android:layout_width="132dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="0 ratings"
+        app:layout_constraintStart_toEndOf="@+id/valoracion"
+        app:layout_constraintTop_toBottomOf="@+id/nombre" />
+
+    <ImageView
+        android:id="@+id/logo_hora"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:contentDescription="logo del comentario"
+        android:src="@android:drawable/ic_menu_recent_history"
+        app:layout_constraintStart_toStartOf="@+id/valoracion"
+        app:layout_constraintTop_toBottomOf="@+id/valoracion" />
+
+    <TextView
+        android:id="@+id/tiempococcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="1h 5min"
+        app:layout_constraintStart_toEndOf="@+id/logo_hora"
+        app:layout_constraintTop_toBottomOf="@+id/valoracion" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

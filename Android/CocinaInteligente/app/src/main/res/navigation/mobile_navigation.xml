@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_nav_home_to_nav_profile"
             app:destination="@+id/nav_profile" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_kitchen"
+            app:destination="@id/nav_kitchen" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_view_recipes"
+            app:destination="@id/nav_view_recipes" />
     </fragment>
 
     <fragment
@@ -71,5 +77,15 @@
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.send.SendFragment"
         android:label="@string/menu_send"
         tools:layout="@layout/fragment_send" />
+    <fragment
+        android:id="@+id/nav_kitchen"
+        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.MyKitchenFragment"
+        android:label="My Kitchen"
+        tools:layout="@layout/fragment_kitchen" />
+    <fragment
+        android:id="@+id/nav_view_recipes"
+        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.ViewRecipesFragment"
+        android:label="View Recipes"
+        tools:layout="@layout/fragment_view_recipes" />
 
 </navigation>

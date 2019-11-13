@@ -107,6 +107,23 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_profile);
             }
         });
+        //Asigning the navigation to the myKitchen button
+        Button btnkitchen = root.findViewById(R.id.kitchenBtn);
+        btnkitchen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_kitchen);
+            }
+        });
+
+        //Asigning the navigation to the ViewRecipes button
+        Button btnviewrecipes = root.findViewById(R.id.viewRecipesBtn);
+        btnviewrecipes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_view_recipes);
+            }
+        });
 
         // getting the include of the Device details
         includeDevice = ((ViewFlipper) root.findViewById(R.id.viewFlipper1));

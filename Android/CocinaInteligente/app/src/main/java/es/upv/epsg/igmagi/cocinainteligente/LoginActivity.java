@@ -30,15 +30,14 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
     private String TAG = "LOGINACTIVITY";
     private static final int RC_SIGN_IN = 123;
+    private FirebaseUser mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         login();
     }
-
-    private FirebaseUser mAuth;
-    private FirebaseFirestore db;
 
     private void login() {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
@@ -75,13 +74,14 @@ public class LoginActivity extends AppCompatActivity {
                             Map<String, Object> user = new HashMap<>();
                             user.put("email", mAuth.getEmail());
                             user.put("name", mAuth.getDisplayName());
-                            user.put("image", mAuth.getPhotoUrl().toString());
+                            user.put("image",((mAuth.isAnonymous()) ? "" : mAuth.getPhotoUrl().toString()));
                             user.put("fidelity", 0);
                             user.put("recipes", new ArrayList<String>());
                             user.put("favouriteReceips", new ArrayList<String>());
                             user.put("devices", new ArrayList<String>());
                             user.put("joinDate", new Date());
 
+                            Log.d(TAG,user.toString() + "  -  " + mAuth.getUid());
                             // Add a new document with a generated ID
                             db.collection("users")
                                     .document(mAuth.getUid()).set(user)

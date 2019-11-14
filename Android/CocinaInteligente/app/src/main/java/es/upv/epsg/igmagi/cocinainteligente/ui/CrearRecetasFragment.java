@@ -139,7 +139,7 @@ public class CrearRecetasFragment extends Fragment {
         datos.put("description", descripcion_receta.getText().toString());
         datos.put("duration", duracion.getText().toString());
         datos.put("name", nombre_receta.getText().toString());
-        datos.put("picture", /*downloadUrl.toString()*/"null");
+        datos.put("picture", /*downloadUrl.toString()*/"https://previews.123rf.com/images/margolana/margolana1706/margolana170600029/80490007-vector-verduras-ensalada-estilo-de-dibujos-animados-ensalada-tazón-comida-fresca-saludable-en-un-plato-.jpg");
         datos.put("ratings", Arrays.asList());
         datos.put("steps", Arrays.asList(paso1.getText().toString(), paso2.getText().toString(), paso3.getText().toString(), paso4.getText().toString(), paso5.getText().toString()));
         datos.put("tipo", "Principal");

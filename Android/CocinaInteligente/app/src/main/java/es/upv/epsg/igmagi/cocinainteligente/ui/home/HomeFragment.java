@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -80,7 +81,17 @@ public class HomeFragment extends Fragment {
     private User user;
     private TextView fidelity, name;
     private ImageView photo;
-    private ArrayList<Device> devices;View includeUser;
+    private ArrayList<Device> devices = new ArrayList<>();
+    View includeUser;
+
+    //Device
+    private TextView deviceName;
+    private ImageView lights;
+    private ImageView fan;
+    private TextView temp1;
+    private TextView temp2;
+    private TextView temp3;
+    private TextView temp4;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -107,6 +118,23 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_profile);
             }
         });
+        //Asigning the navigation to the myKitchen button
+        Button btnkitchen = root.findViewById(R.id.kitchenBtn);
+        btnkitchen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_kitchen);
+            }
+        });
+
+        //Asigning the navigation to the ViewRecipes button
+        Button btnviewrecipes = root.findViewById(R.id.viewRecipesBtn);
+        btnviewrecipes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_view_recipes);
+            }
+        });
 
         Button botonCrearReceta = root.findViewById(R.id.createRecipesBtn);
         botonCrearReceta.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +145,7 @@ public class HomeFragment extends Fragment {
         });
         // getting the include of the Device details
         includeDevice = ((ViewFlipper) root.findViewById(R.id.viewFlipper1));
-        View nodevice = includeDevice.getCurrentView();
+        View nodevice = includeDevice.getChildAt(0);
         Button button = nodevice.findViewById(R.id.pairDevice);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +153,14 @@ public class HomeFragment extends Fragment {
                 showPairingWindow();
             }
         });
+        View device = includeDevice.getChildAt(1);
+        deviceName = device.findViewById(R.id.includeDeviceName);
+        lights = device.findViewById(R.id.includeDeviceLights);
+        fan = device.findViewById(R.id.includeDeviceFan);
+        temp1 = device.findViewById(R.id.includeDeviceT1);
+        temp2 = device.findViewById(R.id.includeDeviceT2);
+        temp3 = device.findViewById(R.id.includeDeviceT3);
+        temp4 = device.findViewById(R.id.includeDeviceT4);
 
         update();
         /*
@@ -171,12 +207,37 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()){
-                            if (user.devices.contains(snapshot.getId())) devices.add(snapshot.toObject(Device.class));
+                            if (user.devices.contains(snapshot.getId())) {
+                                devices.clear();
+                                devices.add(snapshot.toObject(Device.class));
+                                refreshDevice();
+                            }
                         }
                     }
                 });
             }
         });
+    }
+
+    private void refreshDevice() {
+        deviceName.setText(devices.get(0).getName());
+        temp1.setText("Temperatura 1: " + devices.get(0).getCooktop().get(0));
+        temp2.setText("Temperatura 2: " + devices.get(0).getCooktop().get(1));
+        temp3.setText("Temperatura 3: "  + devices.get(0).getCooktop().get(2));
+        temp4.setText("Temperatura 4: "  + devices.get(0).getCooktop().get(3));
+
+        if (devices.get(0).lights){
+            lights.setImageResource(R.drawable.btnluzon);
+        }
+        else {
+            lights.setImageResource(R.drawable.btnluzoff);
+        }
+        if (devices.get(0).fan) {
+            fan.setImageResource(R.drawable.btnextraon);
+        }
+        else {
+            fan.setImageResource(R.drawable.btnextraoff);
+        }
     }
 
     private void refreshUser() {
@@ -233,7 +294,7 @@ public class HomeFragment extends Fragment {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             DocumentSnapshot document = task.getResult();
                             ArrayList<String> group;
-                            if(checkDevices(document)){
+                            if(user.getDevices().size() > 0){
                                 group = (ArrayList<String>) document.get("devices");
                                 group.add(id.getText().toString());
                             } else {
@@ -246,7 +307,7 @@ public class HomeFragment extends Fragment {
                                         @Override
                                         public void onSuccess(Void documentReference) {
                                             Log.d(TAG, "DocumentSnapshot successfully written!");
-                                            includeDevice.showNext();
+                                            includeDevice.setDisplayedChild(1);
                                             d.cancel();
                                         }
                                     })

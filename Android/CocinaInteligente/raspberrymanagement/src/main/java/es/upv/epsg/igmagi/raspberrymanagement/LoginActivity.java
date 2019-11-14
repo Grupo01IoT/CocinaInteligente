@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         device.put("joinDate", new Date());
         device.put("lights", false);
         device.put("fan", false);
-        device.put("cooktop", false);
+        device.put("cooktop", new ArrayList<Float>());
         device.put("voice", false);
 
         db.collection("devices").document(idInput.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

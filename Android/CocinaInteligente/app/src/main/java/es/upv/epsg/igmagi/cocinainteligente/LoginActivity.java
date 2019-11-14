@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                         usuario.getDisplayName() + " - " + usuario.getEmail(), Toast.LENGTH_LONG).show();
             }
 
-            Intent i = new Intent(this, MainActivity.class);
+            final Intent i = new Intent(this, MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -101,9 +101,9 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         Log.d(TAG, "Failed with: ", task.getException());
                     }
+                    startActivity(i);
                 }
             });
-            startActivity(i);
         } else {
             startActivityForResult(AuthUI.getInstance()
                             .createSignInIntentBuilder()
@@ -130,15 +130,12 @@ public class LoginActivity extends AppCompatActivity {
                 IdpResponse response = IdpResponse.fromResultIntent(data);
                 if (response == null) {
                     Toast.makeText(this, "Cancelado", Toast.LENGTH_LONG).show();
-                    return;
                 } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
                     Toast.makeText(this, "Sin conexión a Internet",
                             Toast.LENGTH_LONG).show();
-                    return;
                 } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                     Toast.makeText(this, "Error desconocido",
                             Toast.LENGTH_LONG).show();
-                    return;
                 }
             }
         }

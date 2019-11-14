@@ -1,9 +1,11 @@
 package es.upv.epsg.igmagi.cocinainteligente;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -69,19 +71,10 @@ public class MainActivity extends AppCompatActivity {
         profileEmail.setText((mAuth.isAnonymous()) ? "Empty email" : mAuth.getEmail());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        Log.d(TAG,"HOLASOYonRESUME");
 
         if (mAuth.isAnonymous()) {
             navigationView.getMenu().findItem(R.id.logout).setVisible(false);
@@ -102,5 +95,6 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 
 }

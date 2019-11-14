@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -29,6 +30,7 @@ public class MyKitchenFragment extends Fragment {
     boolean extrac = false;
     ImageButton lightsbutton;
     ImageButton extractionbutton;
+    TextView txtlightswitch, txtextracswitch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +56,8 @@ public class MyKitchenFragment extends Fragment {
                 updateBD("fan", !extrac);
             }
         });
-
+        txtextracswitch = (TextView) root.findViewById(R.id.tvExtraccionOnOff);
+        txtlightswitch = (TextView) root.findViewById(R.id.tvLuzOnOff);
         refreshView();
 
         // Inflate the layout for this fragment
@@ -75,15 +78,19 @@ public class MyKitchenFragment extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (lights = documentSnapshot.getBoolean("lights")){
                     lightsbutton.setImageResource(R.drawable.btnluzon);
+                    txtlightswitch.setText("ON");
                 }
                 else {
                     lightsbutton.setImageResource(R.drawable.btnluzoff);
+                    txtlightswitch.setText("OFF");
                 }
                 if (extrac = documentSnapshot.getBoolean("fan")) {
                     extractionbutton.setImageResource(R.drawable.btnextraon);
+                    txtextracswitch.setText("ON");
                 }
                 else {
                     extractionbutton.setImageResource(R.drawable.btnextraoff);
+                    txtextracswitch.setText("OFF");
                 }
             }
         });

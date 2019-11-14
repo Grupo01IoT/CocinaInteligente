@@ -39,7 +39,7 @@
         android:layout_width="94dp"
         android:layout_height="20dp"
         android:isIndicator="true"
-        android:numStars="5"
+        android:numStars="4"
         android:rating="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/nombre"
@@ -47,7 +47,7 @@
         app:layout_constraintVertical_bias="0.120000005" />
 
     <TextView
-        android:id="@+id/puntuaciones"
+        android:id="@+id/valoraciones"
         android:layout_width="132dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"

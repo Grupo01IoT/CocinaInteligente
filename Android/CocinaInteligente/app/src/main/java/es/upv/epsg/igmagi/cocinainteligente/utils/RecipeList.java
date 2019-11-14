@@ -10,8 +10,7 @@ public class RecipeList {
 
     public RecipeList(){
         recipeList = new ArrayList<Recipe>();
-        recipeList.add(new Recipe());
-        recipeList.add(new Recipe("QWEWRTREW", "Macarrones", "Macarrones con tomate", 45));
+
     }
     public RecipeList(ArrayList<Recipe> recipeList){
         this.recipeList = recipeList;

@@ -49,7 +49,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         public ViewHolder(View itemView) {
             super(itemView);
             nombre = itemView.findViewById(R.id.nombre);
-            puntuaciones = itemView.findViewById(R.id.puntuaciones);
+            puntuaciones = itemView.findViewById(R.id.valoraciones);
             rating = itemView.findViewById(R.id.valoracion);
             //id = itemView.findViewById(R.id.idNotificacion);
             tiempo = itemView.findViewById(R.id.tiempococcion);
@@ -58,12 +58,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
         // Personalizamos un ViewHolder a partir de un lugar
         public void customize(Recipe recipe) {
-            nombre.setText(recipe.getName());
+            nombre.setText(recipe.getName());/*
             puntuaciones.setText(recipe.getFormattedNumberOfRatings());
             //icono.setImageResource(recipe.getPicture());
             //foto.setScaleType(ImageView.ScaleType.FIT_END);
             rating.setRating(recipe.getRatingValue());
-            tiempo.setText(recipe.getFormattedDuration());
+            tiempo.setText(recipe.getFormattedDuration());*/
         }
 
 

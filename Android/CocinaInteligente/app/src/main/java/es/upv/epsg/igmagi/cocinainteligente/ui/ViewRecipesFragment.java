@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +36,7 @@ import java.net.URI;
 import es.upv.epsg.igmagi.cocinainteligente.R;
 import es.upv.epsg.igmagi.cocinainteligente.adapter.RecipeHolder;
 import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
+import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
 public class ViewRecipesFragment extends Fragment {
@@ -44,6 +47,7 @@ public class ViewRecipesFragment extends Fragment {
     private CollectionReference recipesCollection = mBD.collection("recipes");
 
     private FirestoreRecyclerAdapter<Recipe, RecipeHolder> adapter;
+
 
 
     @Override
@@ -76,14 +80,33 @@ public class ViewRecipesFragment extends Fragment {
             View view;
 
             @Override
-            protected void onBindViewHolder(@NonNull RecipeHolder holder, int position, @NonNull Recipe productModel) {
+            protected void onBindViewHolder(@NonNull RecipeHolder holder, int position, @NonNull final Recipe productModel) {
                 Log.d("RECIPESFRAGMENT", "Llamamos a SetRecipeName()");
                 Log.d("RECIPESFRAGMENT", "Recipe name - "+productModel.getName());
+                View v = view.findViewById(R.id.container);
+                final RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+
+
                 final ImageView image = view.findViewById(R.id.foto);
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("RecipeFragment", productModel.data());
+                        Log.d("RecipeFragment", productModel.getPicture());
+
+                        model.setCurrentRecipeImage(image.getDrawable());
+                        model.setCurrentRecipe(productModel);
+
+                        Navigation.findNavController(getView()).navigate(R.id.action_nav_view_recipes_to_nav_view_recipe);
+
+                    }
+                });
                 if (productModel.getPicture().contains("http")) {
                     new DownloadImageTask(image, getResources(), false).execute(Uri.parse(productModel.getPicture()));
+                    Log.d("AAAA", image+"");
                     holder.setRecipe(productModel.getName(), productModel.getFormattedDuration(),
                             productModel.getFormattedNumberOfRatings(), productModel.getRatingValue(), image);
+                    //refreshView();
                 } else {
                     File localFile = null;
                     try {
@@ -101,6 +124,8 @@ public class ViewRecipesFragment extends Fragment {
                                 (FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Log.d("Almacenamiento", "Fichero bajado");
                             image.setImageBitmap(BitmapFactory.decodeFile(path));
+
+
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

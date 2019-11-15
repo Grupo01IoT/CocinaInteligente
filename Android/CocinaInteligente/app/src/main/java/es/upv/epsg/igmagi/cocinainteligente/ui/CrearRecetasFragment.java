@@ -2,6 +2,7 @@ package es.upv.epsg.igmagi.cocinainteligente.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,13 +30,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -57,6 +61,7 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class CrearRecetasFragment extends Fragment {
     private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
     private EditText nombre_receta, descripcion_receta, duracion, paso1, paso2, paso3, paso4, paso5;
     private Button boton_guardar, boton_cancelar;
     private ImageView galeria, eliminar;
@@ -64,7 +69,7 @@ public class CrearRecetasFragment extends Fragment {
     private static int RESULT_LOAD_PHOTO = 2;
     private StorageReference storageRef;
     private Uri selectedImageUri;
-    private  Uri downloadUrl;
+    private Uri downloadUrl;
     private Context mContext;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -120,40 +125,57 @@ public class CrearRecetasFragment extends Fragment {
     }
 
     public void guardarReceta(View vista) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //FirebaseStorage storage = FirebaseStorage.getInstance();
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Uploading...");
+        progressDialog.show();
 
-       /* UUID uuid = UUID.randomUUID();
-        subirFichero(selectedImageUri, "recipes/" + uuid);
-        StorageReference ficheroRef = storageRef.child("recipes/" + uuid);
-        ficheroRef.child("recipes/" + uuid).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                downloadUrl = uri;
-            }
-        });*/
+        final String pid = UUID.randomUUID().toString();
 
-        Map<String, Object> datos = new HashMap<>();
+        final StorageReference ref = storageRef.child("images/" + pid);
+        ref.putFile(selectedImageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
 
-        datos.put("creationDate", new Date());
-        datos.put("description", descripcion_receta.getText().toString());
-        datos.put("duration", Integer.parseInt(duracion.getText().toString()));
-        datos.put("name", nombre_receta.getText().toString());
-        datos.put("picture", /*downloadUrl.toString()*/"https://previews.123rf.com/images/margolana/margolana1706/margolana170600029/80490007-vector-verduras-ensalada-estilo-de-dibujos-animados-ensalada-tazón-comida-fresca-saludable-en-un-plato-.jpg");
-        datos.put("ratings", Arrays.asList());
-        datos.put("steps", Arrays.asList(paso1.getText().toString(), paso2.getText().toString(), paso3.getText().toString(), paso4.getText().toString(), paso5.getText().toString()));
-        datos.put("tipo", "Principal");
-        datos.put("user", mAuth.getUid());
+                        Map<String, Object> datos = new HashMap<>();
+                        datos.put("creationDate", new Date());
+                        datos.put("description", descripcion_receta.getText().toString());
+                        datos.put("duration", Integer.parseInt(duracion.getText().toString()));
+                        datos.put("name", nombre_receta.getText().toString());
+                        datos.put("picture", pid);
+                        datos.put("ratings", Arrays.asList());
+                        datos.put("steps", Arrays.asList(paso1.getText().toString(), paso2.getText().toString(), paso3.getText().toString(), paso4.getText().toString(), paso5.getText().toString()));
+                        datos.put("tipo", "Principal");
+                        datos.put("user", mAuth.getUid());
+                        mDB.collection("recipes").add(datos).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Toast.makeText(mContext,
+                                        "Receta guardada", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
-        db.collection("recipes").add(datos).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Toast.makeText(mContext,
-                        "Receta guardada", Toast.LENGTH_SHORT).show();
-            }
-        });
-        //getFragmentManager().popBackStackImmediate();
-        Navigation.findNavController(getView()).navigate(R.id.action_nav_create_to_nav_home);
+                        Navigation.findNavController(getView()).navigate(R.id.action_nav_create_to_nav_home);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getActivity(), "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                .getTotalByteCount());
+                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
+
+                    }
+                });
     }
 
     public void confirmarCancelar() {
@@ -192,8 +214,8 @@ public class CrearRecetasFragment extends Fragment {
 
         }
     }
-
-    /*private void subirFichero(Uri fichero, String referencia) {
+/*
+    private void subirFichero(Uri fichero, String referencia) {
         StorageReference ficheroRef = storageRef.child(referencia);
         ficheroRef.putFile(fichero).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

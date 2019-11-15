@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -104,6 +105,9 @@ public class HomeFragment extends Fragment {
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
         final View root = localInflater.inflate(R.layout.fragment_home, container, false);
 
+        SharedPreferences pref =  PreferenceManager.getDefaultSharedPreferences (getActivity());
+
+
         // getting the include of the User details
         includeUser = root.findViewById(R.id.includeUser);
         photo = includeUser.findViewById(R.id.imageView);
@@ -118,6 +122,12 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_profile);
             }
         });
+
+        if(pref.getBoolean("currencySummaryUserOnOff", true))
+            includeUser.setVisibility(View.VISIBLE);
+        else
+            includeUser.setVisibility(View.GONE);
+
         //Asigning the navigation to the myKitchen button
         Button btnkitchen = root.findViewById(R.id.kitchenBtn);
         btnkitchen.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +172,10 @@ public class HomeFragment extends Fragment {
         temp3 = device.findViewById(R.id.includeDeviceT3);
         temp4 = device.findViewById(R.id.includeDeviceT4);
 
+        if(pref.getBoolean("currencySummaryDeviceOnOff", true))
+            includeDevice.setVisibility(View.VISIBLE);
+        else
+            includeDevice.setVisibility(View.GONE);
         update();
         /*
         TabLayout tabLayout = (TabLayout) root.findViewById(R.id.tab_layout);

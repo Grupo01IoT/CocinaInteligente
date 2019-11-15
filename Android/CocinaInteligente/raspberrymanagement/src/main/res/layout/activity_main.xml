@@ -10,31 +10,95 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="78dp"
+        android:layout_marginBottom="94dp"
         android:text="Salir"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout2" />
 
     <TextView
         android:id="@+id/testText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginBottom="13dp"
+        android:layout_marginTop="235dp"
+        android:layout_marginBottom="10dp"
         android:text="Hello World!"
-        app:layout_constraintBottom_toTopOf="@+id/switch1"
-        app:layout_constraintStart_toStartOf="@+id/button2" />
-
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
-        android:text="LED"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="427dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/testText">
+
+        <ImageButton
+            android:id="@+id/lightsButton"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/btnluzoff" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0" />
+
+        <ImageButton
+            android:id="@+id/extracButton"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/btnextraoff" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/includeDeviceT1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Temperatura 1:" />
+
+            <TextView
+                android:id="@+id/includeDeviceT2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Temperatura 2:" />
+
+            <TextView
+                android:id="@+id/includeDeviceT3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Temperatura 3:" />
+
+            <TextView
+                android:id="@+id/includeDeviceT4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Temperatura 4:" />
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

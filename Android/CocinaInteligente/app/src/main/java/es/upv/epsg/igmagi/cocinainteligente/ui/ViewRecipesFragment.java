@@ -1,5 +1,6 @@
 package es.upv.epsg.igmagi.cocinainteligente.ui;
 
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
 import es.upv.epsg.igmagi.cocinainteligente.R;
@@ -44,13 +52,6 @@ public class ViewRecipesFragment extends Fragment {
 
         root = inflater.inflate(R.layout.fragment_view_recipes, container, false);
 
-
-        /*recyclerView = root.findViewById(R.id.recyclerRecipeList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-
-         */
         setUpRecycleView();
 
         // Inflate the layout for this fragment
@@ -77,12 +78,40 @@ public class ViewRecipesFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull RecipeHolder holder, int position, @NonNull Recipe productModel) {
                 Log.d("RECIPESFRAGMENT", "Llamamos a SetRecipeName()");
-                //Log.d("RECIPESFRAGMENT", "Recipe name - )"+productModel.getName());
-                ImageView image = view.findViewById(R.id.foto);
-                new DownloadImageTask(image, getResources()).execute(Uri.parse(productModel.getPicture()));
+                Log.d("RECIPESFRAGMENT", "Recipe name - "+productModel.getName());
+                final ImageView image = view.findViewById(R.id.foto);
+                if (productModel.getPicture().contains("http")) {
+                    new DownloadImageTask(image, getResources(), false).execute(Uri.parse(productModel.getPicture()));
+                    holder.setRecipe(productModel.getName(), productModel.getFormattedDuration(),
+                            productModel.getFormattedNumberOfRatings(), productModel.getRatingValue(), image);
+                } else {
+                    File localFile = null;
+                    try {
+                        localFile = File.createTempFile("image", "jpg");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    final String path = localFile.getAbsolutePath();
+                    Log.d("Almacenamiento", "creando fichero: " + path);
+                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                    StorageReference ficheroRef = storageRef.child("images/" + productModel.getPicture());
+                    ficheroRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess
+                                (FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Log.d("Almacenamiento", "Fichero bajado");
+                            image.setImageBitmap(BitmapFactory.decodeFile(path));
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.e("Almacenamiento", "ERROR: bajando fichero");
+                        }
+                    });
 
-                holder.setRecipe(productModel.getName(), productModel.getFormattedDuration(),
-                        productModel.getFormattedNumberOfRatings(), productModel.getRatingValue(), image);
+                    holder.setRecipe(productModel.getName(), productModel.getFormattedDuration(),
+                            productModel.getFormattedNumberOfRatings(), productModel.getRatingValue(), image);
+                }
             }
 
             @NonNull

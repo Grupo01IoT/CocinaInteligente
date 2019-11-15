@@ -18,7 +18,7 @@
                     android:icon="@drawable/ic_menu_create"
                     android:title="@string/menu_create" />
                 <item
-                    android:id="@+id/nav_show"
+                    android:id="@+id/nav_view_recipes"
                     android:icon="@drawable/ic_menu_list"
                     android:title="@string/menu_list" />
             </group>
@@ -34,7 +34,7 @@
                     android:icon="@drawable/ic_menu_not_paired"
                     android:title="@string/device_pair" />
                 <item
-                    android:id="@+id/nav_view_device"
+                    android:id="@+id/nav_kitchen"
                     android:icon="@drawable/ic_menu_board"
                     android:title="@string/menu_board" />
             </group>

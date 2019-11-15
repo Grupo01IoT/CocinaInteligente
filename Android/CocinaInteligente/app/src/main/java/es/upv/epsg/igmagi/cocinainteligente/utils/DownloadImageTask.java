@@ -3,6 +3,7 @@ package es.upv.epsg.igmagi.cocinainteligente.utils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -20,10 +21,18 @@ import es.upv.epsg.igmagi.cocinainteligente.ui.home.HomeFragment;
 
 public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
     ImageView bmImage;
-Resources res;
+    Resources res;
+    Boolean rounded = true;
+
     public DownloadImageTask(ImageView bmImage, Resources r) {
         this.bmImage = bmImage;
         res = r;
+    }
+
+    public DownloadImageTask(ImageView image, Resources r, boolean b) {
+        this.bmImage = image;
+        res = r;
+        rounded = b;
     }
 
 
@@ -42,8 +51,12 @@ Resources res;
     }
 
     protected void onPostExecute(Bitmap result) {
-        RoundedBitmapDrawable rbd = RoundedBitmapDrawableFactory.create(res, result);
-        rbd.setCircular(true);
-        bmImage.setImageDrawable(rbd);
+        if (rounded){
+            RoundedBitmapDrawable rbd = RoundedBitmapDrawableFactory.create(res, result);
+            rbd.setCircular(true);
+            bmImage.setImageDrawable(rbd);
+        } else {
+            bmImage.setImageBitmap(result);
+        }
     }
 }

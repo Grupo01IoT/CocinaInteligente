@@ -9,8 +9,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import javax.annotation.Nullable;
 
 /**
  * Skeleton of an Android Things activity.
@@ -35,18 +43,25 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences prefs;
     private ArduinoUart uart;
+    private FirebaseFirestore mBD;
+    private Boolean lights, extrac;
+    private ImageButton lightsbutton, extractionbutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView tv = findViewById(R.id.testText);
+        lightsbutton = findViewById(R.id.lightsButton);
+        extractionbutton = findViewById(R.id.extracButton);
+
+
         prefs =
                 getSharedPreferences("Preferences", Context.MODE_PRIVATE);
         tv.setText("Welcome "+ prefs.getString("name", "null"));
 
         uart = new ArduinoUart("UART0", 9600);
-
+/*
         final Switch s = findViewById(R.id.switch1);
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -57,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     uart.escribir("C");
                 }
             }
-        });
+        });*/
 
         Button btn = findViewById(R.id.button2);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +84,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    private void refreshView() {
+        mBD.collection("devices").document("conet_kitchen").addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (lights = documentSnapshot.getBoolean("lights")){
+                    lightsbutton.setImageResource(R.drawable.btnluzon);
+                }
+                else {
+                    lightsbutton.setImageResource(R.drawable.btnluzoff);
+                }
+                if (extrac = documentSnapshot.getBoolean("fan")) {
+                    extractionbutton.setImageResource(R.drawable.btnextraon);
+                }
+                else {
+                    extractionbutton.setImageResource(R.drawable.btnextraoff);
+                }
+            }
+        });
+    }
+
 
     @Override
     protected void onDestroy() {

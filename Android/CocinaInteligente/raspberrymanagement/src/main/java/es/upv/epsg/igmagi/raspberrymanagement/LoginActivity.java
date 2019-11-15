@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +51,22 @@ public class LoginActivity extends AppCompatActivity {
         idInput = findViewById(R.id.idInput);
         pinInput = findViewById(R.id.pinInput);
         nameInput = findViewById(R.id.nameInput);
+        nameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                idInput.setText(nameInput.getText().toString().replace(" ", "_"));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         login = findViewById(R.id.button);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         db = FirebaseFirestore.getInstance();
 
-        idInput.setText(nameInput.toString().replace(" ", "_"));
         // Check if there's a device already on the database
         final Map<String, Object> device = new HashMap<>();
         device.put("name", nameInput.getText().toString());
@@ -73,13 +90,21 @@ public class LoginActivity extends AppCompatActivity {
         device.put("cooktop", new ArrayList<Float>());
         device.put("voice", false);
 
+
         db.collection("devices").document(idInput.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Toast.makeText(getApplication(), "ID already exists!", Toast.LENGTH_LONG).show();
+                    if (document.exists() && document.get("pin").toString().equals(pinInput.getText().toString())) {
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("id", idInput.getText().toString());
+                        editor.putString("name", nameInput.getText().toString());
+                        editor.commit();
+                        Intent i = new Intent(getApplication(), MainActivity.class);
+                        startActivity(i);
+                    }else if(document.exists() && !document.get("pin").toString().equals(pinInput.getText().toString())){
+                        Toast.makeText(getApplication(), "Wrong PIN!", Toast.LENGTH_LONG).show();
                     } else {
                         // Add a new document with a generated ID
                         db.collection("devices").document(idInput.getText().toString())

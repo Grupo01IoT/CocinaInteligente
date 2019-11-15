@@ -6,99 +6,65 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ImageButton
+        android:id="@+id/btnLightsOnOff"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginEnd="41dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btnluzoff"
+        app:layout_constraintBottom_toBottomOf="@+id/button2"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnExtraccionOnOff" />
+
+    <ImageButton
+        android:id="@+id/btnExtraccionOnOff"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginEnd="168dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btnextraoff"
+        app:layout_constraintBottom_toBottomOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button2" />
+
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="94dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="44dp"
         android:text="Salir"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout2" />
+        app:layout_constraintEnd_toStartOf="@+id/btnExtraccionOnOff"
+        app:layout_constraintStart_toEndOf="@+id/btnLightsOnOff"
+        app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <TextView
         android:id="@+id/testText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="235dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="53dp"
         android:text="Hello World!"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button3"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="427dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="32dp"
-        android:orientation="horizontal"
-        android:paddingStart="10dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/testText">
-
-        <ImageButton
-            android:id="@+id/lightsButton"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/btnluzoff" />
-
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0" />
-
-        <ImageButton
-            android:id="@+id/extracButton"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/btnextraoff" />
-
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/includeDeviceT1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Temperatura 1:" />
-
-            <TextView
-                android:id="@+id/includeDeviceT2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Temperatura 2:" />
-
-            <TextView
-                android:id="@+id/includeDeviceT3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Temperatura 3:" />
-
-            <TextView
-                android:id="@+id/includeDeviceT4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Temperatura 4:" />
-        </LinearLayout>
-    </LinearLayout>
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:text="Unlock"
+        app:layout_constraintStart_toStartOf="@+id/button2"
+        app:layout_constraintTop_toBottomOf="@+id/testText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,18 +5,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
@@ -43,63 +53,128 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences prefs;
     private ArduinoUart uart;
-    private FirebaseFirestore mBD;
+    private FirebaseFirestore mBD = FirebaseFirestore.getInstance();
     private Boolean lights, extrac;
     private ImageButton lightsbutton, extractionbutton;
+    private Boolean flag = true;
+    private Button unlock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView tv = findViewById(R.id.testText);
-        lightsbutton = findViewById(R.id.lightsButton);
-        extractionbutton = findViewById(R.id.extracButton);
+        lightsbutton = findViewById(R.id.btnLightsOnOff);
+        extractionbutton = findViewById(R.id.btnExtraccionOnOff);
+        unlock = findViewById(R.id.button3);
+        uart = new ArduinoUart("UART0", 9600);
 
+        unlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uart.escribir("J");
+                flag = true;
+                uart.flush();
+            }
+        });
+
+        lightsbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                flag = false;
+                updateBD("lights", !lights);
+            }
+        });
+
+        extractionbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                flag = false;
+                updateBD("fan", !extrac);
+            }
+        });
+
+        new Thread(new Runnable() {
+            public void run() {
+                while (true) {
+                    try {
+                        if (flag) {
+                            TimeUnit.SECONDS.sleep(2);
+                            String cadena = uart.leer();
+                            String[] cadenas = cadena.split(",");
+                            if (cadenas[0].contains("0")) {
+                                Log.d("TAG", "luces off");
+                                updateBD("lights", false);
+                            } else if (cadenas[0].contains("1")) {
+                                Log.d("TAG", "luces on");
+                                updateBD("lights", true);
+                            }
+                            if (cadenas[1].contains("1")) {
+                                Log.d("TAG", "extractor on");
+                                updateBD("fan", true);
+                            } else if (cadenas[1].contains("0")) {
+                                Log.d("TAG", "extractor off");
+                                updateBD("fan", false);
+                            }
+                            Log.d("TAG", "Temperatura: "+cadenas[2]);
+                        }
+                        //String numero= (cadenas[2].split(":"))[1].replace("\"", "0");
+                        //Log.d("TAG",numero);
+                        //Float temperatura = numero;
+                        //Log.d("TAG", "TEMPERATURA: " + temperatura);
+                        //if (temperatura < 60) {
+                        //   Log.d("TAG", "extractor off " + temperatura);
+                        //} else {
+                        //    Log.d("TAG", "extractor on " + temperatura);
+                        //}
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
 
         prefs =
                 getSharedPreferences("Preferences", Context.MODE_PRIVATE);
-        tv.setText("Welcome "+ prefs.getString("name", "null"));
-
-        uart = new ArduinoUart("UART0", 9600);
-/*
-        final Switch s = findViewById(R.id.switch1);
-        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (s.isChecked()){
-                    uart.escribir("O");
-                } else {
-                    uart.escribir("C");
-                }
-            }
-        });*/
+        tv.setText("Welcome " + prefs.getString("name", "null"));
 
         Button btn = findViewById(R.id.button2);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getApplicationContext().getSharedPreferences("Preferences",0).edit().clear().apply();
+                getApplicationContext().getSharedPreferences("Preferences", 0).edit().clear().apply();
                 startActivity(new Intent(getApplication(), LoginActivity.class));
             }
         });
 
+        refreshView();
+    }
+
+    private void updateBD(String field, Boolean value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(field, value);
+        mBD.collection("devices").document("conet_kitchen").update(map);
     }
 
     private void refreshView() {
         mBD.collection("devices").document("conet_kitchen").addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (lights = documentSnapshot.getBoolean("lights")){
+                if (lights = documentSnapshot.getBoolean("lights")) {
                     lightsbutton.setImageResource(R.drawable.btnluzon);
-                }
-                else {
+                    if (!flag) uart.escribir("O");
+                } else {
                     lightsbutton.setImageResource(R.drawable.btnluzoff);
+                    if (!flag) uart.escribir("C");
                 }
                 if (extrac = documentSnapshot.getBoolean("fan")) {
                     extractionbutton.setImageResource(R.drawable.btnextraon);
-                }
-                else {
+                    if (!flag) uart.escribir("F");
+                } else {
                     extractionbutton.setImageResource(R.drawable.btnextraoff);
+                    if (!flag) uart.escribir("N");
                 }
             }
         });
@@ -111,4 +186,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         uart.cerrar();
     }
+
 }

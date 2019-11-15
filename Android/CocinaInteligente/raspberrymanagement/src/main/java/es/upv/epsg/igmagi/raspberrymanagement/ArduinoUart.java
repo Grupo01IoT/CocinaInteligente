@@ -58,4 +58,13 @@ public class ArduinoUart {
             e.printStackTrace();
         }
     }
+
+    public void flush() {
+        try {
+            uart.flush(UartDevice.FLUSH_IN);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -41,14 +41,7 @@ public class MyKitchenFragment extends Fragment {
         lightsbutton.setOnClickListener(new View.OnClickListener(){
             @Override public void onClick(View v){
                 updateBD("lights", !lights);
-                /*
-                if(lights){
-                    updateBD("lights", false);
-                }else{
-                    updateBD("lights", true);
-                }
-*/
-            };
+            }
         });
         extractionbutton = (ImageButton) root.findViewById(R.id.btnExtraccionOnOff);
         extractionbutton.setOnClickListener(new View.OnClickListener(){

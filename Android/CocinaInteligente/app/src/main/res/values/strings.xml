@@ -36,4 +36,6 @@
     <string name="user_fidelity">Fidelity:</string>
     <string name="menu_pair">Pairing</string>
     <string name="device_info_paired">Paired devices!</string>
+    <string name="menu_kitchen">My Kitchen</string>
+    <string name="menu_vitro">My Stove</string>
 </resources>

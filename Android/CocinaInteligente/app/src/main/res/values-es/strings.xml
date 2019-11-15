@@ -31,4 +31,8 @@
     <string name="menu_device">Dispositivo</string>
     <string name="menu_other">Otros</string>
     <string name="user_fidelity">"Fidelidad: "</string>
+    <string name="menu_pair">Emparejando</string>
+    <string name="device_info_paired">Dispositivos emparejados!</string>
+    <string name="menu_kitchen">Mi Cocina</string>
+    <string name="menu_vitro">Mi Vitrocerámica</string>
 </resources>

@@ -53,11 +53,11 @@
             android:text="Steps:"
             android:textSize="18sp" />
 
-        <LinearLayout
+     <!--   <LinearLayout
             android:id="@+id/stepList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"></LinearLayout>
+    -->
     </LinearLayout>
-
 </LinearLayout>

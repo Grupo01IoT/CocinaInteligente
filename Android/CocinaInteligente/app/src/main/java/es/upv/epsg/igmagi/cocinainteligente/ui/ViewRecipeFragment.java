@@ -30,7 +30,7 @@ import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
 
 public class ViewRecipeFragment extends Fragment {
     TextView tvname, tvdescription;
-    RatingBar tbrating;
+    RatingBar rbrating;
     ImageView ivfoto;
     LinearLayout stepList;
 
@@ -52,7 +52,8 @@ public class ViewRecipeFragment extends Fragment {
         // Inflate the layout for this fragment
         ivfoto = root.findViewById(R.id.recipephoto);
         ivfoto.setImageDrawable(model.getCurrentRecipeImage());
-
+        rbrating = root.findViewById(R.id.rating);
+        rbrating.setRating(recipe.getRatingValue());
 //        ivfoto.setImageDrawable(photo.getDrawable());
         return root;
     }

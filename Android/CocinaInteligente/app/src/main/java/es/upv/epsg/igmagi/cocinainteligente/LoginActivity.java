@@ -46,9 +46,6 @@ public class LoginActivity extends AppCompatActivity {
                 usuario.sendEmailVerification();
                 Toast.makeText(this, usuario.getDisplayName() + " verificia tu cuenta con el correo que te hemos enviado a: " +
                         usuario.getEmail(), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Bienvenido: " +
-                        usuario.getDisplayName() + " - " + usuario.getEmail(), Toast.LENGTH_LONG).show();
             }
 
             final Intent i = new Intent(this, MainActivity.class);

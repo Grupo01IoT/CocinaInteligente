@@ -6,4 +6,5 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name='img_vitro'>190dp</dimen>
+    <dimen name="img_recipe">250dp</dimen>
 </resources>

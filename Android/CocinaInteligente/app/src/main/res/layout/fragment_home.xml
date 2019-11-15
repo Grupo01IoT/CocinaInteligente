@@ -88,7 +88,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/cocinalite"
-                        android:text="Tu cocina" />
+                        android:text="@string/menu_kitchen" />
 
                     <Button
                         android:id="@+id/vitroBtn"
@@ -96,7 +96,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/vitroceramicalite"
-                        android:text="Tu vitroceramica" />
+                        android:text="@string/menu_vitro" />
                 </LinearLayout>
 
             </LinearLayout>

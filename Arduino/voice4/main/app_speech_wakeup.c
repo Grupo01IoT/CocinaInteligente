@@ -16,7 +16,15 @@
 #include "esp_sr_models.h"
 #include "include/app_main.h"
 
+// esp_sr_wakenet2_float
+//sr_model_wakenet1_float
+// sr_model_wakenet1_quantized
+// esp_sr_wakenet2_quantized
+//esp_sr_wakenet3_quantized
+// esp_sr_wakenet4_quantized
+
 #define SR_MODEL esp_sr_wakenet3_quantized
+//#define SR_MODEL esp_sr_wakenet3_quantized
 
 static src_cfg_t srcif;
 static const esp_sr_iface_t *model = &SR_MODEL;
@@ -28,7 +36,12 @@ static void event_wakeup_detected(int r)
 {
     assert(g_state == WAIT_FOR_WAKEUP);
     printf("%s DETECTED.\n", model->get_word_name(model_data, r));
-    g_state = WAIT_FOR_CONNECT;
+
+
+    vTaskDelay(3000 / portTICK_PERIOD_MS);
+
+    g_state = WAIT_FOR_WAKEUP;
+
 }
 
 void nnTask(void *arg)
@@ -44,6 +57,7 @@ void nnTask(void *arg)
         if (r) 
         {
             event_wakeup_detected(r);
+
         }
     }
 
@@ -54,10 +68,17 @@ void nnTask(void *arg)
 void app_speech_wakeup_init()
 {
     //Initialize NN model
-    model_data=model->create(DET_MODE_95);
+    //model_data=model->create(DET_MODE_90);
+	model_data=model->create(0.9999);
+
 
     wake_word_info_t* word_list = malloc(sizeof(wake_word_info_t));
+
+    //int x = model->set_det_threshold(model_data, 0.5, word_list->wake_word_num);
+    //printf("%u .\n",x);
+
     esp_err_t ret = model->get_word_list(model_data, word_list);
+
     if (ret == ESP_OK) printf("wake word number = %d, word1 name = %s\n", 
                                word_list->wake_word_num, word_list->wake_word_list[0]);
     free(word_list);    

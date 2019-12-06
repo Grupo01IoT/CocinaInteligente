@@ -1,29 +1,22 @@
 package es.upv.epsg.igmagi.raspberrymanagement;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -164,17 +157,21 @@ public class MainActivity extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (lights = documentSnapshot.getBoolean("lights")) {
                     lightsbutton.setImageResource(R.drawable.btnluzon);
-                    if (!flag) uart.escribir("O");
+                    if (!flag) {uart.escribir("O");
+                    Log.d("ASDASDASD", "LEIDOS: " + uart.leer());}
                 } else {
                     lightsbutton.setImageResource(R.drawable.btnluzoff);
-                    if (!flag) uart.escribir("C");
+                    if (!flag) {uart.escribir("C");
+                    Log.d("ASDASDASD", "LEIDOS: " + uart.leer());}
                 }
                 if (extrac = documentSnapshot.getBoolean("fan")) {
                     extractionbutton.setImageResource(R.drawable.btnextraon);
-                    if (!flag) uart.escribir("F");
+                    if (!flag){ uart.escribir("F");
+                Log.d("ASDASDASD", "LEIDOS: " + uart.leer());}
                 } else {
                     extractionbutton.setImageResource(R.drawable.btnextraoff);
-                    if (!flag) uart.escribir("N");
+                    if (!flag){ uart.escribir("N");
+            Log.d("ASDASDASD", "LEIDOS: " + uart.leer());}
                 }
             }
         });

@@ -3,6 +3,9 @@ package es.upv.epsg.igmagi.cocinainteligente.ui;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -13,7 +16,9 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,15 +30,11 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import es.upv.epsg.igmagi.cocinainteligente.R;
+import es.upv.epsg.igmagi.cocinainteligente.adapter.TabsAdapter;
 import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
 import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
 
 public class ViewRecipeFragment extends Fragment {
-    TextView tvname, tvdescription;
-    RatingBar rbrating;
-    ImageView ivfoto;
-    LinearLayout stepList;
-
     FirebaseFirestore mBD = FirebaseFirestore.getInstance();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,19 +42,29 @@ public class ViewRecipeFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_view_recipe, container, false);
 
-        RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
-        Recipe recipe = model.getCurrentRecipe();
-        Log.d("AA", recipe.data());
+        setHasOptionsMenu(true);
 
-        tvname = root.findViewById(R.id.name);
-        tvdescription = root.findViewById(R.id.description);
-        tvname.setText(recipe.getName());
-        tvdescription.setText(recipe.getDescription());
-        // Inflate the layout for this fragment
-        ivfoto = root.findViewById(R.id.recipephoto);
-        ivfoto.setImageDrawable(model.getCurrentRecipeImage());
-        rbrating = root.findViewById(R.id.rating);
-        rbrating.setRating(recipe.getRatingValue());
+        TabLayout tabLayout = (TabLayout) root.findViewById(R.id.tabs);
+        tabLayout.addTab(tabLayout.newTab().setText("Recipe"));
+        tabLayout.addTab(tabLayout.newTab().setText("Comments"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        final ViewPager viewPager =(ViewPager)root.findViewById(R.id.recipeContainer);
+        TabsAdapter tabsAdapter = new TabsAdapter(this.getFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(tabsAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
 //        ivfoto.setImageDrawable(photo.getDrawable());
         return root;
     }
@@ -61,6 +72,14 @@ public class ViewRecipeFragment extends Fragment {
         Map<String, Object> map = new HashMap<>();
         map.put(field, value);
         mBD.collection("devices").document("conet_kitchen").update(map);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Do something that differs the Activity's menu here
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.findItem(R.id.action_favorite).setVisible(true);
     }
 
     /*private void refreshView() {

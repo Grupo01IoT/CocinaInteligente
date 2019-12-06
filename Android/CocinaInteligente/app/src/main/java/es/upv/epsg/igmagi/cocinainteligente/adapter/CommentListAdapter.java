@@ -1,13 +1,11 @@
 package es.upv.epsg.igmagi.cocinainteligente.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,22 +13,22 @@ import es.upv.epsg.igmagi.cocinainteligente.R;
 import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
 import es.upv.epsg.igmagi.cocinainteligente.utils.RecipeList;
 
-public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder> {
+public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.ViewHolder> {
     //List with recipes
     protected RecipeList recipeList;
 
-    public RecipeListAdapter(RecipeList recipeList){
+    public CommentListAdapter(RecipeList recipeList){
         this.recipeList = recipeList;
     }
 
     @Override
-    public RecipeListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CommentListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.elemento_receta, parent, false);
-        return new ViewHolder(v);
+        return new CommentListAdapter.ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(CommentListAdapter.ViewHolder holder, int position) {
         Recipe recipe = recipeList.getRecipeByPosition(position);
         holder.customize(recipe);
     }
@@ -42,23 +40,20 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
     //Creamos nuestro ViewHolder, con los tipos de elementos a modificar
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView nombre, puntuaciones, id, tiempo;
-        public ImageView icono;
-        public RatingBar rating;
+        public TextView author, body, date;
+        public ImageView image;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            nombre = itemView.findViewById(R.id.nombre);
-            puntuaciones = itemView.findViewById(R.id.valoraciones);
-            rating = itemView.findViewById(R.id.valoracion);
-            //id = itemView.findViewById(R.id.idNotificacion);
-            tiempo = itemView.findViewById(R.id.tiempococcion);
-            icono = itemView.findViewById(R.id.foto);
+            author = itemView.findViewById(R.id.authorTxt);
+            body = itemView.findViewById(R.id.bodyTxt);
+            date = itemView.findViewById(R.id.dateTxt);
+            image = itemView.findViewById(R.id.commentImg);
         }
 
         // Personalizamos un ViewHolder a partir de un lugar
         public void customize(Recipe recipe) {
-            nombre.setText(recipe.getName());/*
+            /*
             puntuaciones.setText(recipe.getFormattedNumberOfRatings());
             //icono.setImageResource(recipe.getImage());
             //foto.setScaleType(ImageView.ScaleType.FIT_END);

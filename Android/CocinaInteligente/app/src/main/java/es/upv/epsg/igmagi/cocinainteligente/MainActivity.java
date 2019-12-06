@@ -1,11 +1,9 @@
 package es.upv.epsg.igmagi.cocinainteligente;
 
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +19,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
 
@@ -71,6 +70,25 @@ public class MainActivity extends AppCompatActivity {
         profileEmail.setText((mAuth.isAnonymous()) ? "Empty email" : mAuth.getEmail());
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.actionbar_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                    item.setIcon((item.getIcon()==getDrawable(R.drawable.baseline_favorite_24)?R.drawable.baseline_favorite_border_24:R.drawable.baseline_favorite_24));
+                return true;
+            default:
+                break;
+        }
+
+        return false;
+    }
 
     @Override
     protected void onResume() {
@@ -79,11 +97,9 @@ public class MainActivity extends AppCompatActivity {
         if (mAuth.isAnonymous()) {
             navigationView.getMenu().findItem(R.id.logout).setVisible(false);
             navigationView.getMenu().findItem(R.id.login).setVisible(true);
-            // perform action when user is not logged in
         } else {
             navigationView.getMenu().findItem(R.id.logout).setVisible(true);
             navigationView.getMenu().findItem(R.id.login).setVisible(false);
-            // perform action when user is already logged in
         }
 
     }

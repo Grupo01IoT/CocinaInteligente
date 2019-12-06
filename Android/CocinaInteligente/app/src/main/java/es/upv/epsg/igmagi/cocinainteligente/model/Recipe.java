@@ -56,7 +56,7 @@ public class Recipe {
     public Recipe() {
         /*this.name = "RECETA EJEMPLO";
         this.description = "descripcion de la receta ejemplo";
-        this.picture = "@drawable/btnluzon";
+        this.image = "@drawable/btnluzon";
         this.duration = 50;
         this.ratings = new ArrayList<Integer>();
          */

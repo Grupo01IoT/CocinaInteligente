@@ -1,0 +1,64 @@
+package es.upv.epsg.igmagi.cocinainteligente.model;
+
+import android.text.format.DateFormat;
+
+import com.google.firebase.Timestamp;
+
+import java.util.Calendar;
+import java.util.Locale;
+
+public class Comment {
+
+    public String author;
+    public String body;
+    public Timestamp date;
+    public String image;
+
+    public Comment() {
+    }
+
+    public Comment(String author, String body, Timestamp creationDate, String picture) {
+        this.author = author;
+        this.body = body;
+        this.date = creationDate;
+        this.image = picture;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+    public String getFormattedDate(){
+        Calendar cal = Calendar.getInstance(Locale.getDefault());
+        cal.setTimeInMillis(getDate().getSeconds());
+        return DateFormat.format("dd-MM-yyyy", cal).toString();
+    }
+
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+}

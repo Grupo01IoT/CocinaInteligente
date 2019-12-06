@@ -140,11 +140,11 @@ public class CrearRecetasFragment extends Fragment {
                         Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
 
                         Map<String, Object> datos = new HashMap<>();
-                        datos.put("creationDate", new Date());
+                        datos.put("date", new Date());
                         datos.put("description", descripcion_receta.getText().toString());
                         datos.put("duration", Integer.parseInt(duracion.getText().toString()));
                         datos.put("name", nombre_receta.getText().toString());
-                        datos.put("picture", pid);
+                        datos.put("image", pid);
                         datos.put("ratings", Arrays.asList());
                         datos.put("steps", Arrays.asList(paso1.getText().toString(), paso2.getText().toString(), paso3.getText().toString(), paso4.getText().toString(), paso5.getText().toString()));
                         datos.put("tipo", "Principal");

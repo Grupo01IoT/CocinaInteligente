@@ -38,4 +38,5 @@
     <string name="device_info_paired">Paired devices!</string>
     <string name="menu_kitchen">My Kitchen</string>
     <string name="menu_vitro">My Stove</string>
+    <string name="action_favorite">Favourite</string>
 </resources>

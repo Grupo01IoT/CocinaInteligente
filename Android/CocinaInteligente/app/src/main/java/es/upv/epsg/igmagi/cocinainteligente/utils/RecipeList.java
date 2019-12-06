@@ -32,8 +32,4 @@ public class RecipeList {
     public int size(){
         return recipeList.size();
     }
-    public void addExamples(){
-        add(new Recipe());
-        add(new Recipe("QWEWRTREW", "Macarrones", "Macarrones con tomate", 45));
-    }
 }

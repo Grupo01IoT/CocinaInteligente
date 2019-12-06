@@ -5,7 +5,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import es.upv.epsg.igmagi.cocinainteligente.ui.AboutFragment;
+import es.upv.epsg.igmagi.cocinainteligente.ui.AboutRecipeFragment;
 import es.upv.epsg.igmagi.cocinainteligente.ui.ProfileFragment;
+import es.upv.epsg.igmagi.cocinainteligente.ui.RecipeFragment;
 
 /**
  * Created by tutlane on 19-12-2017.
@@ -27,11 +29,9 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position){
         switch (position){
             case 0:
-                ProfileFragment home = new ProfileFragment();
-                return home;
+                return new RecipeFragment();
             case 1:
-                AboutFragment about = new AboutFragment();
-                return about;
+                return new AboutRecipeFragment();
             default:
                 return null;
         }

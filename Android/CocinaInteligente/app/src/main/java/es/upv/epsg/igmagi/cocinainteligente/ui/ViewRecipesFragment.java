@@ -42,31 +42,26 @@ import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 public class ViewRecipesFragment extends Fragment {
 
     public View root;
-    //RecyclerView recyclerView;
     private FirebaseFirestore mBD = FirebaseFirestore.getInstance();
     private CollectionReference recipesCollection = mBD.collection("recipes");
 
     private FirestoreRecyclerAdapter<Recipe, RecipeHolder> adapter;
-
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_view_recipes, container, false);
-
-        setUpRecycleView();
+            setUpRecycleViewByFirestore();
 
         // Inflate the layout for this fragment
         return root;
     }
 
-    private void setUpRecycleView() {
+    private void setUpRecycleViewByFirestore() {
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerRecipeList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-
 
         Query query = recipesCollection.orderBy("name", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<Recipe> options = new FirestoreRecyclerOptions.Builder<Recipe>()
@@ -110,7 +105,7 @@ public class ViewRecipesFragment extends Fragment {
                 } else {
                     File localFile = null;
                     try {
-                        localFile = File.createTempFile("image", "jpg");
+                        localFile = File.createTempFile("image", ".jpg");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -124,8 +119,6 @@ public class ViewRecipesFragment extends Fragment {
                                 (FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Log.d("Almacenamiento", "Fichero bajado");
                             image.setImageBitmap(BitmapFactory.decodeFile(path));
-
-
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -152,7 +145,6 @@ public class ViewRecipesFragment extends Fragment {
                 Log.d("RECIPESFRAGMENT", "ERROR - " + e.getCode());
             }
         };
-//        Log.d("RECIPESFRAGMENT", "adapter - " + adapter.getItem(0).getName() + " - " + adapter.getItemCount());
         recyclerView.setAdapter(adapter);
     }
 

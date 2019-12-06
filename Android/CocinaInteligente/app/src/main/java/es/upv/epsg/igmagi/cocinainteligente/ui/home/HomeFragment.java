@@ -40,6 +40,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -274,7 +275,7 @@ public class HomeFragment extends Fragment {
             Snackbar.make(getView(), "Log in to pair your device", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else {
-            final Dialog d = new Dialog(getParentFragment().getContext());
+            final BottomSheetDialog d = new BottomSheetDialog(getParentFragment().getContext());
             d.setContentView(R.layout.fragment_pair);
             d.setTitle("Vincular dispositivo");
 

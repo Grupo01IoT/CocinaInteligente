@@ -43,8 +43,11 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -55,6 +58,7 @@ import java.util.UUID;
 
 import es.upv.epsg.igmagi.cocinainteligente.R;
 import es.upv.epsg.igmagi.cocinainteligente.ui.home.HomeFragment;
+import es.upv.epsg.igmagi.cocinainteligente.utils.ImageUtils;
 
 import static android.app.Activity.RESULT_OK;
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
@@ -71,6 +75,8 @@ public class CrearRecetasFragment extends Fragment {
     private Uri selectedImageUri;
     private Uri downloadUrl;
     private Context mContext;
+
+    private File file;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_crear_recetas, container, false);
@@ -132,7 +138,7 @@ public class CrearRecetasFragment extends Fragment {
         final String pid = UUID.randomUUID().toString();
 
         final StorageReference ref = storageRef.child("images/" + pid);
-        ref.putFile(selectedImageUri)
+        ref.putFile(Uri.fromFile(file))
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -144,7 +150,7 @@ public class CrearRecetasFragment extends Fragment {
                         datos.put("description", descripcion_receta.getText().toString());
                         datos.put("duration", Integer.parseInt(duracion.getText().toString()));
                         datos.put("name", nombre_receta.getText().toString());
-                        datos.put("image", pid);
+                        datos.put("picture", pid);
                         datos.put("ratings", Arrays.asList());
                         datos.put("steps", Arrays.asList(paso1.getText().toString(), paso2.getText().toString(), paso3.getText().toString(), paso4.getText().toString(), paso5.getText().toString()));
                         datos.put("tipo", "Principal");
@@ -204,12 +210,26 @@ public class CrearRecetasFragment extends Fragment {
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             selectedImageUri = data.getData();
+            BitmapFactory.Options options=new BitmapFactory.Options();
+            options.inSampleSize=2; //decrease decoded image
+            Bitmap bitmap = null;
             try {
-                Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(selectedImageUri));
-                ImageView imageView = (ImageView) getView().findViewById(R.id.crear_imagen_imagen);
-                imageView.setImageBitmap(bitmap);
-            } catch (IOException ie) {
-
+                file = File.createTempFile("compressed", ".jpg");
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(selectedImageUri), null, options);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+                Bitmap comp = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+                // Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(selectedImageUri));
+                ImageView imageView = (ImageView) getView().findViewById(R.id.crear_imagen_imagen);//write the bytes in file
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(out.toByteArray());
+                fos.flush();
+                fos.close();
+                imageView.setImageBitmap(comp);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }

@@ -2,6 +2,7 @@ package es.upv.epsg.igmagi.cocinainteligente.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -47,7 +48,11 @@ import com.vansuita.pickimage.listeners.IPickResult;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.Arrays;
@@ -61,6 +66,7 @@ import es.upv.epsg.igmagi.cocinainteligente.R;
 import es.upv.epsg.igmagi.cocinainteligente.adapter.CommentHolder;
 import es.upv.epsg.igmagi.cocinainteligente.model.Comment;
 import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
+import es.upv.epsg.igmagi.cocinainteligente.utils.ImageUtils;
 
 public class AboutRecipeFragment extends Fragment {
     View root;
@@ -70,8 +76,8 @@ public class AboutRecipeFragment extends Fragment {
     private FirestoreRecyclerAdapter<Comment, CommentHolder> adapter;
     boolean picture = false;
     String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+    File file;
 
-    Uri selectedImageUri;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,7 +89,7 @@ public class AboutRecipeFragment extends Fragment {
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetDialog dialog = new BottomSheetDialog(getContext());
+                final BottomSheetDialog dialog = new BottomSheetDialog(getContext());
                 subview = LayoutInflater.from(getContext()).inflate(R.layout.fragment_add_comment, null);
                 ((TextView) subview.findViewById(R.id.authorTxt2)).setText(user);
                 ((TextView) subview.findViewById(R.id.dateTxt2)).setText(Timestamp.now().toDate().toString());
@@ -94,8 +100,27 @@ public class AboutRecipeFragment extends Fragment {
                                 .setOnPickResult(new IPickResult() {
                                     @Override
                                     public void onPickResult(PickResult r) {
-                                        ((ImageButton) subview.findViewById(R.id.imageCommentBtn)).setImageBitmap(r.getBitmap());
-                                        selectedImageUri = r.getUri();
+                                        BitmapFactory.Options options=new BitmapFactory.Options();
+                                        options.inSampleSize=2; //decrease decoded image
+                                        Bitmap bitmap = null;
+                                        try {
+                                            file = File.createTempFile("compressed", ".jpg");
+                                            ByteArrayOutputStream out = new ByteArrayOutputStream();
+                                            bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(r.getUri()), null, options);
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+                                            Bitmap comp = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+                                            // Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(selectedImageUri));
+                                            FileOutputStream fos = new FileOutputStream(file);
+                                            fos.write(out.toByteArray());
+                                            fos.flush();
+                                            fos.close();
+                                            ((ImageButton) subview.findViewById(R.id.imageCommentBtn)).setImageBitmap(comp);
+                                        } catch (FileNotFoundException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+
                                         picture = true;
                                     }
                                 }).show(getActivity().getSupportFragmentManager());
@@ -115,7 +140,7 @@ public class AboutRecipeFragment extends Fragment {
                             if (picture){
                                 final String pid = UUID.randomUUID().toString();
                                 StorageReference ref = FirebaseStorage.getInstance().getReference().child("comments/" + pid);
-                                ref.putFile(selectedImageUri)
+                                ref.putFile(Uri.fromFile(file))
                                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                             @Override
                                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -132,7 +157,7 @@ public class AboutRecipeFragment extends Fragment {
                                                         progressDialog.dismiss();
                                                     }
                                                 });
-
+                                                dialog.dismiss();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -152,6 +177,8 @@ public class AboutRecipeFragment extends Fragment {
                                             }
                                         });
                             } else {
+                                progressDialog.dismiss();
+                                dialog.dismiss();
                                 Map<String, Object> datos = new HashMap<>();
                                 datos.put("author", user);
                                 datos.put("body", body);
@@ -224,7 +251,13 @@ public class AboutRecipeFragment extends Fragment {
                         public void onSuccess
                                 (FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Log.d("Almacenamiento", "Fichero bajado");
-                            image.setImageBitmap(BitmapFactory.decodeFile(path));
+                            File file;
+                            try {
+                                file = ImageUtils.getCompressed(getContext(), path);
+                                image.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

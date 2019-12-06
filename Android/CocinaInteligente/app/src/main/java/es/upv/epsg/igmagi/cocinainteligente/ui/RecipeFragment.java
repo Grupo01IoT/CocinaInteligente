@@ -20,7 +20,7 @@ public class RecipeFragment extends Fragment {
     TextView tvname, tvdescription;
     RatingBar rbrating;
     ImageView ivfoto;
-    LinearLayout stepList;
+    LinearLayout stepsContainer;
 
 
     @Override
@@ -28,7 +28,6 @@ public class RecipeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_info_recipe, container, false);
-
 
         RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
         Recipe recipe = model.getCurrentRecipe();
@@ -41,7 +40,8 @@ public class RecipeFragment extends Fragment {
         ivfoto.setImageDrawable(model.getCurrentRecipeImage());
         rbrating = root.findViewById(R.id.rating);
         rbrating.setRating(recipe.getRatingValue());
-
+        stepsContainer = root.findViewById(R.id.stepsContainer);
+        
         return root;
     }
 

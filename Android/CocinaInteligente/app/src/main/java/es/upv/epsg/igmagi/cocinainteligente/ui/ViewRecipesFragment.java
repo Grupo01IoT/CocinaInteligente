@@ -52,7 +52,7 @@ public class ViewRecipesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_view_recipes, container, false);
-            setUpRecycleViewByFirestore();
+        setUpRecycleViewByFirestore();
 
         // Inflate the layout for this fragment
         return root;
@@ -77,7 +77,7 @@ public class ViewRecipesFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull RecipeHolder holder, int position, @NonNull final Recipe productModel) {
                 Log.d("RECIPESFRAGMENT", "Llamamos a SetRecipeName()");
-                Log.d("RECIPESFRAGMENT", "Recipe name - "+productModel.getName());
+                Log.d("RECIPESFRAGMENT", "Recipe name - " + productModel.getName());
                 View v = view.findViewById(R.id.container);
                 final RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
 
@@ -96,40 +96,33 @@ public class ViewRecipesFragment extends Fragment {
 
                     }
                 });
-                if (productModel.getPicture().contains("http")) {
-                    new DownloadImageTask(image, getResources(), false).execute(Uri.parse(productModel.getPicture()));
-                    Log.d("AAAA", image+"");
-                    holder.setRecipe(productModel.getName(), productModel.getFormattedDuration(),
-                            productModel.getFormattedNumberOfRatings(), productModel.getRatingValue(), image);
-                    //refreshView();
-                } else {
-                    File localFile = null;
-                    try {
-                        localFile = File.createTempFile("image", ".jpg");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    final String path = localFile.getAbsolutePath();
-                    Log.d("Almacenamiento", "creando fichero: " + path);
-                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                    StorageReference ficheroRef = storageRef.child("images/" + productModel.getPicture());
-                    ficheroRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess
-                                (FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            Log.d("Almacenamiento", "Fichero bajado");
-                            image.setImageBitmap(BitmapFactory.decodeFile(path));
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Log.e("Almacenamiento", "ERROR: bajando fichero");
-                        }
-                    });
-
-                    holder.setRecipe(productModel.getName(), productModel.getFormattedDuration(),
-                            productModel.getFormattedNumberOfRatings(), productModel.getRatingValue(), image);
+                File localFile = null;
+                try {
+                    localFile = File.createTempFile("image", ".jpg");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                final String path = localFile.getAbsolutePath();
+                Log.d("Almacenamiento", "creando fichero: " + path);
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference ficheroRef = storageRef.child("images/" + productModel.getPicture());
+                ficheroRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess
+                            (FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Log.d("Almacenamiento", "Fichero bajado");
+                        image.setImageBitmap(BitmapFactory.decodeFile(path));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.e("Almacenamiento", "ERROR: bajando fichero");
+                    }
+                });
+
+                holder.setRecipe(productModel.getName(), productModel.getFormattedDuration(),
+                        productModel.getFormattedNumberOfRatings(), productModel.getRatingValue(), image);
+
             }
 
             @NonNull

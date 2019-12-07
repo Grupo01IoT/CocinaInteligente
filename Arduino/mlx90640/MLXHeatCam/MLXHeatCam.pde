@@ -56,7 +56,7 @@ void setup() {
   printArray(Serial.list());
   // Depending on where your sensor falls on this list, you
   // may need to change Serial.list()[0] to a different number
-  myPort = new Serial(this, Serial.list()[2], 115200);
+  myPort = new Serial(this, Serial.list()[0], 115200);
   myPort.clear();
   // Throw out the first chunk in case we caught it in the 
   // middle of a frame

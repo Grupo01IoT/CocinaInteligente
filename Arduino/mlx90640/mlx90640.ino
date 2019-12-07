@@ -32,6 +32,7 @@
 
 #include "MLX90640_API.h"
 #include "MLX90640_I2C_Driver.h"
+#define TAMBUFFER 40
 
 const byte MLX90640_address = 0x33; //Default 7-bit unshifted address of the MLX90640
 
@@ -43,10 +44,15 @@ float maxTemp;
 
 #include "WiFi.h" 
 #include "AsyncUDP.h"
+
+float tf1, tf2, tf3, tf4;
+int ppl = 32;
+int ppc = 24;
+
 AsyncUDP udp;
 const char * ssid = "TEAM_01"; 
 const char * password = "123456789";
-char texto[20];
+char texto[TAMBUFFER];
 
 void setup()
 {
@@ -92,7 +98,7 @@ void setup()
     Serial.print("UDP Listening on IP: "); 
     Serial.println(WiFi.localIP()); 
     udp.onPacket([](AsyncUDPPacket packet) {
-      int i=20; 
+      int i=TAMBUFFER; 
       while (i--) {
         //(texto+i)=(packet.data()+i);
       } 
@@ -119,7 +125,14 @@ void loop()
     MLX90640_CalculateTo(mlx90640Frame, &mlx90640, emissivity, tr, mlx90640To);
   }
   //long stopTime = millis();
+  int pos1 = 0;
+  int pos2 = 0;
+  int pos3 = 0;
+  int pos4 = 0;
   maxTemp = -10;
+
+  
+  
   
   for (int x = 0 ; x < 768 ; x++)
   {
@@ -131,10 +144,22 @@ void loop()
   //delay(1);
   Serial.println("");
   //delay(1);
+  
+  pos1 = ppl*(ppc/4)+(ppl/4);
+  pos2 = ppl*(ppc/4)+(3*ppl/4);
+  pos3 = ppl*(3*ppc/4)+(ppl/4);
+  pos4 = ppl*(3*ppc/4)+(3*ppl/4);
 
+  tf1 = mlx90640To[pos2];
+  tf2 = mlx90640To[pos1];
+  tf3 = mlx90640To[pos4];
+  tf4 = mlx90640To[pos3];
   
   
-  sprintf (texto, "Temperatura: %f" ,maxTemp);
+  //sprintf (texto, "Temperatura: %f" ,maxTemp);
+  //sprintf (texto, "Temperatura: %.0f,%.0f,%.0f,%.0f",tf1, tf2, tf3, tf4);
+  sprintf (texto, "%.0f,%.0f,%.0f,%.0f,%.0f",maxTemp,tf1, tf2, tf3, tf4);
+  //Serial.println(texto);
   udp.broadcastTo(texto,1234);
 }
 

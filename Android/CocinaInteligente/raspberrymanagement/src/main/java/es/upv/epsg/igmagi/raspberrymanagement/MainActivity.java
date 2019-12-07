@@ -17,14 +17,16 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
 /**
- * Skeleton of an Android Things activity.
+ * Skeleton o   f an Android Things activity.
  * <p>
  * Android Things peripheral APIs are accessible through the class
  * PeripheralManagerService. For example, the snippet below will open a GPIO pin and
@@ -89,11 +91,16 @@ public class MainActivity extends AppCompatActivity {
 
         new Thread(new Runnable() {
             public void run() {
+
                 while (true) {
+                    List<Integer> temps = new ArrayList<Integer>();
                     try {
                         if (flag) {
-                            TimeUnit.SECONDS.sleep(2);
                             String cadena = uart.leer();
+                            TimeUnit.SECONDS.sleep(1);
+                            //cadena = cadena + ",0";
+                            //cadena.concat(",0");
+                            Log.d("TAG_1", cadena);
                             String[] cadenas = cadena.split(",");
                             if (cadenas[0].contains("0")) {
                                 Log.d("TAG", "luces off");
@@ -109,7 +116,26 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("TAG", "extractor off");
                                 updateBD("fan", false);
                             }
-                            Log.d("TAG", "Temperatura: "+cadenas[2]);
+                            Log.d("TAG", "TemperaturaMaxima: "+cadenas[2]);
+                            Log.d("TAG", "Temperatura1: "+cadenas[3]);
+                            Log.d("TAG", "Temperatura2: "+cadenas[4]);
+                            Log.d("TAG", "Temperatura3: "+cadenas[5]);
+                            Log.d("TAG", "Temperatura4: "+cadenas[6]);
+
+                            temps.clear();
+
+                            temps.add(Integer.parseInt(cadenas[3]));
+                            temps.add(Integer.parseInt(cadenas[4]));
+                            temps.add(Integer.parseInt(cadenas[5]));
+                            temps.add(Integer.parseInt(cadenas[6]));
+
+                            //Log.d("TAG_DINS ARRRAy", ""+temps.get(0));
+
+                            updateTemperaturesBD(temps);
+
+
+
+
                         }
                         //String numero= (cadenas[2].split(":"))[1].replace("\"", "0");
                         //Log.d("TAG",numero);
@@ -150,7 +176,11 @@ public class MainActivity extends AppCompatActivity {
         map.put(field, value);
         mBD.collection("devices").document("conet_kitchen").update(map);
     }
-
+    private void updateTemperaturesBD(List<Integer> t){
+        Map<String, Object> map = new HashMap<>();
+        map.put("cooktop", t);
+        mBD.collection("devices").document("conet_kitchen").update(map);
+    }
     private void refreshView() {
         mBD.collection("devices").document("conet_kitchen").addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override

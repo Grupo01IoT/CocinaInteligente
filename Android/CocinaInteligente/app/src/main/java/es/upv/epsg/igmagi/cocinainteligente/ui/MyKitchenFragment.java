@@ -1,6 +1,7 @@
 package es.upv.epsg.igmagi.cocinainteligente.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,7 +18,9 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -28,15 +31,26 @@ public class MyKitchenFragment extends Fragment {
 
     boolean lights = false;
     boolean extrac = false;
+    List<Integer> temperatures;
     ImageButton lightsbutton;
     ImageButton extractionbutton;
     TextView txtlightswitch, txtextracswitch;
+    ImageButton temp1, temp2, temp3, temp4;
+    int triggerTemperature = 25;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        temperatures = new ArrayList<Integer>();
         View root = inflater.inflate(R.layout.fragment_kitchen, container, false);
+
+        temp1 = (ImageButton) root.findViewById(R.id.temp1);
+        temp2 = (ImageButton) root.findViewById(R.id.temp2);
+        temp3 = (ImageButton) root.findViewById(R.id.temp3);
+        temp4 = (ImageButton) root.findViewById(R.id.temp4);
+
+
         lightsbutton = (ImageButton) root.findViewById(R.id.btnLuzOnOff);
         lightsbutton.setOnClickListener(new View.OnClickListener(){
             @Override public void onClick(View v){
@@ -85,6 +99,48 @@ public class MyKitchenFragment extends Fragment {
                     extractionbutton.setImageResource(R.drawable.btnextraoff);
                     txtextracswitch.setText("OFF");
                 }
+                temperatures = (List<Integer>) documentSnapshot.get("cooktop");
+                Log.d("AA", temperatures.toString());
+                //Log.d("AA", String.valueOf(Integer.parseInt(String.valueOf(temperatures.get(0)))));
+
+                if(Integer.parseInt(String.valueOf(temperatures.get(0))) > triggerTemperature){
+                    //TODO: Cambiar imagen & updatear valor
+                    temp1.setImageResource(R.drawable.vitroon);
+                }else{
+                    //TODO: Restaurar imagen &
+                    temp1.setImageResource(R.drawable.vitrooff);
+
+                }
+                if(Integer.parseInt(String.valueOf(temperatures.get(1))) > triggerTemperature){
+                    //TODO: Cambiar imagen & updatear valor
+                    temp2.setImageResource(R.drawable.vitroon);
+
+                }else{
+                    //TODO: Restaurar imagen &
+                    temp2.setImageResource(R.drawable.vitrooff);
+
+                }
+                if(Integer.parseInt(String.valueOf(temperatures.get(2))) > triggerTemperature){
+                    //TODO: Cambiar imagen & updatear valor
+                    temp3.setImageResource(R.drawable.vitroon);
+
+                }else{
+                    //TODO: Restaurar imagen &
+                    temp3.setImageResource(R.drawable.vitrooff);
+
+                }
+                if(Integer.parseInt(String.valueOf(temperatures.get(3))) > triggerTemperature){
+                    //TODO: Cambiar imagen & updatear valor
+                    temp4.setImageResource(R.drawable.vitroon);
+
+                }else{
+                    //TODO: Restaurar imagen &
+                    temp4.setImageResource(R.drawable.vitrooff);
+
+                }
+
+
+
             }
         });
     }

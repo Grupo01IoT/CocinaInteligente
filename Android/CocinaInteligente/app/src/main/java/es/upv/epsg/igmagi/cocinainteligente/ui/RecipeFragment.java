@@ -41,7 +41,15 @@ public class RecipeFragment extends Fragment {
         rbrating = root.findViewById(R.id.rating);
         rbrating.setRating(recipe.getRatingValue());
         stepsContainer = root.findViewById(R.id.stepsContainer);
-        
+        for (int i = 0; i < recipe.getSteps().size(); i++){
+            TextView ola = new TextView(getContext());
+            ola.setText(i + ". " + recipe.getSteps().get(i));
+            ola.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            stepsContainer.addView(ola);
+        }
+
         return root;
     }
 

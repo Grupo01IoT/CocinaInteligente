@@ -68,8 +68,6 @@ public class ViewRecipesFragment extends Fragment {
                 .setQuery(query, Recipe.class)
                 .build();
 
-        Log.d("RECIPESFRAGMENT", "SetUpRecycleView()");
-
         adapter = new FirestoreRecyclerAdapter<Recipe, RecipeHolder>(options) {
 
             View view;
@@ -80,18 +78,17 @@ public class ViewRecipesFragment extends Fragment {
                 Log.d("RECIPESFRAGMENT", "Recipe name - " + productModel.getName());
                 View v = view.findViewById(R.id.container);
                 final RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
-
+                final String docId = getSnapshots().getSnapshot(position).getId();
 
                 final ImageView image = view.findViewById(R.id.foto);
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("RecipeFragment", productModel.data());
+                        Log.d("RecipeFragment", productModel.data().toString());
                         Log.d("RecipeFragment", productModel.getPicture());
-
+                        productModel.setUid(docId);
                         model.setCurrentRecipeImage(image.getDrawable());
                         model.setCurrentRecipe(productModel);
-
                         Navigation.findNavController(getView()).navigate(R.id.action_nav_view_recipes_to_nav_view_recipe);
 
                     }

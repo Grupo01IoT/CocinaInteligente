@@ -7,7 +7,16 @@ import androidx.lifecycle.ViewModel;
 
 public class RecipeViewModel extends ViewModel {
     private Recipe recipe = new Recipe();
+    private String id;
     private Drawable image;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public void setCurrentRecipe(Recipe recipe){
         this.recipe = recipe;

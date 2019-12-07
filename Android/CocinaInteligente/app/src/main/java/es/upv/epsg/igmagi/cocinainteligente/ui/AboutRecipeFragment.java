@@ -32,9 +32,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -55,6 +60,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,28 +68,42 @@ import java.util.Map;
 import java.util.TooManyListenersException;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import es.upv.epsg.igmagi.cocinainteligente.R;
 import es.upv.epsg.igmagi.cocinainteligente.adapter.CommentHolder;
+import es.upv.epsg.igmagi.cocinainteligente.adapter.CommentListAdapter;
 import es.upv.epsg.igmagi.cocinainteligente.model.Comment;
+import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
 import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.utils.ImageUtils;
+import es.upv.epsg.igmagi.cocinainteligente.utils.RecipeList;
 
 public class AboutRecipeFragment extends Fragment {
     View root;
     View subview;
     private FirebaseFirestore mBD = FirebaseFirestore.getInstance();
     private CollectionReference commentsCollection = mBD.collection("comments");
-    private FirestoreRecyclerAdapter<Comment, CommentHolder> adapter;
+    //private FirestoreRecyclerAdapter<Comment, CommentHolder> adapter;
+    private CommentListAdapter adapter;
     boolean picture = false;
     String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     File file;
+    Recipe recipe;
+
+    ArrayList<Comment> comments = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_about_recipe, container, false);
+        final RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+        recipe = model.getCurrentRecipe();
         setUpRecycleViewByFirestore();
+
+
+
 
         Button comment = root.findViewById(R.id.commentBtn);
         comment.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +169,7 @@ public class AboutRecipeFragment extends Fragment {
                                                 datos.put("body", body);
                                                 datos.put("date", timestamp);
                                                 datos.put("image", pid);
+                                                datos.put("recipe", recipe.getUid());
                                                 mBD.collection("comments").add(datos).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                     @Override
                                                     public void onSuccess(DocumentReference documentReference) {
@@ -184,6 +205,7 @@ public class AboutRecipeFragment extends Fragment {
                                 datos.put("body", body);
                                 datos.put("date", timestamp);
                                 datos.put("image", "null");
+                                datos.put("recipe", recipe.getUid());
                                 mBD.collection("comments").add(datos).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
@@ -206,17 +228,47 @@ public class AboutRecipeFragment extends Fragment {
         return root;
     }
 
+    public String TAG = "commentss";
+
     private void setUpRecycleViewByFirestore() {
-        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerCommentsList);
+        final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerCommentsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        Query query = commentsCollection.orderBy("date", Query.Direction.DESCENDING);
-        FirestoreRecyclerOptions<Comment> options = new FirestoreRecyclerOptions.Builder<Comment>()
-                .setQuery(query, Comment.class)
-                .build();
+        Query query = commentsCollection.orderBy("date", Query.Direction.DESCENDING).whereEqualTo("recipe",recipe.getUid());
 
-        Log.d("RECIPESFRAGMENT", "SetUpRecycleView()");
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "listen:error", e);
+                    return;
+                }
 
+                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
+                    Comment temp;
+                    switch (dc.getType()) {
+                        case ADDED:
+                            temp = new Comment(dc.getDocument().getId(),(String)dc.getDocument().get("author"),(String)dc.getDocument().get("body"),new Timestamp((Date)dc.getDocument().get("date")),(String)dc.getDocument().get("image"));
+                            comments.add(temp);
+                            break;
+                        case MODIFIED:
+                            comments.remove(comments.indexOf(new Comment(dc.getDocument().getId())));
+                            temp = new Comment(dc.getDocument().getId(),(String)dc.getDocument().get("author"),(String)dc.getDocument().get("body"),new Timestamp((Date)dc.getDocument().get("date")),(String)dc.getDocument().get("image"));
+                            comments.add(temp);
+                            break;
+                        case REMOVED:
+                            comments.remove(comments.indexOf(new Comment(dc.getDocument().getId())));
+                            break;
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        adapter = new CommentListAdapter(comments, getContext());
+        recyclerView.setAdapter(adapter);
+
+        /*
         adapter = new FirestoreRecyclerAdapter<Comment, CommentHolder>(options) {
 
             View view;
@@ -270,20 +322,7 @@ public class AboutRecipeFragment extends Fragment {
                         comment.getFormattedDate(), image);
             }
         };
-        recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d("RECIPESFRAGMENT", "OnStart()");
-        adapter.startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        adapter.stopListening();
+        */
     }
 
 }

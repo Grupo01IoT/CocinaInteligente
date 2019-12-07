@@ -44,7 +44,7 @@
             android:layout_height="125dp"
             android:layout_weight="1"
             android:background="@null"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             app:srcCompat="@drawable/btnluzoff" />
 
         <LinearLayout

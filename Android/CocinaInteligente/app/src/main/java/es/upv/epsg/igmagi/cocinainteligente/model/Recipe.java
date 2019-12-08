@@ -1,9 +1,12 @@
 package es.upv.epsg.igmagi.cocinainteligente.model;
 
+import androidx.annotation.Nullable;
+
 import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Recipe {
 
@@ -14,7 +17,7 @@ public class Recipe {
     public String picture;
     public String tipo;
     public ArrayList<String> steps;
-    public ArrayList<Integer> ratings;
+    public HashMap<String,Long> ratings;
     public String user;
     public int duration;
 
@@ -24,13 +27,13 @@ public class Recipe {
         this.description = description;
         this.picture ="";
         this.steps = new ArrayList<String>();
-        this.ratings = new ArrayList<Integer>();
+        this.ratings =new HashMap<String,Long>();
         this.user = "Paco";
         this.duration = duracion;
     }
 
     public Recipe(String uid, String name, String description, String picture,
-                  ArrayList<Integer> rating, String user, int duracion) {
+                  HashMap<String,Long> rating, String user, int duracion) {
         this.uid = uid;
         this.name = name;
         this.description = description;
@@ -41,14 +44,14 @@ public class Recipe {
     }
 
     public Recipe(String uid, String name, String description, Timestamp creationDate, String picture,
-                  ArrayList<String> steps, ArrayList<Integer> rating, String user, int duracion) {
+                  ArrayList<String> steps, HashMap<String,Long> rating, String user, int duracion) {
         this.uid = uid;
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
         this.picture = picture;
         this.steps = steps;
-        this.ratings = rating;
+        this.ratings = (rating==null?new HashMap<String,Long>():rating);
         this.user = user;
         this.duration = duracion;
     }
@@ -60,6 +63,10 @@ public class Recipe {
         this.duration = 50;
         this.ratings = new ArrayList<Integer>();
          */
+    }
+
+    public Recipe(String id) {
+        this.uid = id;
     }
 
     public String getUid() {
@@ -114,9 +121,9 @@ public class Recipe {
     public float getRatingValue() {
         //float r = (float) 33.22;
         float r = 0;
+        if (ratings == null) return r;
         if(ratings.size() > 0){
-
-            for (int i: this.ratings) {
+            for (Long i: this.ratings.values()) {
                 r+=i;
             }
             r = r/ratings.size();
@@ -124,6 +131,12 @@ public class Recipe {
         return r;
     }
 
+    public float getRatingValue(String uid) {
+        float r = 0;
+        if (ratings == null) return r;
+        if (ratings.containsKey(uid)) return ratings.get(uid);
+        else return getRatingValue();
+    }
 
     public String getTipo() {
         return tipo;
@@ -133,11 +146,11 @@ public class Recipe {
         this.tipo = tipo;
     }
 
-    public ArrayList<Integer> getRatings() {
+    public HashMap<String,Long> getRatings() {
         return ratings;
     }
 
-    public void setRatings(ArrayList<Integer> ratings) {
+    public void setRatings(HashMap<String,Long> ratings) {
         this.ratings = ratings;
     }
 
@@ -187,6 +200,12 @@ public class Recipe {
         //return rating.size();
         //return String.valueOf(rating.size())+" ratings.";
         return (this.name + this.description + this.user);
-
     }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        boolean equals = ((String)((Recipe)obj).getUid()).equals((String)this.getUid());
+        return equals;
+    }
+
 }

@@ -102,9 +102,6 @@ public class AboutRecipeFragment extends Fragment {
         recipe = model.getCurrentRecipe();
         setUpRecycleViewByFirestore();
 
-
-
-
         Button comment = root.findViewById(R.id.commentBtn);
         comment.setOnClickListener(new View.OnClickListener() {
             @Override

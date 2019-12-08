@@ -62,7 +62,9 @@ import es.upv.epsg.igmagi.cocinainteligente.LoginActivity;
 import es.upv.epsg.igmagi.cocinainteligente.MainActivity;
 import es.upv.epsg.igmagi.cocinainteligente.R;
 import es.upv.epsg.igmagi.cocinainteligente.model.Device;
+import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.model.User;
+import es.upv.epsg.igmagi.cocinainteligente.model.UserViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.ui.ProfileFragment;
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
@@ -215,8 +217,12 @@ public class HomeFragment extends Fragment {
                         documentSnapshot.getString("email"), documentSnapshot.getString("image"),
                         documentSnapshot.getLong("fidelity"), documentSnapshot.getDate("joinDate"),
                         (ArrayList<String>) documentSnapshot.get("recipes"),
-                        (ArrayList<String>) documentSnapshot.get("favouriteRecipes"),
+                        (ArrayList<String>) documentSnapshot.get("favouriteReceips"),
                         (ArrayList<String>) documentSnapshot.get("devices"));
+
+                final UserViewModel model = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+                model.setCurrentUser(user);
+                Log.d("AAAAA",model.getCurrentUser().getFavouriteReceipts().toString());
                 refreshUser();
                 db.collection("devices").addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override

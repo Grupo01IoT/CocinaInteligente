@@ -22,7 +22,7 @@ public class User {
     public long fidelity;
     public Date joinDate;
     public ArrayList<String> recipes;
-    public ArrayList<String> favouriteReceipts;
+    public ArrayList<String> favouriteReceipts = new ArrayList<>();
     public ArrayList<String> devices;
 
     public User() {

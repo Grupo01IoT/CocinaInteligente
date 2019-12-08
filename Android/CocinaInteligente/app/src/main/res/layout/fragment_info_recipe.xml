@@ -30,7 +30,7 @@
             android:layout_height="47dp"
             android:numStars="5"
             android:rating="3.5"
-            android:stepSize="0.5" />
+            android:stepSize="1" />
 
         <TextView
             android:id="@+id/description"

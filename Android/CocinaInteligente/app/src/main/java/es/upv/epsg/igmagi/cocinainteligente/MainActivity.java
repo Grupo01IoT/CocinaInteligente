@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -20,6 +21,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
+import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
+import es.upv.epsg.igmagi.cocinainteligente.model.User;
+import es.upv.epsg.igmagi.cocinainteligente.model.UserViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
 
@@ -55,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_view_recipes, R.id.nav_kitchen, R.id.nav_kitchen,R.id.nav_preferences, R.id.nav_about)
+                R.id.nav_home, R.id.nav_view_recipes, R.id.nav_kitchen, R.id.nav_kitchen, R.id.nav_preferences, R.id.nav_about)
                 .setDrawerLayout(drawer)
                 .build();
         // From activity main drawer control.
@@ -79,14 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_favorite:
-                    item.setIcon((item.getIcon()==getDrawable(R.drawable.baseline_favorite_24)?R.drawable.baseline_favorite_border_24:R.drawable.baseline_favorite_24));
-                return true;
-            default:
-                break;
-        }
-
         return false;
     }
 

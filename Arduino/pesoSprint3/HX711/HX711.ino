@@ -9,6 +9,12 @@
 **/
 #include "HX711.h"
 
+#include "WiFi.h" 
+#include "AsyncUDP.h"
+AsyncUDP udp;
+const char * ssid = "TEAM_01"; 
+const char * password = "123456789";
+char texto[20];
 
 // HX711 circuit wiring
 const int LOADCELL_DOUT_PIN = 15;

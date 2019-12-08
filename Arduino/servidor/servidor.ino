@@ -16,6 +16,8 @@
 #define PINPILOTOPRESENCIA 15
 #define TAMBUFFER 60
 
+#define PINGAS 19
+
 
 const char * ssid = "TEAM_01"; 
 const char * password = "123456789";
@@ -29,6 +31,7 @@ String luces = "0";
 String presencia = "0";
 String extractor = "0";
 String forUART = "";
+String gas = "no hay fuga";
 void setup() { 
 //  M5.begin(); 
 //  M5.Lcd.setTextSize(2); //Tamaño del texto
@@ -57,6 +60,7 @@ void setup() {
    pinMode(PINEXTRACTOR, OUTPUT);
    pinMode(PINLUZ, OUTPUT);
    pinMode(PINPILOTOPRESENCIA, OUTPUT);
+   pinMode(PINGAS, OUTPUT);
    digitalWrite(PINPILOTOPRESENCIA, HIGH);
    digitalWrite(PINLUZ, LOW);
    
@@ -122,6 +126,14 @@ void loop() {
         digitalWrite(PINPILOTOPRESENCIA, LOW);
         digitalWrite(PINLUZ, LOW);
       }
+      if(strcmp(texto, "G")==0){
+        gas = "fuga de gas";
+        digitalWrite(PINGAS, HIGH);
+      } else if(strcmp(texto, "V")==0){
+        gas = "no hay fuga";
+        digitalWrite(PINGAS, LOW);
+      }
+        
       //SI EL TEXTO RECIBIDO NO SON ESOS, SIGNIFICA QUE ES UNA MEDIDA DE TEMPERATURA
     /*else if(strlen(texto) > 1){
         String txt;
@@ -184,7 +196,7 @@ void loop() {
       }
         // forUART = "luces:"+luces+",presencia:"+presencia+",temperatura:"+temperatura;
         //Serial.println(forUART);
-        Serial.println(luces+","+extractor+","+temperatura+",FinTrama");
+        Serial.println(luces+","+extractor+","+temperatura+","+gas+",FinTrama");
         delay(1000);
     }
   }

@@ -20,7 +20,7 @@ char texto[20];
 const int LOADCELL_DOUT_PIN = 15;
 const int LOADCELL_SCK_PIN = 2;
 
-int peso  = 0;
+float peso  = 0;
 HX711 scale;
 
 void setup() {
@@ -70,6 +70,27 @@ void setup() {
 						// by the SCALE parameter set with set_scale
 
   Serial.println("Readings:");
+
+  WiFi.mode(WIFI_STA); 
+  WiFi.begin(ssid, password); 
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) { 
+    Serial.println("WiFi Failed"); 
+    while(1) { 
+      delay(1000); 
+      } 
+  }   
+  if(udp.listen(1234)) { 
+    Serial.print("UDP Listening on IP: "); 
+    Serial.println(WiFi.localIP()); 
+    udp.onPacket([](AsyncUDPPacket packet) {
+      int i=20; 
+      while (i--) {
+        //(texto+i)=(packet.data()+i);
+      } 
+      //rec=1;        //indica mensaje recibido
+    });
+  }
+  //scale.tare(); 
 }
 
 void tare_weight(){
@@ -80,11 +101,18 @@ void loop() {
   //Serial.print("one reading:\t");
   //Serial.print(scale.get_units(), 1);
   Serial.print("\t| average:\t");
-  //Serial.println(scale.get_units(20), 1);
-  peso = scale.get_units(20);
+  Serial.println(scale.get_units(10), 1);
+  
+  
+  peso = scale.get_units(10);
   Serial.println(peso);
 
-  scale.power_down();			        // put the ADC in sleep mode
-  delay(200);
-  scale.power_up();
+  
+  sprintf (texto, "Y%f" ,peso);
+  udp.broadcastTo(texto,1234);
+  
+
+  //scale.power_down();			        // put the ADC in sleep mode
+  delay(900);
+  //scale.power_up();
 }

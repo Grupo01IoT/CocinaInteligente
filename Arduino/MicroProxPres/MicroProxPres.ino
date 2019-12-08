@@ -190,6 +190,9 @@ void setup() {
     Serial.println("Alerta: fuga de gas.");
     sprintf (texto2, "G");
     udp.broadcastTo(texto2,1234);
+  } else {
+    sprintf (texto2, "V");
+    udp.broadcastTo(texto2,1234);
   }
   delay(500);
   //programacion del temporizador del RTC para que despierte 

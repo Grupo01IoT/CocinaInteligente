@@ -1,18 +1,16 @@
 package es.upv.epsg.igmagi.cocinainteligente.ui;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,9 +32,9 @@ public class MyKitchenFragment extends Fragment {
     List<Integer> temperatures;
     ImageButton lightsbutton;
     ImageButton extractionbutton;
-    TextView txtlightswitch, txtextracswitch;
+    TextView txtlightswitch, txtextracswitch, txttemp1,txttemp2,txttemp3,txttemp4;
     ImageButton temp1, temp2, temp3, temp4;
-    int triggerTemperature = 25;
+    int triggerTemperature = 60;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +47,11 @@ public class MyKitchenFragment extends Fragment {
         temp2 = (ImageButton) root.findViewById(R.id.temp2);
         temp3 = (ImageButton) root.findViewById(R.id.temp3);
         temp4 = (ImageButton) root.findViewById(R.id.temp4);
+
+        txttemp1 = root.findViewById(R.id.t1);
+        txttemp2 = root.findViewById(R.id.t2);
+        txttemp3 = root.findViewById(R.id.t3);
+        txttemp4 = root.findViewById(R.id.t4);
 
 
         lightsbutton = (ImageButton) root.findViewById(R.id.btnLuzOnOff);
@@ -103,39 +106,51 @@ public class MyKitchenFragment extends Fragment {
                 Log.d("AA", temperatures.toString());
                 //Log.d("AA", String.valueOf(Integer.parseInt(String.valueOf(temperatures.get(0)))));
 
+                txttemp1.setText(String.valueOf(temperatures.get(0)+"ºC"));
+                txttemp2.setText(String.valueOf(temperatures.get(1)+"ºC"));
+                txttemp3.setText(String.valueOf(temperatures.get(2)+"ºC"));
+                txttemp4.setText(String.valueOf(temperatures.get(3)+"ºC"));
+
                 if(Integer.parseInt(String.valueOf(temperatures.get(0))) > triggerTemperature){
                     //TODO: Cambiar imagen & updatear valor
                     temp1.setImageResource(R.drawable.vitroon);
+                    txttemp1.setTypeface(null, Typeface.BOLD);
                 }else{
                     //TODO: Restaurar imagen &
                     temp1.setImageResource(R.drawable.vitrooff);
+                    txttemp1.setTypeface(null, Typeface.NORMAL);
 
                 }
                 if(Integer.parseInt(String.valueOf(temperatures.get(1))) > triggerTemperature){
                     //TODO: Cambiar imagen & updatear valor
                     temp2.setImageResource(R.drawable.vitroon);
+                    txttemp2.setTypeface(null, Typeface.BOLD);
 
                 }else{
                     //TODO: Restaurar imagen &
                     temp2.setImageResource(R.drawable.vitrooff);
-
+                    txttemp2.setTypeface(null, Typeface.NORMAL);
                 }
                 if(Integer.parseInt(String.valueOf(temperatures.get(2))) > triggerTemperature){
                     //TODO: Cambiar imagen & updatear valor
                     temp3.setImageResource(R.drawable.vitroon);
+                    txttemp3.setTypeface(null, Typeface.BOLD);
 
                 }else{
                     //TODO: Restaurar imagen &
                     temp3.setImageResource(R.drawable.vitrooff);
+                    txttemp3.setTypeface(null, Typeface.NORMAL);
 
                 }
                 if(Integer.parseInt(String.valueOf(temperatures.get(3))) > triggerTemperature){
                     //TODO: Cambiar imagen & updatear valor
                     temp4.setImageResource(R.drawable.vitroon);
+                    txttemp4.setTypeface(null, Typeface.BOLD);
 
                 }else{
                     //TODO: Restaurar imagen &
                     temp4.setImageResource(R.drawable.vitrooff);
+                    txttemp4.setTypeface(null, Typeface.NORMAL);
 
                 }
 

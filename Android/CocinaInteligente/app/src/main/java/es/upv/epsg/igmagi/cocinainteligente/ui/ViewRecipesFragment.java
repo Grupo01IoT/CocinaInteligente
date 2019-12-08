@@ -96,16 +96,26 @@ public class ViewRecipesFragment extends Fragment {
                     Recipe temp;
                     switch (dc.getType()) {
                         case ADDED:
-                            temp = getRecipeFromDoc(dc);
-                            if (!recipes.contains(temp)) {
-                                recipes.add(temp);
+                            try {
+                                temp = getRecipeFromDoc(dc);
+                                if (!recipes.contains(temp)) {
+                                    recipes.add(temp);
+                                }
+                            } catch (ClassCastException ex)
+                            {
+                                Toast.makeText(getContext(),"ESTAS FLIPANt",Toast.LENGTH_SHORT);
                             }
                             break;
                         case MODIFIED:
                             Log.d("asdd", "" + recipes.indexOf(new Recipe(dc.getDocument().getId())));
                             recipes.remove(recipes.indexOf(new Recipe(dc.getDocument().getId())));
-                            temp = getRecipeFromDoc(dc);
+                            try {
+                                temp = getRecipeFromDoc(dc);
                             recipes.add(temp);
+                            } catch (ClassCastException ex)
+                            {
+                                Toast.makeText(getContext(),"ESTAS FLIPANt",Toast.LENGTH_SHORT);
+                            }
                             break;
                         case REMOVED:
                             Log.d("asdd", "" + recipes.indexOf(new Recipe(dc.getDocument().getId())));
@@ -157,7 +167,7 @@ public class ViewRecipesFragment extends Fragment {
 
     }
 
-    private Recipe getRecipeFromDoc(DocumentChange dc) {
+    private Recipe getRecipeFromDoc(DocumentChange dc) throws ClassCastException{
         return new Recipe(
                 dc.getDocument().getId(),
                 (String) dc.getDocument().get("name"),

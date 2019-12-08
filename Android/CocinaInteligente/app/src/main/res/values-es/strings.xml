@@ -35,4 +35,5 @@
     <string name="device_info_paired">Dispositivos emparejados!</string>
     <string name="menu_kitchen">Mi Cocina</string>
     <string name="menu_vitro">Mi Vitrocerámica</string>
+    <string name="menu_register">Mis registros</string>
 </resources>

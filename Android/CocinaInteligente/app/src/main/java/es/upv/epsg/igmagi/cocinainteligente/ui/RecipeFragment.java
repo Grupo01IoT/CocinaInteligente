@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -32,7 +33,7 @@ public class RecipeFragment extends Fragment {
     TextView tvname, tvdescription;
     RatingBar rbrating;
     ImageView ivfoto;
-    LinearLayout stepsContainer;
+    ViewFlipper stepsContainer;
     Recipe recipe;
     User user;
 
@@ -67,16 +68,18 @@ public class RecipeFragment extends Fragment {
 
             }
         });
-        stepsContainer = root.findViewById(R.id.stepsContainer);
-        if(recipe.steps != null)
-        for (int i = 0; i < recipe.getSteps().size(); i++){
-            TextView ola = new TextView(getContext());
-            ola.setText(i + ". " + recipe.getSteps().get(i));
-            ola.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-            stepsContainer.addView(ola);
+        stepsContainer = root.findViewById(R.id.stepFlipper);
+        if(recipe.steps != null){
+            for (int i = 0; i < recipe.getSteps().size(); i++){
+                LayoutInflater li = LayoutInflater.from(getContext());
+                View theview = li.inflate(R.layout.fragment_steps, null);
+                ((TextView) theview.findViewById(R.id.stepNumber)).setText((i+1)+".");
+                ((TextView) theview.findViewById(R.id.stepInfo)).setText(recipe.getSteps().get(i));
+                stepsContainer.addView(theview);
+            }
+            stepsContainer.setAutoStart(true);
         }
+
 
         return root;
     }

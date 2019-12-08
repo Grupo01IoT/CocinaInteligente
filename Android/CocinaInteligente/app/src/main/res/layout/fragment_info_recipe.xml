@@ -3,66 +3,77 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/recipephoto"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/img_recipe"
-        android:scaleType="centerCrop" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/infoRecipe"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/name"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="30sp" />
+            android:orientation="vertical" >
 
-        <RatingBar
-            android:id="@+id/rating"
-            style="@style/Widget.AppCompat.RatingBar"
-            android:layout_width="241dp"
-            android:layout_height="47dp"
-            android:numStars="5"
-            android:rating="3.5"
-            android:stepSize="1" />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:text="TextView"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Steps"
-            android:textSize="24dp" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/recipephoto"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/img_recipe"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
-                android:id="@+id/stepsContainer"
+                android:id="@+id/infoRecipe"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="10dp" />
-        </ScrollView>
+                android:padding="10dp">
 
-        <!--   <LinearLayout
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textSize="30sp" />
+
+                <RatingBar
+                    android:id="@+id/rating"
+                    style="@style/Widget.AppCompat.RatingBar"
+                    android:layout_width="241dp"
+                    android:layout_height="47dp"
+                    android:numStars="5"
+                    android:rating="3.5"
+                    android:stepSize="1" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textSize="14sp" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Steps"
+                    android:textSize="24dp" />
+
+                <ViewFlipper
+                    android:id="@+id/stepFlipper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:padding="7.5dp" />
+
+                <!--   <LinearLayout
             android:id="@+id/stepList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"></LinearLayout>
     -->
-    </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

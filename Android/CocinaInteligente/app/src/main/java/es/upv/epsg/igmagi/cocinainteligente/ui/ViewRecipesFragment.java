@@ -11,7 +11,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -62,6 +67,7 @@ public class ViewRecipesFragment extends Fragment {
 
     private RecipeListAdapter adapter;
     ArrayList<Recipe> recipes = new ArrayList<>();
+    ArrayList<Recipe> recipesFilter = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -70,11 +76,12 @@ public class ViewRecipesFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_view_recipes, container, false);
         setUpRecycleViewByFirestore();
 
+
         return root;
     }
 
     private void setUpRecycleViewByFirestore() {
-        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerRecipeList);
+        final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerRecipeList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Query query = recipesCollection.orderBy("name", Query.Direction.DESCENDING);
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -111,10 +118,46 @@ public class ViewRecipesFragment extends Fragment {
         });
 
         adapter = new RecipeListAdapter(recipes, getContext(), getActivity(), getView());
+
         recyclerView.setAdapter(adapter);
+
+
+        Spinner sp = root.findViewById(R.id.filterSpinner);
+        ArrayAdapter<CharSequence> spAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.recipe_type, android.R.layout.simple_spinner_item);
+        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(spAdapter);
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                Log.d("aaAAA", "TIPO : " + item);
+                if (item.equals("Todas")) {
+
+                    Log.d("aaAAA", "A  ");
+                    adapter = new RecipeListAdapter(recipes, getContext(), getActivity(), getView());
+                } else {
+                    Log.d("aaAAA", "B  ");
+                    recipesFilter.clear();
+                    for (Recipe r : recipes) {
+                        Log.d("aaAAA", "item tipo : " + r.getTipo());
+                        if (item.equals(r.getTipo())){
+                            recipesFilter.add(r);
+                            Log.d("aaAAA", "item lista : " + r.getName());
+                        }
+                    }
+                    adapter = new RecipeListAdapter(recipesFilter, getContext(), getActivity(), getView());
+                }
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
     }
 
-    private Recipe getRecipeFromDoc(DocumentChange dc){
+    private Recipe getRecipeFromDoc(DocumentChange dc) {
         return new Recipe(
                 dc.getDocument().getId(),
                 (String) dc.getDocument().get("name"),
@@ -124,7 +167,8 @@ public class ViewRecipesFragment extends Fragment {
                 (ArrayList<String>) dc.getDocument().get("steps"),
                 (HashMap<String, Long>) dc.getDocument().get("ratings"),
                 (String) dc.getDocument().get("user"),
-                Integer.parseInt(dc.getDocument().get("duration")+"")
+                (String) dc.getDocument().get("tipo"),
+                Integer.parseInt(dc.getDocument().get("duration") + "")
         );
     }
 

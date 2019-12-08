@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="recipe_type">
+        <item>Todas</item>
+        <item>Principal</item>
+        <item>Entrante</item>
+        <item>Postre</item>
+        <item>Especial</item>
+    </string-array>
+</resources>

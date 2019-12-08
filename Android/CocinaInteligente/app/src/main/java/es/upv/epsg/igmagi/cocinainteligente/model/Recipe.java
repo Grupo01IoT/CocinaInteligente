@@ -44,7 +44,7 @@ public class Recipe {
     }
 
     public Recipe(String uid, String name, String description, Timestamp creationDate, String picture,
-                  ArrayList<String> steps, HashMap<String,Long> rating, String user, int duracion) {
+                  ArrayList<String> steps, HashMap<String,Long> rating, String user, String tipo,int duracion) {
         this.uid = uid;
         this.name = name;
         this.description = description;
@@ -53,6 +53,7 @@ public class Recipe {
         this.steps = steps;
         this.ratings = (rating==null?new HashMap<String,Long>():rating);
         this.user = user;
+        this.tipo = tipo;
         this.duration = duracion;
     }
 

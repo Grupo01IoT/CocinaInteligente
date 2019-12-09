@@ -16,6 +16,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import org.eclipse.paho.client.mqttv3.MqttClient;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,16 +27,23 @@ import javax.annotation.Nullable;
 
 import es.upv.epsg.igmagi.cocinainteligente.R;
 
-public class MyKitchenFragment extends Fragment {
+//public class MyKitchenFragment extends Fragment implements org.eclipse.paho.client.mqttv3.MqttCallback{
+public class MyKitchenFragment extends Fragment{
+    private MqttClient client;
+    private static final String TAG = "KitchenFragment";
 
     boolean lights = false;
     boolean extrac = false;
     List<Integer> temperatures;
+    //int weight;
     ImageButton lightsbutton;
     ImageButton extractionbutton;
-    TextView txtlightswitch, txtextracswitch, txttemp1,txttemp2,txttemp3,txttemp4;
+    TextView txtlightswitch, txtextracswitch, txttemp1,txttemp2,txttemp3,txttemp4, txtalert, txtweight, txtleak;
     ImageButton temp1, temp2, temp3, temp4;
     int triggerTemperature = 60;
+
+    //For mqtt
+    private String activeKitchen;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +62,10 @@ public class MyKitchenFragment extends Fragment {
         txttemp3 = root.findViewById(R.id.t3);
         txttemp4 = root.findViewById(R.id.t4);
 
+        txtalert = root.findViewById(R.id.alert);
+
+        txtweight = root.findViewById(R.id.tvweight);
+        //txtleak = root.findViewById(R.id.tvleak);
 
         lightsbutton = (ImageButton) root.findViewById(R.id.btnLuzOnOff);
         lightsbutton.setOnClickListener(new View.OnClickListener(){
@@ -68,6 +81,57 @@ public class MyKitchenFragment extends Fragment {
         });
         txtextracswitch = (TextView) root.findViewById(R.id.tvExtraccionOnOff);
         txtlightswitch = (TextView) root.findViewById(R.id.tvLuzOnOff);
+
+        //MQTT
+        /*
+        try {
+            Log.i(TAG, "Conectando al broker " + broker);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            connOpts.setKeepAliveInterval(60);
+            connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),
+                    qos, false);
+            client = new MqttClient(broker, clientId, new MemoryPersistence());
+            client.connect(connOpts);
+            //client.connect();
+        } catch (MqttException e) {
+            Log.e(TAG, "Error al conectar.", e);
+        }
+
+
+        //ESCRIBIR
+        try {
+            Log.i(TAG, "Publicando mensaje: " + "hola");
+            MqttMessage message = new MqttMessage("true".getBytes());
+            message.setQos(qos);
+            message.setRetained(false);
+            client.publish(topicRoot+enUso, message);
+        } catch (MqttException e) {
+            Log.e(TAG, "Error al publicar.", e);
+        }*/
+        //CONEXION
+       /* try{
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            connOpts.setKeepAliveInterval(60);
+            connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),
+                    qos, false);
+            client.connect(connOpts);
+
+        }catch(MqttException e) {
+            Log.e(TAG, "Error al conectarESTE.", e);
+        }*/
+        //LEER
+        /*try {
+            Log.i(TAG, "Suscrito a " + topicRoot+enUso);
+            client.subscribe(topicRoot+enUso, qos);
+            client.setCallback(this);
+        } catch (MqttException e) {
+            Log.e(TAG, "Error al suscribir.", e);
+        }
+
+
+         */
         refreshView();
 
         // Inflate the layout for this fragment
@@ -89,10 +153,14 @@ public class MyKitchenFragment extends Fragment {
                 if (lights = documentSnapshot.getBoolean("lights")){
                     lightsbutton.setImageResource(R.drawable.btnluzon);
                     txtlightswitch.setText("ON");
+                    //mqtt.setVisibility(View.VISIBLE);
+
                 }
                 else {
                     lightsbutton.setImageResource(R.drawable.btnluzoff);
                     txtlightswitch.setText("OFF");
+                    //mqtt.setVisibility(View.GONE);
+
                 }
                 if (extrac = documentSnapshot.getBoolean("fan")) {
                     extractionbutton.setImageResource(R.drawable.btnextraon);
@@ -102,6 +170,15 @@ public class MyKitchenFragment extends Fragment {
                     extractionbutton.setImageResource(R.drawable.btnextraoff);
                     txtextracswitch.setText("OFF");
                 }
+                if (documentSnapshot.getBoolean("leak")){
+
+                    txtalert.setVisibility(View.VISIBLE);
+
+                }
+                else {
+                    txtalert.setVisibility(View.GONE);
+                }
+
                 temperatures = (List<Integer>) documentSnapshot.get("cooktop");
                 Log.d("AA", temperatures.toString());
                 //Log.d("AA", String.valueOf(Integer.parseInt(String.valueOf(temperatures.get(0)))));
@@ -111,44 +188,43 @@ public class MyKitchenFragment extends Fragment {
                 txttemp3.setText(String.valueOf(temperatures.get(2)+"ºC"));
                 txttemp4.setText(String.valueOf(temperatures.get(3)+"ºC"));
 
+                if(documentSnapshot.getLong("weight") < 0){
+                    txtweight.setText("0g");
+                }else{
+
+                    txtweight.setText(documentSnapshot.getLong("weight").toString()+"g");
+                }
+
                 if(Integer.parseInt(String.valueOf(temperatures.get(0))) > triggerTemperature){
-                    //TODO: Cambiar imagen & updatear valor
                     temp1.setImageResource(R.drawable.vitroon);
                     txttemp1.setTypeface(null, Typeface.BOLD);
                 }else{
-                    //TODO: Restaurar imagen &
                     temp1.setImageResource(R.drawable.vitrooff);
                     txttemp1.setTypeface(null, Typeface.NORMAL);
 
                 }
                 if(Integer.parseInt(String.valueOf(temperatures.get(1))) > triggerTemperature){
-                    //TODO: Cambiar imagen & updatear valor
                     temp2.setImageResource(R.drawable.vitroon);
                     txttemp2.setTypeface(null, Typeface.BOLD);
 
                 }else{
-                    //TODO: Restaurar imagen &
                     temp2.setImageResource(R.drawable.vitrooff);
                     txttemp2.setTypeface(null, Typeface.NORMAL);
                 }
                 if(Integer.parseInt(String.valueOf(temperatures.get(2))) > triggerTemperature){
-                    //TODO: Cambiar imagen & updatear valor
                     temp3.setImageResource(R.drawable.vitroon);
                     txttemp3.setTypeface(null, Typeface.BOLD);
 
                 }else{
-                    //TODO: Restaurar imagen &
                     temp3.setImageResource(R.drawable.vitrooff);
                     txttemp3.setTypeface(null, Typeface.NORMAL);
 
                 }
                 if(Integer.parseInt(String.valueOf(temperatures.get(3))) > triggerTemperature){
-                    //TODO: Cambiar imagen & updatear valor
                     temp4.setImageResource(R.drawable.vitroon);
                     txttemp4.setTypeface(null, Typeface.BOLD);
 
                 }else{
-                    //TODO: Restaurar imagen &
                     temp4.setImageResource(R.drawable.vitrooff);
                     txttemp4.setTypeface(null, Typeface.NORMAL);
 
@@ -159,5 +235,44 @@ public class MyKitchenFragment extends Fragment {
             }
         });
     }
+/*
+    @Override public void onDestroy() {
+        try {
+            Log.i(TAG, "Desconectado");
+            if(client.isConnected()){
+                client.disconnect();
+            }
+        } catch (MqttException e) {
+            Log.e(TAG, "Error al desconectar.", e);
+        }
+        super.onDestroy();
+    }
 
+    @Override
+    public void connectionLost(Throwable cause) {
+        Log.d(TAG, "connectionLost: ");
+    }
+
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        String payload = new String(message.getPayload());
+        if(payload=="true"){
+            mqtt.setVisibility(View.VISIBLE);
+        }else{
+            mqtt.setVisibility(View.GONE);
+        }
+        Log.d(TAG, "messageArrived:"+payload);
+    }
+
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken token) {
+        try {
+
+            Log.i(TAG, "deliveryComplete: "+token.getMessage());
+        }catch(MqttException e) {
+            Log.e(TAG, "Error al deliver.", e);
+        }
+    }
+
+ */
 }

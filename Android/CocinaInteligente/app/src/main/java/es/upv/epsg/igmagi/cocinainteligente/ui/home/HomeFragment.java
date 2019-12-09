@@ -261,7 +261,12 @@ public class HomeFragment extends Fragment {
             }
         }
         if(notification == false){
-            notificationManager.cancel(NOTIFICACION_ID);
+            try{
+
+                notificationManager.cancel(NOTIFICACION_ID);
+            }catch(Exception e){
+
+            }
         }
         notification = false;
 

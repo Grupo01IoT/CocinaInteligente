@@ -17,6 +17,12 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +30,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
+
+import static com.example.igmagi.shared.Mqtt.broker;
+import static com.example.igmagi.shared.Mqtt.clientId;
+import static com.example.igmagi.shared.Mqtt.enUso;
+import static com.example.igmagi.shared.Mqtt.qos;
+import static com.example.igmagi.shared.Mqtt.topicRoot;
 
 /**
  * Skeleton o   f an Android Things activity.
@@ -45,7 +57,7 @@ import javax.annotation.Nullable;
  * @see <a href="https://github.com/androidthings/contrib-drivers#readme">https://github.com/androidthings/contrib-drivers#readme</a>
  */
 public class MainActivity extends AppCompatActivity {
-
+    private MqttClient client;
     private SharedPreferences prefs;
     private ArduinoUart uart;
     private FirebaseFirestore mBD = FirebaseFirestore.getInstance();
@@ -54,10 +66,31 @@ public class MainActivity extends AppCompatActivity {
     private Boolean flag = true;
     private Button unlock;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //MQTT
+
+        try {
+            Log.i("EE", "Conectando al broker " + broker);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            connOpts.setKeepAliveInterval(60);
+            connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),
+                    qos, false);
+            client = new MqttClient(broker, clientId, new MemoryPersistence());
+            client.connect(connOpts);
+            //client.connect();
+        } catch (MqttException e) {
+            Log.e("EE", "Error al conectar.", e);
+        }
+
+
+
+
         TextView tv = findViewById(R.id.testText);
         lightsbutton = findViewById(R.id.btnLightsOnOff);
         extractionbutton = findViewById(R.id.btnExtraccionOnOff);
@@ -102,13 +135,34 @@ public class MainActivity extends AppCompatActivity {
                             //cadena.concat(",0");
                             Log.d("TAG_1", cadena);
                             String[] cadenas = cadena.split(",");
+                            //LIGHTS + PRESENCE
                             if (cadenas[0].contains("0")) {
                                 Log.d("TAG", "luces off");
                                 updateBD("lights", false);
+                                //ESCRIBIR
+                                try {
+                                    Log.i("ESCRI", "Publicando mensaje: " + "FALSE");
+                                    MqttMessage message = new MqttMessage("false".getBytes());
+                                    message.setQos(qos);
+                                    message.setRetained(false);
+                                    client.publish(topicRoot+enUso, message);
+                                } catch (MqttException e) {
+                                    Log.e("ESCRI", "Error al publicar.", e);
+                                }
                             } else if (cadenas[0].contains("1")) {
                                 Log.d("TAG", "luces on");
                                 updateBD("lights", true);
+                                try {
+                                    Log.i("ESCRI", "Publicando mensaje: " + "TRUE");
+                                    MqttMessage message = new MqttMessage("true".getBytes());
+                                    message.setQos(qos);
+                                    message.setRetained(false);
+                                    client.publish(topicRoot+enUso, message);
+                                } catch (MqttException e) {
+                                    Log.e("ESCRI", "Error al publicar.", e);
+                                }
                             }
+                            //FAN ON OFF
                             if (cadenas[1].contains("1")) {
                                 Log.d("TAG", "extractor on");
                                 updateBD("fan", true);
@@ -116,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("TAG", "extractor off");
                                 updateBD("fan", false);
                             }
+
+                            //TEMPERATURES
                             Log.d("TAG", "TemperaturaMaxima: "+cadenas[2]);
                             Log.d("TAG", "Temperatura1: "+cadenas[3]);
                             Log.d("TAG", "Temperatura2: "+cadenas[4]);
@@ -133,8 +189,16 @@ public class MainActivity extends AppCompatActivity {
 
                             updateTemperaturesBD(temps);
 
+                            //FUGA ON OFF
+                            if (cadenas[7].contains("1")) {
+                                Log.d("TAG", "FUGA");
+                                updateBD("leak", true);
+                            } else if (cadenas[7].contains("0")) {
+                                Log.d("TAG", "FUGA off");
+                                updateBD("leak", false);
+                            }
 
-
+                            updateWeightBD(Integer.parseInt(cadenas[8]));
 
                         }
                         //String numero= (cadenas[2].split(":"))[1].replace("\"", "0");
@@ -176,6 +240,13 @@ public class MainActivity extends AppCompatActivity {
         map.put(field, value);
         mBD.collection("devices").document("conet_kitchen").update(map);
     }
+
+    private void updateWeightBD(int value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("weight", value);
+        mBD.collection("devices").document("conet_kitchen").update(map);
+    }
+
     private void updateTemperaturesBD(List<Integer> t){
         Map<String, Object> map = new HashMap<>();
         map.put("cooktop", t);

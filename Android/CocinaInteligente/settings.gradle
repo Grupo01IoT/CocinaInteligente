@@ -1,2 +1,2 @@
-include ':app', ':raspberrymanagement'
+include ':app', ':raspberrymanagement', ':shared'
 rootProject.name='CocinaInteligente'

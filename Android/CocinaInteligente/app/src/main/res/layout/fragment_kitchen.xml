@@ -19,14 +19,35 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Peso:"
+                app:layout_constraintBottom_toTopOf="@+id/textView8"
+                app:layout_constraintStart_toStartOf="@+id/btnLuzOnOff"
+                app:layout_constraintTop_toBottomOf="@+id/temp3"
+                app:layout_constraintVertical_bias="0.09" />
+
+            <TextView
+                android:id="@+id/tvweight"
+                android:layout_width="75dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:text="0g"
+                app:layout_constraintBottom_toBottomOf="@+id/textView16"
+                app:layout_constraintStart_toEndOf="@+id/textView16"
+                app:layout_constraintTop_toTopOf="@+id/textView16" />
 
             <TextView
                 android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="64dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="40dp"
                 android:background="@color/invisible"
                 android:text="Campana extractora"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +81,7 @@
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="40dp"
                 android:background="@color/invisible"
                 android:text="Luz de la campana"
                 app:layout_constraintEnd_toStartOf="@+id/textView10"
@@ -120,6 +141,22 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/temp3"
                 app:layout_constraintTop_toBottomOf="@+id/temp2" />
+
+            <TextView
+                android:id="@+id/alert"
+                android:layout_width="270dp"
+                android:layout_height="58dp"
+                android:layout_marginTop="32dp"
+                android:background="#DD2C00"
+                android:gravity="center"
+                android:text="GAS LEAK DETECTED"
+                android:textColor="#FFCFCF"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@+id/t3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.593" />
 
             <ImageButton
                 android:id="@+id/temp1"

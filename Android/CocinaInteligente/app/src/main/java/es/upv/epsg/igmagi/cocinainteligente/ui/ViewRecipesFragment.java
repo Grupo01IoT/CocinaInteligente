@@ -119,6 +119,8 @@ public class ViewRecipesFragment extends Fragment {
                             break;
                         case REMOVED:
                             Log.d("asdd", "" + recipes.indexOf(new Recipe(dc.getDocument().getId())));
+                            Log.d("asdd", "" + recipes.indexOf(new Recipe(dc.getDocument().getId())));
+
                             recipes.remove(recipes.indexOf(new Recipe(dc.getDocument().getId())));
                             break;
                     }

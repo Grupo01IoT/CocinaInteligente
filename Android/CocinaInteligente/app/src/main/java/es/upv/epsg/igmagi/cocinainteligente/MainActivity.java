@@ -2,6 +2,7 @@ package es.upv.epsg.igmagi.cocinainteligente;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -21,19 +22,32 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
 import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
 import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.model.User;
 import es.upv.epsg.igmagi.cocinainteligente.model.UserViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
 
+import static com.example.igmagi.shared.Mqtt.broker;
+import static com.example.igmagi.shared.Mqtt.clientId;
+import static com.example.igmagi.shared.Mqtt.enUso;
+import static com.example.igmagi.shared.Mqtt.qos;
+import static com.example.igmagi.shared.Mqtt.topicRoot;
+
 
 public class MainActivity extends AppCompatActivity {
-
     private static final String TAG = "MainActivity";
     private AppBarConfiguration mAppBarConfiguration;
     private ImageView profilePicture;
     private TextView profileName, profileEmail;
+
 
     private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
@@ -73,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
         new DownloadImageTask(profilePicture, getResources()).execute(imageUrl);
         profileName.setText((mAuth.isAnonymous()) ? "Anonymous" : mAuth.getDisplayName());
         profileEmail.setText((mAuth.isAnonymous()) ? "Empty email" : mAuth.getEmail());
+
+
+
+
     }
 
     @Override
@@ -108,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+
 
 
 }

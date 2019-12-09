@@ -31,7 +31,9 @@ String luces = "0";
 String presencia = "0";
 String extractor = "0";
 String forUART = "";
-String gas = "no hay fuga";
+String gas = "0";
+String peso = "0";
+
 void setup() { 
 //  M5.begin(); 
 //  M5.Lcd.setTextSize(2); //Tamaño del texto
@@ -127,10 +129,10 @@ void loop() {
         digitalWrite(PINLUZ, LOW);
       }
       if(strcmp(texto, "G")==0){
-        gas = "fuga de gas";
+        gas = "1";
         digitalWrite(PINGAS, HIGH);
       } else if(strcmp(texto, "V")==0){
-        gas = "no hay fuga";
+        gas = "0";
         digitalWrite(PINGAS, LOW);
       }
         
@@ -172,7 +174,23 @@ void loop() {
           temperatura = temp;
         Serial.println(luces+","+extractor+","+temperatura);
       }*/
-      else if(strlen(texto) > 1){
+      else if( texto[0]=='Y'){
+        peso = "";
+        String txt;
+        int posComa = 0;
+        for(int j = 1; j < strlen(texto);j++){
+          if(texto[j]=='.'){
+            
+            break;
+          }
+          peso += texto[j];
+        }
+
+      
+        
+      }
+      else if(strlen(texto) > 3){
+      //else{
         String txt;
         int posFinalMaxTemp = 0;
         for(int j = 0; j < strlen(texto);j++){
@@ -196,7 +214,7 @@ void loop() {
       }
         // forUART = "luces:"+luces+",presencia:"+presencia+",temperatura:"+temperatura;
         //Serial.println(forUART);
-        Serial.println(luces+","+extractor+","+temperatura+","+gas+",FinTrama");
+        Serial.println(luces+","+extractor+","+temperatura+","+gas+","+peso+",FinTrama");
         delay(1000);
     }
   }

@@ -47,6 +47,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     compileOnly 'com.google.android.things:androidthings:+'
     implementation 'com.google.firebase:firebase-firestore:21.2.1'
+    //MQTT
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.1'
+    implementation project(path: ':shared')
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -180,30 +180,7 @@ public class HomeFragment extends Fragment {
         else
             includeDevice.setVisibility(View.GONE);
         update();
-        /*
-        TabLayout tabLayout = (TabLayout) root.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Profile"));
-        tabLayout.addTab(tabLayout.newTab().setText("About"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        final ViewPager viewPager =(ViewPager)root.findViewById(R.id.view_pager);
-        TabsAdapter tabsAdapter = new TabsAdapter(this.getFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(tabsAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-*/
         return root;
     }
 

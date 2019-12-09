@@ -35,7 +35,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-thin"
                 android:maxLines="2"
-                android:text="Nombres del laecei jodeefsfsdg"
+                android:text="Nombre de la receta"
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="16sp"
@@ -94,6 +94,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/veggieIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/veggie" />
+
+                <ImageView
+                    android:id="@+id/veganIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/vegan" />
+
+                <ImageView
+                    android:id="@+id/dairyIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/dairy" />
+
+                <ImageView
+                    android:id="@+id/glutenIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/gluten" />
 
                 <ImageView
                     android:id="@+id/favIcon"

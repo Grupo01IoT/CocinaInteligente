@@ -40,4 +40,5 @@
     <string name="menu_vitro">My Stove</string>
     <string name="action_favorite">Favourite</string>
     <string name="menu_register">My register</string>
+    <string name="action_upload">Upload</string>
 </resources>

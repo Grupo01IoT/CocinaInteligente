@@ -131,7 +131,6 @@ public class ViewRecipesFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-
         Spinner sp = root.findViewById(R.id.filterSpinner);
         ArrayAdapter<CharSequence> spAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.recipe_type, android.R.layout.simple_spinner_item);
@@ -141,19 +140,13 @@ public class ViewRecipesFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
-                Log.d("aaAAA", "TIPO : " + item);
                 if (item.equals("Todas")) {
-
-                    Log.d("aaAAA", "A  ");
                     adapter = new RecipeListAdapter(recipes, getContext(), getActivity(), getView());
                 } else {
-                    Log.d("aaAAA", "B  ");
                     recipesFilter.clear();
                     for (Recipe r : recipes) {
-                        Log.d("aaAAA", "item tipo : " + r.getTipo());
                         if (item.equals(r.getTipo())){
                             recipesFilter.add(r);
-                            Log.d("aaAAA", "item lista : " + r.getName());
                         }
                     }
                     adapter = new RecipeListAdapter(recipesFilter, getContext(), getActivity(), getView());
@@ -174,7 +167,9 @@ public class ViewRecipesFragment extends Fragment {
                 (String) dc.getDocument().get("description"),
                 (Timestamp) dc.getDocument().get("creationDate"),
                 (String) dc.getDocument().get("picture"),
+                (HashMap<String, Boolean>) dc.getDocument().get("extra"),
                 (ArrayList<String>) dc.getDocument().get("steps"),
+                (ArrayList<String>) dc.getDocument().get("ingredients"),
                 (HashMap<String, Long>) dc.getDocument().get("ratings"),
                 (String) dc.getDocument().get("user"),
                 (String) dc.getDocument().get("tipo"),

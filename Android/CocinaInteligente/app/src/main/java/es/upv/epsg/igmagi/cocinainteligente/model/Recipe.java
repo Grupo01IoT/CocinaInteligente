@@ -16,8 +16,10 @@ public class Recipe {
     public Timestamp creationDate;
     public String picture;
     public String tipo;
+    public ArrayList<String> ingredients;
     public ArrayList<String> steps;
     public HashMap<String,Long> ratings;
+    public HashMap<String,Boolean> extra;
     public String user;
     public int duration;
 
@@ -66,8 +68,40 @@ public class Recipe {
          */
     }
 
+    public ArrayList<String> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(ArrayList<String> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public HashMap<String, Boolean> getExtra() {
+        return extra;
+    }
+
+    public void setExtra(HashMap<String, Boolean> extra) {
+        this.extra = extra;
+    }
+
     public Recipe(String id) {
         this.uid = id;
+    }
+
+    public Recipe(String id, String name, String description, Timestamp creationDate, String picture, HashMap<String, Boolean> extra, ArrayList<String> steps,
+                  ArrayList<String> ingredients, HashMap<String, Long> ratings, String user, String tipo, int duration) {
+        this.extra = extra;
+        this.ingredients = ingredients;
+        this.uid = id;
+        this.name = name;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.picture = picture;
+        this.steps = steps;
+        this.ratings = (ratings==null?new HashMap<String,Long>():ratings);
+        this.user = user;
+        this.tipo = tipo;
+        this.duration = duration;
     }
 
     public String getUid() {
@@ -205,7 +239,7 @@ public class Recipe {
 
     @Override
     public boolean equals(@Nullable Object obj) {
-        boolean equals = ((String)((Recipe)obj).getUid()).equals((String)this.getUid());
+        boolean equals = ((String)((Recipe)obj).getUid()).equals(""+this.getUid());
         return equals;
     }
 

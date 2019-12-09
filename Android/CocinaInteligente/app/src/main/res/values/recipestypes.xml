@@ -7,4 +7,10 @@
         <item>Postre</item>
         <item>Especial</item>
     </string-array>
+    <string-array name="create_recipe_type">
+        <item>Principal</item>
+        <item>Entrante</item>
+        <item>Postre</item>
+        <item>Especial</item>
+    </string-array>
 </resources>

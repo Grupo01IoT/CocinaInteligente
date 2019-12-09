@@ -32,10 +32,11 @@ import es.upv.epsg.igmagi.cocinainteligente.model.UserViewModel;
 public class RecipeFragment extends Fragment {
     TextView tvname, tvdescription;
     RatingBar rbrating;
-    ImageView ivfoto;
+    ImageView ivfoto,vegan, veggie, dairy, gluten;
     ViewFlipper stepsContainer;
     Recipe recipe;
     User user;
+    LinearLayout ingredientList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,6 +69,24 @@ public class RecipeFragment extends Fragment {
 
             }
         });
+
+        ingredientList = root.findViewById(R.id.ingredientList);
+        for (String s: recipe.getIngredients()) {
+            TextView t = new TextView(getContext());
+            t.setText("- " + s);
+            ingredientList.addView(t);
+        }
+
+        gluten = root.findViewById(R.id.glutenIcon2);
+        dairy = root.findViewById(R.id.dairyIcon2);
+        vegan = root.findViewById(R.id.veganIcon2);
+        veggie= root.findViewById(R.id.veggieIcon2);
+        if(recipe.getExtra().get("veggie")) veggie.setVisibility(View.VISIBLE);
+        if(recipe.getExtra().get("vegan")) vegan.setVisibility(View.VISIBLE);
+        if(recipe.getExtra().get("dairy")) dairy.setVisibility(View.VISIBLE);
+        if(recipe.getExtra().get("gluten")) gluten.setVisibility(View.VISIBLE);
+
+
         stepsContainer = root.findViewById(R.id.stepFlipper);
         if(recipe.steps != null){
             for (int i = 0; i < recipe.getSteps().size(); i++){

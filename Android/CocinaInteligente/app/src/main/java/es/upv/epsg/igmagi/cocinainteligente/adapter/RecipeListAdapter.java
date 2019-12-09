@@ -77,7 +77,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     //Creamos nuestro ViewHolder, con los tipos de elementos a modificar
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nombre, puntuaciones, id, tiempo;
-        public ImageView icono, fav;
+        public ImageView icono, fav, veggie, vegan, dairy, gluten;
         public RatingBar rating;
 
         public ViewHolder(View itemView) {
@@ -89,6 +89,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             tiempo = itemView.findViewById(R.id.tiempococcion);
             icono = itemView.findViewById(R.id.foto);
             fav = itemView.findViewById(R.id.favIcon);
+            gluten = itemView.findViewById(R.id.glutenIcon);
+            dairy = itemView.findViewById(R.id.dairyIcon);
+            vegan = itemView.findViewById(R.id.veganIcon);
+            veggie= itemView.findViewById(R.id.veggieIcon);
         }
 
         // Personalizamos un ViewHolder a partir de un lugar
@@ -100,6 +104,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             Log.d("aaAAA",recipe.getRatingValue()+" - a");
             rating.setRating(recipe.getRatingValue());
             tiempo.setText(recipe.getFormattedDuration());
+            if(recipe.getExtra().get("veggie")) veggie.setVisibility(View.VISIBLE);
+            if(recipe.getExtra().get("vegan")) vegan.setVisibility(View.VISIBLE);
+            if(recipe.getExtra().get("dairy")) dairy.setVisibility(View.VISIBLE);
+            if(recipe.getExtra().get("gluten")) gluten.setVisibility(View.VISIBLE);
 
             UserViewModel userModel = ViewModelProviders.of((FragmentActivity) app).get(UserViewModel.class);
             User user = userModel.getCurrentUser();
@@ -112,7 +120,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
                 public void onClick(View v) {
                     model.setCurrentRecipeImage(icono.getDrawable());
                     model.setId(recipe.getUid());
-                    Log.d("AAAA", recipe.getUid().concat(recipe.name));
                     model.setCurrentRecipe(recipe);
                     Navigation.findNavController(v).navigate(R.id.action_nav_view_recipes_to_nav_view_recipe);
                 }

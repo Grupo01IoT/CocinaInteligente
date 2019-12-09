@@ -21,6 +21,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import es.upv.epsg.igmagi.cocinainteligente.R;
@@ -74,7 +75,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         public void customize(Comment comment) {
             author.setText(comment.author);
             body.setText(comment.body);
-            date.setText(comment.date.toDate().toString());
+            date.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(comment.date.toDate()));
 
             if (comment.image.contains("-")) {
                 File localFile = null;

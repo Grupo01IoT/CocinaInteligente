@@ -2,11 +2,15 @@ package es.upv.epsg.igmagi.cocinainteligente.ui.home;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -30,6 +34,7 @@ import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
@@ -58,6 +63,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import es.upv.epsg.igmagi.cocinainteligente.FirebaseService;
 import es.upv.epsg.igmagi.cocinainteligente.LoginActivity;
 import es.upv.epsg.igmagi.cocinainteligente.MainActivity;
 import es.upv.epsg.igmagi.cocinainteligente.R;
@@ -67,6 +73,9 @@ import es.upv.epsg.igmagi.cocinainteligente.model.User;
 import es.upv.epsg.igmagi.cocinainteligente.model.UserViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.ui.ProfileFragment;
 import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class HomeFragment extends Fragment {
 
@@ -97,6 +106,12 @@ public class HomeFragment extends Fragment {
     private TextView temp3;
     private TextView temp4;
 
+    //Notificaciones
+    private boolean notification = false;
+    private NotificationManager notificationManager;
+    static final String CANAL_ID = "mi_canal";
+    static final int NOTIFICACION_ID = 1;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
@@ -110,6 +125,7 @@ public class HomeFragment extends Fragment {
 
         SharedPreferences pref =  PreferenceManager.getDefaultSharedPreferences (getActivity());
 
+        //getActivity().startService(new Intent(getContext(), FirebaseService.class));
 
         // getting the include of the User details
         includeUser = root.findViewById(R.id.includeUser);
@@ -223,6 +239,31 @@ public class HomeFragment extends Fragment {
         temp2.setText("Temperatura 2: " + devices.get(0).getCooktop().get(1));
         temp3.setText("Temperatura 3: "  + devices.get(0).getCooktop().get(2));
         temp4.setText("Temperatura 4: "  + devices.get(0).getCooktop().get(3));
+
+        for(int i = 0; i < 4; i++){
+            if(devices.get(0).getCooktop().get(0) > 60 && notification == false){
+                notificationManager = (NotificationManager) getActivity().getSystemService(NotificationManager.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel notificationChannel = new NotificationChannel(CANAL_ID, "Mis Notificaciones", NotificationManager.IMPORTANCE_DEFAULT);
+                    notificationChannel.setDescription("Descripcion del canal");
+                    notificationManager.createNotificationChannel(notificationChannel);
+                }
+                NotificationCompat.Builder notificacion = new NotificationCompat.Builder(getContext(), CANAL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Cocina en uso")
+                        .setContentText("El fuego está encendido")
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo1))
+                        .setWhen(System.currentTimeMillis() + 1000 * 60 * 60)
+                        .setContentInfo("más info")
+                        .setTicker("Texto en barra de estado");
+                notificationManager.notify(NOTIFICACION_ID, notificacion.build());
+                notification = true;
+            }
+        }
+        if(notification == false){
+            notificationManager.cancel(NOTIFICACION_ID);
+        }
+        notification = false;
 
         if (devices.get(0).lights){
             lights.setImageResource(R.drawable.btnluzon);

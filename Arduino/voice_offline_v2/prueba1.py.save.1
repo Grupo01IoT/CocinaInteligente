@@ -16,7 +16,7 @@ def interrupt_callback():
 
 signal.signal(signal.SIGINT, signal_handler)
 
-detector = snowboydecoder.HotwordDetector("saved_model.pmdl", sensitivity=0.5, audio_gain=7)
+detector = snowboydecoder.HotwordDetector("ok.pmdl", sensitivity=0.6, audio_gain=1)
 print('Listening... Press Ctrl+C to exit')
 
 led = Light(17)

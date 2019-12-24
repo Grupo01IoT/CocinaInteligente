@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,8 +40,9 @@ public class MyKitchenFragment extends Fragment{
     //int weight;
     ImageButton lightsbutton;
     ImageButton extractionbutton;
-    TextView txtlightswitch, txtextracswitch, txttemp1,txttemp2,txttemp3,txttemp4, txtalert, txtweight, txtleak;
-    ImageButton temp1, temp2, temp3, temp4;
+    TextView txtlightswitch, txtextracswitch, txttemp1,txttemp2,txttemp3,txttemp4, txtalert, txtweight;
+    LinearLayout temp1, temp2, temp3, temp4;
+    CardView cvleak;
     int triggerTemperature = 60;
 
     //For mqtt
@@ -52,10 +55,10 @@ public class MyKitchenFragment extends Fragment{
         temperatures = new ArrayList<Integer>();
         View root = inflater.inflate(R.layout.fragment_kitchen, container, false);
 
-        temp1 = (ImageButton) root.findViewById(R.id.temp1);
-        temp2 = (ImageButton) root.findViewById(R.id.temp2);
-        temp3 = (ImageButton) root.findViewById(R.id.temp3);
-        temp4 = (ImageButton) root.findViewById(R.id.temp4);
+        temp1 =  root.findViewById(R.id.ltemp1);
+        temp2 =  root.findViewById(R.id.ltemp2);
+        temp3 =  root.findViewById(R.id.ltemp3);
+        temp4 =  root.findViewById(R.id.ltemp4);
 
         txttemp1 = root.findViewById(R.id.t1);
         txttemp2 = root.findViewById(R.id.t2);
@@ -63,9 +66,9 @@ public class MyKitchenFragment extends Fragment{
         txttemp4 = root.findViewById(R.id.t4);
 
         txtalert = root.findViewById(R.id.alert);
-
+        cvleak = root.findViewById(R.id.cardViewLeak);
         txtweight = root.findViewById(R.id.tvweight);
-        //txtleak = root.findViewById(R.id.tvleak);
+
 
         lightsbutton = (ImageButton) root.findViewById(R.id.btnLuzOnOff);
         lightsbutton.setOnClickListener(new View.OnClickListener(){
@@ -151,13 +154,13 @@ public class MyKitchenFragment extends Fragment{
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (lights = documentSnapshot.getBoolean("lights")){
-                    lightsbutton.setImageResource(R.drawable.btnluzon);
+                    lightsbutton.setImageResource(R.drawable.prueba2);
                     txtlightswitch.setText("ON");
                     //mqtt.setVisibility(View.VISIBLE);
 
                 }
                 else {
-                    lightsbutton.setImageResource(R.drawable.btnluzoff);
+                    lightsbutton.setImageResource(R.drawable.prueba1);
                     txtlightswitch.setText("OFF");
                     //mqtt.setVisibility(View.GONE);
 
@@ -172,11 +175,11 @@ public class MyKitchenFragment extends Fragment{
                 }
                 if (documentSnapshot.getBoolean("leak")){
 
-                    txtalert.setVisibility(View.VISIBLE);
+                    cvleak.setVisibility(View.VISIBLE);
 
                 }
                 else {
-                    txtalert.setVisibility(View.GONE);
+                    cvleak.setVisibility(View.GONE);
                 }
 
                 temperatures = (List<Integer>) documentSnapshot.get("cooktop");
@@ -196,39 +199,41 @@ public class MyKitchenFragment extends Fragment{
                 }
 
                 if(Integer.parseInt(String.valueOf(temperatures.get(0))) > triggerTemperature){
-                    temp1.setImageResource(R.drawable.vitroon);
+                    temp1.setBackgroundResource(R.drawable.vitroon);
                     txttemp1.setTypeface(null, Typeface.BOLD);
                 }else{
-                    temp1.setImageResource(R.drawable.vitrooff);
+                    temp1.setBackgroundResource(R.drawable.vitrooff);
                     txttemp1.setTypeface(null, Typeface.NORMAL);
 
                 }
                 if(Integer.parseInt(String.valueOf(temperatures.get(1))) > triggerTemperature){
-                    temp2.setImageResource(R.drawable.vitroon);
+                    temp2.setBackgroundResource(R.drawable.vitroon);
                     txttemp2.setTypeface(null, Typeface.BOLD);
 
                 }else{
-                    temp2.setImageResource(R.drawable.vitrooff);
+                    temp2.setBackgroundResource(R.drawable.vitrooff);
                     txttemp2.setTypeface(null, Typeface.NORMAL);
                 }
                 if(Integer.parseInt(String.valueOf(temperatures.get(2))) > triggerTemperature){
-                    temp3.setImageResource(R.drawable.vitroon);
+                    temp3.setBackgroundResource(R.drawable.vitroon);
                     txttemp3.setTypeface(null, Typeface.BOLD);
 
                 }else{
-                    temp3.setImageResource(R.drawable.vitrooff);
+                    temp3.setBackgroundResource(R.drawable.vitrooff);
                     txttemp3.setTypeface(null, Typeface.NORMAL);
 
                 }
                 if(Integer.parseInt(String.valueOf(temperatures.get(3))) > triggerTemperature){
-                    temp4.setImageResource(R.drawable.vitroon);
+                    temp4.setBackgroundResource(R.drawable.vitroon);
                     txttemp4.setTypeface(null, Typeface.BOLD);
 
                 }else{
-                    temp4.setImageResource(R.drawable.vitrooff);
+                    temp4.setBackgroundResource(R.drawable.vitrooff);
                     txttemp4.setTypeface(null, Typeface.NORMAL);
 
                 }
+
+
 
 
 

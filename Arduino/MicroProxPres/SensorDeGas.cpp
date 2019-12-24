@@ -26,7 +26,7 @@ bool SensorDeGas::hayGas(){
 
   float a = analogRead(pin) * k;
     Serial.println(a);
-    if(a >= 3){
+    if(a >= 0.8){
         
         return true;
     

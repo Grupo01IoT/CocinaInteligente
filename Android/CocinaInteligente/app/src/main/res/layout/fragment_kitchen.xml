@@ -1,246 +1,277 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="8dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewLeak"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+
+                android:layout_marginBottom="2dp"
+                android:visibility="gone"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#DD2C00"
+                    android:orientation="horizontal"
+
+                    android:padding="6dp">
+
+                    <TextView
+                        android:id="@+id/alert"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center"
+                        android:text="GAS LEAK DETECTED"
+                        android:textColor="#FFCFCF"
+                        android:textSize="24sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Peso:"
-                app:layout_constraintBottom_toTopOf="@+id/textView8"
-                app:layout_constraintStart_toStartOf="@+id/btnLuzOnOff"
-                app:layout_constraintTop_toBottomOf="@+id/temp3"
-                app:layout_constraintVertical_bias="0.09" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="7dp"
+                app:cardCornerRadius="10dp">
 
-            <TextView
-                android:id="@+id/tvweight"
-                android:layout_width="75dp"
-                android:layout_height="18dp"
-                android:layout_marginStart="8dp"
-                android:text="0g"
-                app:layout_constraintBottom_toBottomOf="@+id/textView16"
-                app:layout_constraintStart_toEndOf="@+id/textView16"
-                app:layout_constraintTop_toTopOf="@+id/textView16" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="64dp"
-                android:layout_marginTop="40dp"
-                android:background="@color/invisible"
-                android:text="Campana extractora"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/temp4" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/btnExtraccionOnOff"
-                android:layout_width="120dp"
-                android:layout_height="80dp"
-                android:adjustViewBounds="true"
-                android:backgroundTint="@color/invisible"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
-                app:layout_constraintEnd_toEndOf="@+id/textView10"
-                app:layout_constraintStart_toStartOf="@+id/textView10"
-                app:layout_constraintTop_toBottomOf="@+id/textView10"
-                app:srcCompat="@drawable/btnextraoff" />
+                        <LinearLayout
+                            android:id="@+id/ltemp1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/vitrooff"
+                            android:gravity="bottom|center"
+                            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvExtraccionOnOff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OFF"
-                app:layout_constraintEnd_toEndOf="@+id/btnExtraccionOnOff"
-                app:layout_constraintStart_toStartOf="@+id/btnExtraccionOnOff"
-                app:layout_constraintTop_toBottomOf="@+id/btnExtraccionOnOff" />
+                            <TextView
+                                android:id="@+id/t1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="25dp"
+                                android:gravity="center"
+                                android:text="0ºC"
+                                android:textColor="#DADADA"
+                                android:textSize="12sp"></TextView>
+                        </LinearLayout>
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:background="@color/invisible"
-                android:text="Luz de la campana"
-                app:layout_constraintEnd_toStartOf="@+id/textView10"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/temp3" />
+                        <LinearLayout
+                            android:id="@+id/ltemp2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/vitrooff"
+                            android:gravity="bottom|center"
+                            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/btnLuzOnOff"
-                android:layout_width="120dp"
-                android:layout_height="80dp"
-                android:adjustViewBounds="true"
-                android:backgroundTint="@color/invisible"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
-                app:layout_constraintEnd_toEndOf="@+id/textView8"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/textView8"
-                app:srcCompat="@drawable/btnluzoff" />
+                            <TextView
+                                android:id="@+id/t2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="25dp"
+                                android:gravity="center"
+                                android:text="0ºC"
+                                android:textColor="#DADADA"
+                                android:textSize="12sp"></TextView>
+                        </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvLuzOnOff"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OFF"
-                app:layout_constraintEnd_toEndOf="@+id/btnLuzOnOff"
-                app:layout_constraintStart_toStartOf="@+id/btnLuzOnOff"
-                app:layout_constraintTop_toBottomOf="@+id/btnLuzOnOff" />
+                    </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/temp3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/vitrooff"
-                app:layout_constraintBottom_toTopOf="@+id/textView8"
-                app:layout_constraintEnd_toStartOf="@+id/temp4"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:orientation="horizontal">
 
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/temp1" />
+                        <LinearLayout
+                            android:id="@+id/ltemp3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/vitrooff"
+                            android:gravity="bottom|center"
+                            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/temp4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:backgroundTint="#00000000"
-                android:contentDescription="AAAA"
+                            <TextView
+                                android:id="@+id/t3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="25dp"
+                                android:gravity="center"
+                                android:text="0ºC"
+                                android:textColor="#DADADA"
+                                android:textSize="12sp"></TextView>
+                        </LinearLayout>
 
-                android:cropToPadding="false"
-                android:scaleType="center"
-                android:src="@drawable/vitrooff"
-                android:tint="#00000000"
-                app:layout_constraintBottom_toTopOf="@+id/textView10"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/temp3"
-                app:layout_constraintTop_toBottomOf="@+id/temp2" />
+                        <LinearLayout
+                            android:id="@+id/ltemp4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/vitrooff"
+                            android:gravity="bottom|center"
+                            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/alert"
-                android:layout_width="270dp"
-                android:layout_height="58dp"
-                android:layout_marginTop="32dp"
-                android:background="#DD2C00"
-                android:gravity="center"
-                android:text="GAS LEAK DETECTED"
-                android:textColor="#FFCFCF"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="@+id/t3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.593" />
+                            <TextView
+                                android:id="@+id/t4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="25dp"
+                                android:gravity="center"
+                                android:text="0ºC"
+                                android:textColor="#DADADA"
+                                android:textSize="12sp"></TextView>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <ImageButton
-                android:id="@+id/temp1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/vitrooff"
-                app:layout_constraintBottom_toTopOf="@+id/temp3"
-                app:layout_constraintEnd_toStartOf="@+id/temp2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="7dp"
+                app:cardCornerRadius="10dp">
 
-            <ImageButton
-                android:id="@+id/temp2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/vitroon"
-                app:layout_constraintBottom_toTopOf="@+id/temp4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/temp1"
-                app:layout_constraintTop_toTopOf="parent" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
 
-            <TextView
-                android:id="@+id/t4"
-                android:layout_width="74dp"
-                android:layout_height="47dp"
-                android:layout_marginTop="100dp"
-                android:gravity="center"
-                android:text="0ºC"
-                android:textColor="#DADADA"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/temp4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/temp3"
-                app:layout_constraintTop_toTopOf="@+id/temp4" />
+                    <TextView
+                        android:id="@+id/textView16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Peso:" />
 
-            <TextView
-                android:id="@+id/t1"
-                android:layout_width="74dp"
-                android:layout_height="47dp"
-                android:layout_marginTop="100dp"
-                android:gravity="center"
-                android:text="0ºC"
-                android:textColor="#DADADA"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/temp3"
-                app:layout_constraintEnd_toEndOf="@+id/temp1"
-                app:layout_constraintStart_toStartOf="@+id/temp1"
-                app:layout_constraintTop_toTopOf="@+id/temp1" />
+                    <TextView
+                        android:id="@+id/tvweight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="8dp"
+                        android:text="0g" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/t3"
-                android:layout_width="74dp"
-                android:layout_height="47dp"
-                android:layout_marginTop="100dp"
-                android:gravity="center"
-                android:text="0ºC"
-                android:textColor="#DADADA"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/temp3"
-                app:layout_constraintEnd_toEndOf="@+id/temp3"
-                app:layout_constraintStart_toStartOf="@+id/temp3"
-                app:layout_constraintTop_toTopOf="@+id/temp3" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:cardCornerRadius="10dp">
 
-            <TextView
-                android:id="@+id/t2"
-                android:layout_width="74dp"
-                android:layout_height="47dp"
-                android:layout_marginTop="100dp"
-                android:gravity="center"
-                android:text="0ºC"
-                android:textColor="#DADADA"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/temp4"
-                app:layout_constraintEnd_toEndOf="@+id/temp2"
-                app:layout_constraintStart_toEndOf="@+id/temp1"
-                app:layout_constraintTop_toTopOf="@+id/temp2" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:background="@color/invisible"
+                            android:text="Luz de la campana" />
+
+                        <ImageButton
+                            android:id="@+id/btnLuzOnOff"
+                            android:layout_width="120dp"
+                            android:layout_height="80dp"
+                            android:adjustViewBounds="true"
+                            android:backgroundTint="@color/invisible"
+
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/btnluzoff" />
+
+                        <TextView
+                            android:id="@+id/tvLuzOnOff"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="OFF" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:background="@color/invisible"
+                            android:gravity="center"
+                            android:text="Campana extractora" />
+
+                        <ImageButton
+                            android:id="@+id/btnExtraccionOnOff"
+                            android:layout_width="120dp"
+                            android:layout_height="80dp"
+                            android:adjustViewBounds="true"
+                            android:backgroundTint="@color/invisible"
 
 
+                            android:scaleType="fitCenter"
+
+                            app:srcCompat="@drawable/btnextraoff" />
+
+                        <TextView
+                            android:id="@+id/tvExtraccionOnOff"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="OFF" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

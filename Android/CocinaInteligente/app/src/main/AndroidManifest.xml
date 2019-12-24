@@ -26,10 +26,10 @@
         android:exported="false"
         android:grantUriPermissions="true"
         tools:replace="android:authorities">
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/picker_provider_paths" />
-    </provider>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/picker_provider_paths" />
+        </provider>
         <activity android:name=".LoginActivity"
             android:label="@string/app_name">
             <intent-filter>

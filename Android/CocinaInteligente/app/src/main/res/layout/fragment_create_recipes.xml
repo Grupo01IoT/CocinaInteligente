@@ -30,23 +30,43 @@
     <ViewFlipper
         android:id="@+id/infoRecipe"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
-        <include
-            layout="@layout/fragment_create_recipes_info1"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="10dp">
 
-        <include
-            layout="@layout/fragment_create_recipes_info2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <include
+                layout="@layout/fragment_create_recipes_info1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.cardview.widget.CardView>
 
-        <include
-            layout="@layout/fragment_create_recipes_info3"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="10dp">
+
+            <include
+                layout="@layout/fragment_create_recipes_info2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="10dp">
+
+            <include
+                layout="@layout/fragment_create_recipes_info3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </androidx.cardview.widget.CardView>
     </ViewFlipper>
 
     <View

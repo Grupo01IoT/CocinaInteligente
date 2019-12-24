@@ -154,31 +154,6 @@ public class HomeFragment extends Fragment {
         else
             includeUser.setVisibility(View.GONE);
 
-        //Asigning the navigation to the myKitchen button
-        Button btnkitchen = root.findViewById(R.id.kitchenBtn);
-        btnkitchen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_kitchen);
-            }
-        });
-
-        //Asigning the navigation to the ViewRecipes button
-        Button btnviewrecipes = root.findViewById(R.id.viewRecipesBtn);
-        btnviewrecipes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_view_recipes);
-            }
-        });
-
-        Button botonCrearReceta = root.findViewById(R.id.createRecipesBtn);
-        botonCrearReceta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_nav_create);
-            }
-        });
         // getting the include of the Device details
         includeDevice = ((ViewFlipper) root.findViewById(R.id.viewFlipper1));
         View nodevice = includeDevice.getChildAt(0);

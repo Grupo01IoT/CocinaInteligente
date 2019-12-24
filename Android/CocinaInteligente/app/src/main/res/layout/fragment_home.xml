@@ -27,14 +27,15 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="10dp">
 
                 <ViewFlipper
                     android:id="@+id/viewFlipper1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    android:padding="7.5dp">
+                    android:background="@drawable/border">
 
 
                     <include

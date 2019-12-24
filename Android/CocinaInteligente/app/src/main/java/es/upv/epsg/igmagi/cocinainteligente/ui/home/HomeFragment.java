@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -116,6 +117,12 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
+
+
+        if (homeViewModel.getBitmap() != null) {
+            photo.setImageBitmap(homeViewModel.getBitmap());
+        }
+
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         // clone the inflater using the ContextThemeWrapper
         // getting the parent view for handle the fragment
@@ -374,6 +381,13 @@ public class HomeFragment extends Fragment {
 
     private boolean checkDevices(DocumentSnapshot document){
         return document.get("devices") != null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        homeViewModel.setBitmap(((BitmapDrawable) photo.getDrawable()).getBitmap());
     }
 
     //This onResume handle the log in/log out functions

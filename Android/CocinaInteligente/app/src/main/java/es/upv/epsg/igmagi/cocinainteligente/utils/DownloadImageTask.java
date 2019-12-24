@@ -35,6 +35,10 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Bitmap> {
         rounded = b;
     }
 
+    public DownloadImageTask(Resources system) {
+        res = system;
+    }
+
 
     @Override
     protected Bitmap doInBackground(Uri... uris) {

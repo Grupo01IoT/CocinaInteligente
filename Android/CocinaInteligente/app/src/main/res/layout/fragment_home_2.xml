@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/includeUser"
+                layout="@layout/fragment_home_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ViewFlipper
+                android:id="@+id/viewFlipper1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="7.5dp"
+                android:background="@drawable/border">
+
+
+                <include
+                    android:id="@+id/includeNoDevice"
+                    layout="@layout/fragment_home_nodevice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/includeDevice"
+                    layout="@layout/fragment_home_device"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </ViewFlipper>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="325dp"
+                    android:layout_weight="0"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/viewRecipesBtn"
+                        android:layout_width="85dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/crearrecetaslite"
+                        android:text="@string/menu_list" />
+
+                    <Button
+                        android:id="@+id/createRecipesBtn"
+                        android:layout_width="85dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/verrecetaslite"
+                        android:text="@string/menu_create" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="325dp"
+                    android:layout_weight="0"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/kitchenBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/vitroceramicalite"
+                        android:text="@string/menu_kitchen" />
+
+                    <Button
+                        android:id="@+id/vitroBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/history"
+                        android:text="@string/menu_register" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

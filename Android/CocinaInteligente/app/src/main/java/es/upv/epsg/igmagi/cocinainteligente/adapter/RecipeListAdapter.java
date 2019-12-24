@@ -3,7 +3,9 @@ package es.upv.epsg.igmagi.cocinainteligente.adapter;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,11 +43,11 @@ import es.upv.epsg.igmagi.cocinainteligente.utils.RecipeList;
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder> {
     //List with recipes
     protected ArrayList<Recipe> recipes;
-    protected Context context;
+    protected static Context context;
     protected static Activity app;
     protected static View v;
 
-    public RecipeListAdapter(ArrayList<Recipe> recipeList){
+    public RecipeListAdapter(ArrayList<Recipe> recipeList) {
         this.recipes = recipeList;
     }
 
@@ -70,7 +72,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
     @Override
     public int getItemCount() {
-        if (recipes==null) return 0;
+        if (recipes == null) return 0;
         return recipes.size();
     }
 
@@ -92,7 +94,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             gluten = itemView.findViewById(R.id.glutenIcon);
             dairy = itemView.findViewById(R.id.dairyIcon);
             vegan = itemView.findViewById(R.id.veganIcon);
-            veggie= itemView.findViewById(R.id.veggieIcon);
+            veggie = itemView.findViewById(R.id.veggieIcon);
         }
 
         // Personalizamos un ViewHolder a partir de un lugar
@@ -101,17 +103,18 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             puntuaciones.setText(recipe.getFormattedNumberOfRatings());
             //icono.setImageResource(recipe.getImage());
             //foto.setScaleType(ImageView.ScaleType.FIT_END);
-            Log.d("aaAAA",recipe.getRatingValue()+" - a");
+            Log.d("aaAAA", recipe.getRatingValue() + " - a");
             rating.setRating(recipe.getRatingValue());
             tiempo.setText(recipe.getFormattedDuration());
-            if(recipe.getExtra().get("veggie")) veggie.setVisibility(View.VISIBLE);
-            if(recipe.getExtra().get("vegan")) vegan.setVisibility(View.VISIBLE);
-            if(recipe.getExtra().get("dairy")) dairy.setVisibility(View.VISIBLE);
-            if(recipe.getExtra().get("gluten")) gluten.setVisibility(View.VISIBLE);
+            if (recipe.getExtra().get("veggie")) veggie.setVisibility(View.VISIBLE);
+            if (recipe.getExtra().get("vegan")) vegan.setVisibility(View.VISIBLE);
+            if (recipe.getExtra().get("dairy")) dairy.setVisibility(View.VISIBLE);
+            if (recipe.getExtra().get("gluten")) gluten.setVisibility(View.VISIBLE);
 
             UserViewModel userModel = ViewModelProviders.of((FragmentActivity) app).get(UserViewModel.class);
             User user = userModel.getCurrentUser();
-            if (user.getFavouriteReceipts().contains(recipe.getUid())) fav.setVisibility(View.VISIBLE);
+            if (user.getFavouriteReceipts().contains(recipe.getUid()))
+                fav.setVisibility(View.VISIBLE);
 
             View v = itemView.findViewById(R.id.container);
             final RecipeViewModel model = ViewModelProviders.of((FragmentActivity) app).get(RecipeViewModel.class);
@@ -126,29 +129,37 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             });
             File localFile = null;
             try {
-                localFile = File.createTempFile("image", ".jpg");
-            } catch (IOException e) {
+                localFile = new File(context.getCacheDir().toString().concat("/" + recipe.getUid().concat(".jpg")));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             final String path = localFile.getAbsolutePath();
-            Log.d("Almacenamiento", "creando fichero: " + path);
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference ficheroRef = storageRef.child("images/" + recipe.getPicture());
-            ficheroRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess
-                        (FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Log.d("Almacenamiento", "Fichero bajado");
-                    icono.setImageBitmap(BitmapFactory.decodeFile(path));
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.e("Almacenamiento", "ERROR: bajando fichero");
-                }
-            });
-        }
+            if (localFile.exists()) {
+                icono.setImageBitmap(BitmapFactory.decodeFile(path));
+            } else {
+                Log.d("Almacenamiento", "creando fichero: " + path);
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference ficheroRef = storageRef.child("images/" + recipe.getPicture());
+                ficheroRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess
+                            (FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        try {
+                            Log.d("Almacenamiento", "Fichero bajado");
+                            icono.setImageBitmap(BitmapFactory.decodeFile(path));
+                        } catch (OutOfMemoryError er) {
+                            //CONTROL LA FLUSH
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.e("Almacenamiento", "ERROR: bajando fichero");
+                    }
+                });
+            }
 
+        }
 
     }
 }

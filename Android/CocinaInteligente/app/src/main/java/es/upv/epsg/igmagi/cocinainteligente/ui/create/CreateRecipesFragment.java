@@ -1,4 +1,4 @@
-package es.upv.epsg.igmagi.cocinainteligente.ui;
+package es.upv.epsg.igmagi.cocinainteligente.ui.create;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,8 +21,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -79,10 +83,12 @@ public class CreateRecipesFragment extends Fragment {
     private Spinner recipeSp;
     private ImageView recipePhoto;
     private ViewFlipper infoRecipe, ingredients, steps;
-    private CheckBox veggie, vegan, dairy, gluten;
+    private CheckBox veggie, vegan, dairy, gluten, interactive;
     private Button next, prev;
     private TextView progressTxt;
     private ProgressBar progressBar;
+
+    private LinearLayout interactiveOptions;
 
     private boolean upload = true;
 
@@ -100,6 +106,7 @@ public class CreateRecipesFragment extends Fragment {
         recipeName = vista.findViewById(R.id.recipeName);
         recipeDescription = vista.findViewById(R.id.recipeDescription);
         recipeDuration = vista.findViewById(R.id.recipeDuration);
+
         addIngredient = vista.findViewById(R.id.addIngredient);
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,6 +216,8 @@ public class CreateRecipesFragment extends Fragment {
                 prev.setEnabled(true);
                 progressTxt.setText("Paso " + pos + " de 3");
                 progressBar.setProgress((100 / 3) * pos);
+                infoRecipe.setInAnimation(getContext(), R.anim.view_transition_in_left);
+                infoRecipe.setOutAnimation(getContext(), R.anim.view_transition_out_left);
                 infoRecipe.showNext();
                 if (pos > 2) {
                     next.setEnabled(false);
@@ -223,6 +232,8 @@ public class CreateRecipesFragment extends Fragment {
                 next.setEnabled(true);
                 progressTxt.setText("Paso " + infoRecipe.getDisplayedChild() + " de 3");
                 progressBar.setProgress((100 / 3) * infoRecipe.getDisplayedChild());
+                infoRecipe.setInAnimation(getContext(), R.anim.view_transition_in_right);
+                infoRecipe.setOutAnimation(getContext(), R.anim.view_transition_out_right);
                 infoRecipe.showPrevious();
                 if (pos < 1) {
                     prev.setEnabled(false);
@@ -231,6 +242,18 @@ public class CreateRecipesFragment extends Fragment {
             }
         });
 
+        interactive = vista.findViewById(R.id.interactiveRecipe);
+        interactiveOptions = vista.findViewById(R.id.interactiveSide);
+
+        interactive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (steps.getChildCount()==1) return;
+                interactiveOptions = steps.findViewById(R.id.interactiveSide);
+                if (isChecked) interactiveOptions.setVisibility(View.VISIBLE);
+                else interactiveOptions.setVisibility(View.GONE);
+            }
+        });
         return vista;
     }
 
@@ -337,7 +360,6 @@ public class CreateRecipesFragment extends Fragment {
 
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

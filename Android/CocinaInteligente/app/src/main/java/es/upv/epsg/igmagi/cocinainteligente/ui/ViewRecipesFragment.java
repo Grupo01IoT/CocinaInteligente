@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
@@ -74,8 +75,8 @@ public class ViewRecipesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_view_recipes, container, false);
-        setUpRecycleViewByFirestore();
 
+        setUpRecycleViewByFirestore();
 
         return root;
     }
@@ -119,13 +120,12 @@ public class ViewRecipesFragment extends Fragment {
                             break;
                         case REMOVED:
                             Log.d("asdd", "" + recipes.indexOf(new Recipe(dc.getDocument().getId())));
-                            Log.d("asdd", "" + recipes.indexOf(new Recipe(dc.getDocument().getId())));
-
                             recipes.remove(recipes.indexOf(new Recipe(dc.getDocument().getId())));
                             break;
                     }
                 }
                 adapter.notifyDataSetChanged();
+                ((ProgressBar) root.findViewById(R.id.recipeProgress)).setVisibility(View.GONE);
             }
         });
 

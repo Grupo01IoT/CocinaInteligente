@@ -25,81 +25,87 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <ViewFlipper
-                android:id="@+id/viewFlipper1"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="7.5dp"
-                android:background="@drawable/border">
+                android:layout_height="match_parent" >
 
-
-                <include
-                    android:id="@+id/includeNoDevice"
-                    layout="@layout/fragment_home_nodevice"
+                <ViewFlipper
+                    android:id="@+id/viewFlipper1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:padding="7.5dp">
 
-                <include
-                    android:id="@+id/includeDevice"
-                    layout="@layout/fragment_home_device"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
 
-            </ViewFlipper>
+                    <include
+                        android:id="@+id/includeNoDevice"
+                        layout="@layout/fragment_home_nodevice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical">
+                    <include
+                        android:id="@+id/includeDevice"
+                        layout="@layout/fragment_home_device"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="325dp"
-                    android:layout_weight="0"
-                    android:orientation="horizontal">
+                </ViewFlipper>
+            </androidx.cardview.widget.CardView>
+            <!--
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/viewRecipesBtn"
-                        android:layout_width="85dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/crearrecetaslite"
-                        android:text="@string/menu_list" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="325dp"
+                                android:layout_weight="0"
+                                android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/createRecipesBtn"
-                        android:layout_width="85dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/verrecetaslite"
-                        android:text="@string/menu_create" />
+                                <Button
+                                    android:id="@+id/viewRecipesBtn"
+                                    android:layout_width="85dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/crearrecetaslite"
+                                    android:text="@string/menu_list" />
 
-                </LinearLayout>
+                                <Button
+                                    android:id="@+id/createRecipesBtn"
+                                    android:layout_width="85dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/verrecetaslite"
+                                    android:text="@string/menu_create" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="325dp"
-                    android:layout_weight="0"
-                    android:orientation="horizontal">
+                            </LinearLayout>
 
-                    <Button
-                        android:id="@+id/kitchenBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/vitroceramicalite"
-                        android:text="@string/menu_kitchen" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="325dp"
+                                android:layout_weight="0"
+                                android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/vitroBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/history"
-                        android:text="@string/menu_register" />
-                </LinearLayout>
+                                <Button
+                                    android:id="@+id/kitchenBtn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/vitroceramicalite"
+                                    android:text="@string/menu_kitchen" />
 
-            </LinearLayout>
+                                <Button
+                                    android:id="@+id/vitroBtn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/history"
+                                    android:text="@string/menu_register" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    -->
 
         </LinearLayout>
     </ScrollView>

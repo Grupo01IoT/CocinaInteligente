@@ -38,6 +38,7 @@ import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -84,13 +85,13 @@ public class CreateRecipesFragment extends Fragment {
     private ImageView recipePhoto;
     private ViewFlipper infoRecipe, ingredients, steps;
     private CheckBox veggie, vegan, dairy, gluten, interactive;
-    private Button next, prev;
+    private Button next, prev, upload;
     private TextView progressTxt;
     private ProgressBar progressBar;
 
     private LinearLayout interactiveOptions;
 
-    private boolean upload = true;
+    private boolean uploadFlag = true;
 
     private File file;
 
@@ -209,6 +210,7 @@ public class CreateRecipesFragment extends Fragment {
 
         next = vista.findViewById(R.id.nextBtn);
         prev = vista.findViewById(R.id.prevBtn);
+        upload = vista.findViewById(R.id.uploadBtn);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,7 +222,8 @@ public class CreateRecipesFragment extends Fragment {
                 infoRecipe.setOutAnimation(getContext(), R.anim.view_transition_out_left);
                 infoRecipe.showNext();
                 if (pos > 2) {
-                    next.setVisibility(View.INVISIBLE);
+                    next.setVisibility(View.GONE);
+                    upload.setVisibility(View.VISIBLE);
                     return;
                 }
             }
@@ -230,6 +233,7 @@ public class CreateRecipesFragment extends Fragment {
             public void onClick(View v) {
                 int pos = infoRecipe.getDisplayedChild() - 1;
                 next.setVisibility(View.VISIBLE);
+                upload.setVisibility(View.GONE);
                 progressTxt.setText("Paso " + infoRecipe.getDisplayedChild() + " de 3");
                 progressBar.setProgress((100 / 3) * infoRecipe.getDisplayedChild());
                 infoRecipe.setInAnimation(getContext(), R.anim.view_transition_in_right);
@@ -239,6 +243,12 @@ public class CreateRecipesFragment extends Fragment {
                     prev.setVisibility(View.INVISIBLE);
                     return;
                 }
+            }
+        });
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "WATCHOUT!", Toast.LENGTH_SHORT).show();
             }
         });
 

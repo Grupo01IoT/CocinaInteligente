@@ -28,8 +28,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
@@ -38,6 +40,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -80,7 +83,7 @@ public class ViewRecipesFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_view_recipes, container, false);
 
         createFAB = root.findViewById(R.id.createFAB);
-        createFAB.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_create,null));
+        createFAB.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_create, null));
 
         setUpRecycleViewByFirestore();
 
@@ -91,6 +94,25 @@ public class ViewRecipesFragment extends Fragment {
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerRecipeList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Query query = recipesCollection.orderBy("name", Query.Direction.DESCENDING);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for (QueryDocumentSnapshot dc : task.getResult()) {
+                    Recipe temp;
+                    try {
+                        temp = getRecipeFromDoc(dc);
+                        if (!recipes.contains(temp)) {
+                            recipes.add(temp);
+                        }
+                    } catch (ClassCastException ex) {
+                        Toast.makeText(getContext(), "ESTAS FLIPANt", Toast.LENGTH_SHORT);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                ((ProgressBar) root.findViewById(R.id.recipeProgress)).setVisibility(View.GONE);
+            }
+        });
+        /*
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -134,7 +156,7 @@ public class ViewRecipesFragment extends Fragment {
                 ((ProgressBar) root.findViewById(R.id.recipeProgress)).setVisibility(View.GONE);
             }
         });
-
+*/
         adapter = new RecipeListAdapter(recipes, getContext(), getActivity(), getView());
 
         recyclerView.setAdapter(adapter);
@@ -153,7 +175,7 @@ public class ViewRecipesFragment extends Fragment {
                 } else {
                     recipesFilter.clear();
                     for (Recipe r : recipes) {
-                        if (item.equals(r.getTipo())){
+                        if (item.equals(r.getTipo())) {
                             recipesFilter.add(r);
                         }
                     }
@@ -163,25 +185,26 @@ public class ViewRecipesFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
     }
 
-    private Recipe getRecipeFromDoc(DocumentChange dc) throws ClassCastException{
+    private Recipe getRecipeFromDoc(QueryDocumentSnapshot dc) throws ClassCastException {
         return new Recipe(
-                dc.getDocument().getId(),
-                (String) dc.getDocument().get("name"),
-                (String) dc.getDocument().get("description"),
-                (Timestamp) dc.getDocument().get("creationDate"),
-                (String) dc.getDocument().get("picture"),
-                (HashMap<String, Boolean>) dc.getDocument().get("extra"),
-                (ArrayList<String>) dc.getDocument().get("steps"),
-                (ArrayList<String>) dc.getDocument().get("ingredients"),
-                (HashMap<String, Long>) dc.getDocument().get("ratings"),
-                (String) dc.getDocument().get("user"),
-                (String) dc.getDocument().get("tipo"),
-                Integer.parseInt(dc.getDocument().get("duration") + "")
+                dc.getId(),
+                (String) dc.get("name"),
+                (String) dc.get("description"),
+                (Timestamp) dc.get("creationDate"),
+                (String) dc.get("picture"),
+                (HashMap<String, Boolean>) dc.get("extra"),
+                (ArrayList<String>) dc.get("steps"),
+                (ArrayList<String>) dc.get("ingredients"),
+                (HashMap<String, Long>) dc.get("ratings"),
+                (String) dc.get("user"),
+                (String) dc.get("tipo"),
+                Integer.parseInt(dc.get("duration") + "")
         );
     }
 

@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,8 +16,10 @@
             android:id="@+id/textView11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-smallcaps"
             android:text="Ingredients"
-            android:textSize="24dp" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="30dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,13 +58,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <ViewFlipper
                 android:id="@+id/ingredientsFlipper"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="7.5dp">
 
@@ -73,16 +76,16 @@
             </ViewFlipper>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/rmvIngredient"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Quitar" />
 
                 <Button
@@ -92,6 +95,7 @@
                     android:layout_height="wrap_content"
                     android:text="Añadir" />
             </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

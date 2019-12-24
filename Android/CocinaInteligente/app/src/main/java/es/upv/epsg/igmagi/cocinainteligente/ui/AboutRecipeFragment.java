@@ -29,6 +29,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -102,7 +103,7 @@ public class AboutRecipeFragment extends Fragment {
         recipe = model.getCurrentRecipe();
         setUpRecycleViewByFirestore();
 
-        Button comment = root.findViewById(R.id.commentBtn);
+        FloatingActionButton comment = root.findViewById(R.id.commentFAB);
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

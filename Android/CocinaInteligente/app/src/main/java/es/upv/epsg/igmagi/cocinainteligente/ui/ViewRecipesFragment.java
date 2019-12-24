@@ -30,6 +30,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -70,11 +71,16 @@ public class ViewRecipesFragment extends Fragment {
     ArrayList<Recipe> recipes = new ArrayList<>();
     ArrayList<Recipe> recipesFilter = new ArrayList<>();
 
+    FloatingActionButton createFAB;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_view_recipes, container, false);
+
+        createFAB = root.findViewById(R.id.createFAB);
+        createFAB.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_create,null));
 
         setUpRecycleViewByFirestore();
 

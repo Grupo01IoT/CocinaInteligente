@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -86,19 +87,18 @@ public class HomeFragment extends Fragment {
     private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
     private Uri imgLink = mAuth.getPhotoUrl();
     private ViewFlipper includeDevice;
+    private View includeTopRecipe;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    //Esto se movera a un singleton del perfil en un futuro.
-    private long recipe = 0;
-    private ProgressBar pb;
-    private TextView recipes;
-    private User user;
-    private TextView fidelity, name;
-    private ImageView photo;
-    private ArrayList<Device> devices = new ArrayList<>();
-    View includeUser;
+    //Recipe
+    LinearLayout photo;
+    TextView name, duration;
+    RatingBar rating;
+
 
     //Device
+    private User user;
+    private ArrayList<Device> devices = new ArrayList<>();
     private TextView deviceName;
     private ImageView lights;
     private ImageView fan;
@@ -117,12 +117,6 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
-
-
-        if (homeViewModel.getBitmap() != null) {
-            photo.setImageBitmap(homeViewModel.getBitmap());
-        }
-
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         // clone the inflater using the ContextThemeWrapper
         // getting the parent view for handle the fragment
@@ -135,10 +129,12 @@ public class HomeFragment extends Fragment {
         //getActivity().startService(new Intent(getContext(), FirebaseService.class));
 
         // getting the include of the User details
-        includeUser = root.findViewById(R.id.includeUser);
-        photo = includeUser.findViewById(R.id.imageView);
-        name = includeUser.findViewById(R.id.textName);
-        recipes = includeUser.findViewById(R.id.recipesText);
+        includeTopRecipe = root.findViewById(R.id.includeTopRecipe);
+        photo = includeTopRecipe.findViewById(R.id.topRecipe);
+        name = includeTopRecipe.findViewById(R.id.topName);
+        rating = includeTopRecipe.findViewById(R.id.topRating);
+        duration = includeTopRecipe.findViewById(R.id.topDuration);
+        /*
         pb = includeUser.findViewById(R.id.progressBar);
         fidelity = includeUser.findViewById(R.id.fidelityText);
 
@@ -153,7 +149,7 @@ public class HomeFragment extends Fragment {
             includeUser.setVisibility(View.VISIBLE);
         else
             includeUser.setVisibility(View.GONE);
-
+*/
         // getting the include of the Device details
         includeDevice = ((ViewFlipper) root.findViewById(R.id.viewFlipper1));
         View nodevice = includeDevice.getChildAt(0);
@@ -195,10 +191,7 @@ public class HomeFragment extends Fragment {
                         (ArrayList<String>) documentSnapshot.get("favouriteReceips"),
                         (ArrayList<String>) documentSnapshot.get("devices"));
 
-                final UserViewModel model = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
-                model.setCurrentUser(user);
-                Log.d("AAAAA",model.getCurrentUser().getFavouriteReceipts().toString());
-                refreshUser();
+
                 db.collection("devices").addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -242,7 +235,7 @@ public class HomeFragment extends Fragment {
                 notification = true;
             }
         }
-        if(notification == false){
+        if(!notification){
             try{
 
                 notificationManager.cancel(NOTIFICACION_ID);
@@ -264,21 +257,6 @@ public class HomeFragment extends Fragment {
         else {
             fan.setImageResource(R.drawable.btnextraoff);
         }
-    }
-
-    private void refreshUser() {
-        name.setText((mAuth.isAnonymous()) ? "Anonymous" : user.getName());
-        imgLink = (imgLink == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imgLink;
-        new DownloadImageTask(photo, getResources()).execute(imgLink);
-        if(user.getDevices().size()>0){
-            includeDevice.setDisplayedChild(1);
-        } else {
-            includeDevice.setDisplayedChild(0);
-        }
-        recipe = user.getRecipes().size();
-        recipes.setText(recipe + " " + getResources().getString(R.string.user_receipts));
-        pb.setProgress(Integer.parseInt("" +user.getFidelity()));
-        fidelity.setText(user.getFidelity() + "%");
     }
 
     private void showPairingWindow() {
@@ -356,13 +334,6 @@ public class HomeFragment extends Fragment {
 
     private boolean checkDevices(DocumentSnapshot document){
         return document.get("devices") != null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        homeViewModel.setBitmap(((BitmapDrawable) photo.getDrawable()).getBitmap());
     }
 
     //This onResume handle the log in/log out functions

@@ -213,14 +213,14 @@ public class CreateRecipesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int pos = infoRecipe.getDisplayedChild() + 2;
-                prev.setEnabled(true);
+                prev.setVisibility(View.VISIBLE);
                 progressTxt.setText("Paso " + pos + " de 3");
                 progressBar.setProgress((100 / 3) * pos);
                 infoRecipe.setInAnimation(getContext(), R.anim.view_transition_in_left);
                 infoRecipe.setOutAnimation(getContext(), R.anim.view_transition_out_left);
                 infoRecipe.showNext();
                 if (pos > 2) {
-                    next.setEnabled(false);
+                    next.setVisibility(View.INVISIBLE);
                     return;
                 }
             }
@@ -229,14 +229,14 @@ public class CreateRecipesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int pos = infoRecipe.getDisplayedChild() - 1;
-                next.setEnabled(true);
+                next.setVisibility(View.VISIBLE);
                 progressTxt.setText("Paso " + infoRecipe.getDisplayedChild() + " de 3");
                 progressBar.setProgress((100 / 3) * infoRecipe.getDisplayedChild());
                 infoRecipe.setInAnimation(getContext(), R.anim.view_transition_in_right);
                 infoRecipe.setOutAnimation(getContext(), R.anim.view_transition_out_right);
                 infoRecipe.showPrevious();
                 if (pos < 1) {
-                    prev.setEnabled(false);
+                    prev.setVisibility(View.INVISIBLE);
                     return;
                 }
             }

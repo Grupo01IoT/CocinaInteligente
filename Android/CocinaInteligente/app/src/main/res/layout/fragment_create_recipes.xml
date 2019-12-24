@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="#0D8CC63E"
     android:orientation="vertical">
 
-    <FrameLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white">
+        android:layout_margin="10dp"
+        app:cardCornerRadius="10dp">
 
         <ImageView
             android:id="@+id/recipePhoto"
             android:layout_width="match_parent"
             android:layout_height="@dimen/img_recipe"
-            android:layout_margin="15dp"
             android:background="#F5F5F5"
             android:scaleType="centerInside"
             app:srcCompat="@mipmap/camera_colored" />
-    </FrameLayout>
+    </androidx.cardview.widget.CardView>
 
     <View
         android:id="@+id/view"
@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/rounded_fg"
         android:gravity="bottom"
         android:orientation="horizontal">
 
@@ -69,8 +69,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:enabled="false"
-            android:text="Previous" />
+            android:enabled="true"
+            android:text="Previous"
+            android:textColor="@android:color/white"
+            android:visibility="invisible" />
 
         <ProgressBar
             android:id="@+id/stepProgress"
@@ -90,7 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Paso 1 de 3" />
+            android:text="Paso 1 de 3"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/nextBtn"
@@ -98,7 +101,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="next" />
+            android:text="next"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </LinearLayout>

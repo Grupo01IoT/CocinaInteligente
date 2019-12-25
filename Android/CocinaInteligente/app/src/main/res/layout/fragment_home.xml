@@ -29,11 +29,61 @@
                 android:layout_marginBottom="5dp"
                 app:cardCornerRadius="10dp">
 
-                <include
-                    android:id="@+id/includeTopRecipe"
-                    layout="@layout/fragment_top_recipe"
+                <ViewFlipper
+                    android:id="@+id/topFlipper"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:autoStart="false"
+                    android:flipInterval="1000"
+                    android:inAnimation="@anim/view_transition_fade_in"
+                    android:outAnimation="@anim/view_transition_fade_out">
+
+
+                    <FrameLayout
+                        android:id="@+id/topPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:background="@drawable/verrecetaslite">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="#ADFFFFFF"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView20"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-smallcaps"
+                                android:gravity="center"
+                                android:text="Top recipe"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                                android:textSize="60sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textView21"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-smallcaps"
+                                android:gravity="center"
+                                android:text="The best recipe by users"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                                android:textSize="32sp" />
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                    <include
+                        android:id="@+id/includeTopRecipe"
+                        layout="@layout/fragment_top_recipe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </ViewFlipper>
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView

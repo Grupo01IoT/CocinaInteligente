@@ -2,17 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <EditText
         android:id="@+id/recipeName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
+        android:fontFamily="sans-serif-smallcaps"
         android:hint="Recipe name"
         android:padding="3dp"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textSize="30dp" />
 
     <EditText
         android:id="@+id/recipeDescription"
@@ -44,7 +46,7 @@
 
         <EditText
             android:id="@+id/recipeDuration"
-            android:layout_width="164dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:ems="10"

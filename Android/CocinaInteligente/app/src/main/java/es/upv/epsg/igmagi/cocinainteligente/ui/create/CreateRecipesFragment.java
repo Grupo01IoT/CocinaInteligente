@@ -38,6 +38,7 @@ import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -84,17 +85,18 @@ public class CreateRecipesFragment extends Fragment {
     private ImageView recipePhoto;
     private ViewFlipper infoRecipe, ingredients, steps;
     private CheckBox veggie, vegan, dairy, gluten, interactive;
-    private Button next, prev;
+    private Button next, prev, upload;
     private TextView progressTxt;
     private ProgressBar progressBar;
 
     private LinearLayout interactiveOptions;
+    private LinearLayout currentIngredients;
 
-    private boolean upload = true;
+    private boolean uploadFlag = true;
 
     private File file;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_create_recipes, container, false);
 
         setHasOptionsMenu(true);
@@ -106,6 +108,8 @@ public class CreateRecipesFragment extends Fragment {
         recipeName = vista.findViewById(R.id.recipeName);
         recipeDescription = vista.findViewById(R.id.recipeDescription);
         recipeDuration = vista.findViewById(R.id.recipeDuration);
+
+        currentIngredients = vista.findViewById(R.id.currentIngredients);
 
         addIngredient = vista.findViewById(R.id.addIngredient);
         addIngredient.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +125,9 @@ public class CreateRecipesFragment extends Fragment {
                 }
                 if (ingredients.getChildCount() > 1) {
                     if (!((EditText) ingredients.getCurrentView().findViewById(R.id.addIngredientName)).getText().toString().equals("")) {
+                        View preview = li.inflate(R.layout.fragment_add_ingredients, null);
+                        ((EditText)preview.findViewById(R.id.addIngredientName)).setText(((EditText) ingredients.getCurrentView().findViewById(R.id.addIngredientName)).getText().toString());
+                        currentIngredients.addView(preview);
                         ingredients.addView(theview);
                         ingredients.showNext();
                     }
@@ -131,8 +138,10 @@ public class CreateRecipesFragment extends Fragment {
         rmvIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ingredients.getChildCount() > 1)
+                if (ingredients.getChildCount() > 1){
                     ingredients.removeViewAt(ingredients.getChildCount() - 1);
+                    currentIngredients.removeViewAt(ingredients.getChildCount() - 1);
+                }
             }
         });
         addStep = vista.findViewById(R.id.addStep);
@@ -209,6 +218,7 @@ public class CreateRecipesFragment extends Fragment {
 
         next = vista.findViewById(R.id.nextBtn);
         prev = vista.findViewById(R.id.prevBtn);
+        upload = vista.findViewById(R.id.uploadBtn);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,7 +230,8 @@ public class CreateRecipesFragment extends Fragment {
                 infoRecipe.setOutAnimation(getContext(), R.anim.view_transition_out_left);
                 infoRecipe.showNext();
                 if (pos > 2) {
-                    next.setVisibility(View.INVISIBLE);
+                    next.setVisibility(View.GONE);
+                    upload.setVisibility(View.VISIBLE);
                     return;
                 }
             }
@@ -230,6 +241,7 @@ public class CreateRecipesFragment extends Fragment {
             public void onClick(View v) {
                 int pos = infoRecipe.getDisplayedChild() - 1;
                 next.setVisibility(View.VISIBLE);
+                upload.setVisibility(View.GONE);
                 progressTxt.setText("Paso " + infoRecipe.getDisplayedChild() + " de 3");
                 progressBar.setProgress((100 / 3) * infoRecipe.getDisplayedChild());
                 infoRecipe.setInAnimation(getContext(), R.anim.view_transition_in_right);
@@ -239,6 +251,12 @@ public class CreateRecipesFragment extends Fragment {
                     prev.setVisibility(View.INVISIBLE);
                     return;
                 }
+            }
+        });
+        upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "WATCHOUT!", Toast.LENGTH_SHORT).show();
             }
         });
 

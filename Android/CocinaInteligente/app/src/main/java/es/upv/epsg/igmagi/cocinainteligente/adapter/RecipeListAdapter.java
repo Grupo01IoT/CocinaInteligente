@@ -103,7 +103,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             puntuaciones.setText(recipe.getFormattedNumberOfRatings());
             //icono.setImageResource(recipe.getImage());
             //foto.setScaleType(ImageView.ScaleType.FIT_END);
-            Log.d("aaAAA", recipe.getRatingValue() + " - a");
             rating.setRating(recipe.getRatingValue());
             tiempo.setText(recipe.getFormattedDuration());
             if (recipe.getExtra().get("veggie")) veggie.setVisibility(View.VISIBLE);
@@ -115,7 +114,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             User user = userModel.getCurrentUser();
             if (user.getFavouriteReceipts().contains(recipe.getUid()))
                 fav.setVisibility(View.VISIBLE);
-
             View v = itemView.findViewById(R.id.container);
             final RecipeViewModel model = ViewModelProviders.of((FragmentActivity) app).get(RecipeViewModel.class);
             v.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +135,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             if (localFile.exists()) {
                 icono.setImageBitmap(BitmapFactory.decodeFile(path));
             } else {
-                Log.d("Almacenamiento", "creando fichero: " + path);
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                 StorageReference ficheroRef = storageRef.child("images/" + recipe.getPicture());
                 ficheroRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {

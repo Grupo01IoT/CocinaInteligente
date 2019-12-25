@@ -9,21 +9,9 @@
     <LinearLayout
         android:id="@+id/topRecipe"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         android:background="@drawable/ingredients"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:fontFamily="sans-serif-smallcaps"
-            android:gravity="center"
-            android:text="Top recipe"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="28sp"
-            android:textStyle="bold" />
 
         <Space
             android:layout_width="match_parent"
@@ -35,6 +23,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:paddingBottom="5dp">
 
             <LinearLayout
@@ -49,7 +39,6 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:maxLength="10"
                     android:text="Nombre"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textSize="20sp" />

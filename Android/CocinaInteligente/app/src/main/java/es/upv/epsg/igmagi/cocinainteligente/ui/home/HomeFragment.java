@@ -147,8 +147,6 @@ public class HomeFragment extends Fragment {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                topFlipper.setInAnimation(getContext(), R.anim.view_transition_fade_in);
-                topFlipper.setOutAnimation(getContext(), R.anim.view_transition_fade_out);
                 topFlipper.showNext();
             }
         }, 1000);

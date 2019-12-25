@@ -90,12 +90,13 @@ public class CreateRecipesFragment extends Fragment {
     private ProgressBar progressBar;
 
     private LinearLayout interactiveOptions;
+    private LinearLayout currentIngredients;
 
     private boolean uploadFlag = true;
 
     private File file;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_create_recipes, container, false);
 
         setHasOptionsMenu(true);
@@ -107,6 +108,8 @@ public class CreateRecipesFragment extends Fragment {
         recipeName = vista.findViewById(R.id.recipeName);
         recipeDescription = vista.findViewById(R.id.recipeDescription);
         recipeDuration = vista.findViewById(R.id.recipeDuration);
+
+        currentIngredients = vista.findViewById(R.id.currentIngredients);
 
         addIngredient = vista.findViewById(R.id.addIngredient);
         addIngredient.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +125,9 @@ public class CreateRecipesFragment extends Fragment {
                 }
                 if (ingredients.getChildCount() > 1) {
                     if (!((EditText) ingredients.getCurrentView().findViewById(R.id.addIngredientName)).getText().toString().equals("")) {
+                        View preview = li.inflate(R.layout.fragment_add_ingredients, null);
+                        ((EditText)preview.findViewById(R.id.addIngredientName)).setText(((EditText) ingredients.getCurrentView().findViewById(R.id.addIngredientName)).getText().toString());
+                        currentIngredients.addView(preview);
                         ingredients.addView(theview);
                         ingredients.showNext();
                     }
@@ -132,8 +138,10 @@ public class CreateRecipesFragment extends Fragment {
         rmvIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ingredients.getChildCount() > 1)
+                if (ingredients.getChildCount() > 1){
                     ingredients.removeViewAt(ingredients.getChildCount() - 1);
+                    currentIngredients.removeViewAt(ingredients.getChildCount() - 1);
+                }
             }
         });
         addStep = vista.findViewById(R.id.addStep);

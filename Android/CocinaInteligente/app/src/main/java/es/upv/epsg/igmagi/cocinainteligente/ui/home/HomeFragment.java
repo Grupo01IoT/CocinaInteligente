@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -82,6 +83,7 @@ import es.upv.epsg.igmagi.cocinainteligente.LoginActivity;
 import es.upv.epsg.igmagi.cocinainteligente.MainActivity;
 import es.upv.epsg.igmagi.cocinainteligente.R;
 import es.upv.epsg.igmagi.cocinainteligente.model.Device;
+import es.upv.epsg.igmagi.cocinainteligente.model.FilterViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
 import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.model.User;
@@ -120,6 +122,9 @@ public class HomeFragment extends Fragment {
     private TextView temp2;
     private TextView temp3;
     private TextView temp4;
+
+    //Fast Buttons
+    private ImageButton fbAll, fbMain, fbStarter, fbDessert, fbSpecial, fbVeggie, fbVegan, fbDairy, fbGluten;
 
     //Notificaciones
     private boolean notification = false;
@@ -163,6 +168,7 @@ public class HomeFragment extends Fragment {
         topVeggie = includeTopRecipe.findViewById(R.id.topVeggieIcon);
         topGluten = includeTopRecipe.findViewById(R.id.topGlutenIcon);
         final RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+        final FilterViewModel filtermodel = ViewModelProviders.of(getActivity()).get(FilterViewModel.class);
         includeTopRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,6 +177,107 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.nav_view_recipe);
             }
         });
+
+        // getting the references for fastbuttons
+        //fbAll, fbMain, fbStarter, fbDessert, fbSpecial, fbVeggie, fbVegan, fbDairy, fbGluten;
+
+        fbAll = root.findViewById(R.id.fbAll);
+        fbAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtermodel.setIndex(0);
+                filtermodel.setSelected(false);
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipes);
+            }
+        });
+
+
+        fbMain = root.findViewById(R.id.fbMain);
+        fbMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtermodel.setIndex(1);
+                filtermodel.setSelected(false);
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipes);
+            }
+        });
+
+        fbStarter = root.findViewById(R.id.fbStarter);
+        fbStarter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtermodel.setIndex(2);
+                filtermodel.setSelected(false);
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipes);
+            }
+        });
+
+        fbDessert = root.findViewById(R.id.fbDessert);
+        fbDessert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtermodel.setIndex(3);
+                filtermodel.setSelected(false);
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipes);
+            }
+        });
+        fbSpecial = root.findViewById(R.id.fbSpecial);
+        fbSpecial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtermodel.setIndex(4);
+                filtermodel.setSelected(false);
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipes);
+            }
+        });
+        fbVeggie = root.findViewById(R.id.fbVeggie);
+        fbVeggie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtermodel.setIndex(5);
+                filtermodel.setSelected(false);
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipes);
+            }
+        });
+        fbVegan = root.findViewById(R.id.fbVegan);
+        fbVegan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtermodel.setIndex(6);
+                filtermodel.setSelected(false);
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipes);
+            }
+        });
+
+        fbDairy = root.findViewById(R.id.fbDairy);
+        fbDairy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtermodel.setIndex(7);
+                filtermodel.setSelected(false);
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipes);
+            }
+        });
+
+        fbGluten = root.findViewById(R.id.fbGluten);
+        fbGluten.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtermodel.setIndex(8);
+                filtermodel.setSelected(false);
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipes);
+            }
+        });
+
 
         // getting the include of the Device details
         includeDevice = ((ViewFlipper) root.findViewById(R.id.viewFlipper1));
@@ -201,7 +308,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void update() {
-        db.collection("recipes").whereEqualTo("name", "Brian A La Planxa").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("recipes").whereEqualTo("name", "paella").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -314,14 +421,14 @@ public class HomeFragment extends Fragment {
         notification = false;
 
         if (devices.get(0).lights) {
-            lights.setImageResource(R.drawable.btnluzon);
+            lights.setImageResource(R.drawable.lighton);
         } else {
-            lights.setImageResource(R.drawable.btnluzoff);
+            lights.setImageResource(R.drawable.lightoff);
         }
         if (devices.get(0).fan) {
-            fan.setImageResource(R.drawable.btnextraon);
+            fan.setImageResource(R.drawable.fanon);
         } else {
-            fan.setImageResource(R.drawable.btnextraoff);
+            fan.setImageResource(R.drawable.fanoff);
         }
     }
 

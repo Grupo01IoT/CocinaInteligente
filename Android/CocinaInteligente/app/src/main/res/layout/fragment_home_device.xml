@@ -37,7 +37,7 @@
                 android:id="@+id/includeDeviceLights"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/btnluzoff" />
+                app:srcCompat="@drawable/lightoff" />
 
             <Space
                 android:layout_width="10dp"
@@ -48,7 +48,7 @@
                 android:id="@+id/includeDeviceFan"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/btnextraoff" />
+                app:srcCompat="@drawable/fanoff" />
 
             <Space
                 android:layout_width="10dp"

@@ -154,23 +154,23 @@ public class MyKitchenFragment extends Fragment{
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (lights = documentSnapshot.getBoolean("lights")){
-                    lightsbutton.setImageResource(R.drawable.prueba2);
+                    lightsbutton.setImageResource(R.drawable.lighton);
                     txtlightswitch.setText("ON");
                     //mqtt.setVisibility(View.VISIBLE);
 
                 }
                 else {
-                    lightsbutton.setImageResource(R.drawable.prueba1);
+                    lightsbutton.setImageResource(R.drawable.lightoff);
                     txtlightswitch.setText("OFF");
                     //mqtt.setVisibility(View.GONE);
 
                 }
                 if (extrac = documentSnapshot.getBoolean("fan")) {
-                    extractionbutton.setImageResource(R.drawable.btnextraon);
+                    extractionbutton.setImageResource(R.drawable.fanon);
                     txtextracswitch.setText("ON");
                 }
                 else {
-                    extractionbutton.setImageResource(R.drawable.btnextraoff);
+                    extractionbutton.setImageResource(R.drawable.fanoff);
                     txtextracswitch.setText("OFF");
                 }
                 if (documentSnapshot.getBoolean("leak")){

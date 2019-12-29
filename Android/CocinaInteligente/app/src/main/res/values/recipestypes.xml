@@ -6,6 +6,10 @@
         <item>Entrante</item>
         <item>Postre</item>
         <item>Especial</item>
+        <item>Veggie</item>
+        <item>Vegan</item>
+        <item>Dairy</item>
+        <item>Gluten</item>
     </string-array>
     <string-array name="create_recipe_type">
         <item>Principal</item>

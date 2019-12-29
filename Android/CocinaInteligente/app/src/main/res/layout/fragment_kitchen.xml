@@ -225,7 +225,7 @@
                             android:backgroundTint="@color/invisible"
 
                             android:scaleType="fitCenter"
-                            app:srcCompat="@drawable/btnluzoff" />
+                            app:srcCompat="@drawable/lightoff" />
 
                         <TextView
                             android:id="@+id/tvLuzOnOff"
@@ -260,7 +260,7 @@
 
                             android:scaleType="fitCenter"
 
-                            app:srcCompat="@drawable/btnextraoff" />
+                            app:srcCompat="@drawable/fanoff" />
 
                         <TextView
                             android:id="@+id/tvExtraccionOnOff"

@@ -32,7 +32,7 @@
                     android:contentDescription="fotografía"
                     android:filterTouchesWhenObscured="false"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/btnluzoff" />
+                    android:src="@drawable/lightoff" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

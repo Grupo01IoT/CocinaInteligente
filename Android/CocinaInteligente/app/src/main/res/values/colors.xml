@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--
     <color name="colorPrimary">#8CC63E</color>
     <color name="invisible">#00FFFFFF</color>
     <color name="colorPrimaryDark">#519039</color>
     <color name="colorAccent">#D85C45</color>
+    <color name="mainBackgroundColor">#0D8CC63E</color>
+
+    <color name="colorPrimary">#8CC63E</color>
+    <color name="invisible">#00FFFFFF</color>
+    <color name="colorPrimaryDark">#F2C53D</color>
+    <color name="colorAccent">#F2AB27</color>
+    <color name="mainBackgroundColor">#F2CA80</color>
+
+<color name="colorPrimary">#A9C4CC</color>
+    <color name="invisible">#00FFFFFF</color>
+    <color name="colorPrimaryDark">#696770</color>
+    <color name="colorAccent">#F2AB27</color>
+    <color name="mainBackgroundColor">#EBEBFA</color>
+
+
+    <color name="colorPrimary">#A9C4CC</color>
+    <color name="invisible">#00FFFFFF</color>
+    <color name="colorPrimaryDark">#518899</color>
+    <color name="colorAccent">#FF7564</color>
+    <color name="mainBackgroundColor">#ECFFF9</color>
+
+<color name="invisible">#00FFFFFF</color>
+    <color name="colorPrimary">#518899</color>
+    <color name="colorPrimaryDark">#518899</color>
+    <color name="colorAccent">#F04F4F</color>
+    <color name="mainBackgroundColor">#ffffff</color>
+    <color name="drawerTextColor">#292929</color>
+-->
+
+
+    <color name="colorPrimary">#A9C4CC</color>
+    <color name="invisible">#00FFFFFF</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#ffbf00</color>
+    <color name="mainBackgroundColor">#ECFFF9</color>
+
+
+
+
 </resources>

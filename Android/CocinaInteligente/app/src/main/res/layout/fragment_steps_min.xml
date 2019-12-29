@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="200dp"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
@@ -13,7 +13,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ingredientsbg_min">
+            android:background="@drawable/stepbg_min">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:id="@+id/ingredientNumberMin"
+                    android:id="@+id/stepNumberMin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -32,7 +32,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/ingredientNameMin"
+                    android:id="@+id/stepNameMin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

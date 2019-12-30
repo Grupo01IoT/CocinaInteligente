@@ -65,8 +65,7 @@ public class RecipeFragment extends Fragment {
                 HashMap<String, Long> userRat = recipe.getRatings();
                 userRat.put(user.getUid(), (long)rbrating.getRating());
                 recipe.setRatings(userRat);
-                FirebaseFirestore.getInstance().collection("recipes").document(recipe.getUid()).update("ratings",userRat);
-
+                //FirebaseFirestore.getInstance().collection("recipes").document(recipe.getUid()).update("ratings",userRat);
             }
         });
 
@@ -93,7 +92,8 @@ public class RecipeFragment extends Fragment {
                 LayoutInflater li = LayoutInflater.from(getContext());
                 View theview = li.inflate(R.layout.fragment_steps, null);
                 ((TextView) theview.findViewById(R.id.stepNumber)).setText((i+1)+".");
-                ((TextView) theview.findViewById(R.id.stepInfo)).setText(recipe.getSteps().get(i));
+                if (!recipe.isInteractive())((TextView) theview.findViewById(R.id.stepInfo)).setText(recipe.getSteps().get(i).toString());
+                else ((TextView) theview.findViewById(R.id.stepInfo)).setText(recipe.getSteps().get(i).toString());
                 stepsContainer.addView(theview);
             }
             stepsContainer.setAutoStart(true);

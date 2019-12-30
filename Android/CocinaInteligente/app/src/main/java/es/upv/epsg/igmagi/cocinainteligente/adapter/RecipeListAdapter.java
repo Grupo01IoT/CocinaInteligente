@@ -79,7 +79,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     //Creamos nuestro ViewHolder, con los tipos de elementos a modificar
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nombre, puntuaciones, id, tiempo;
-        public ImageView icono, fav, veggie, vegan, dairy, gluten;
+        public ImageView icono, fav, veggie, vegan, dairy, gluten, interactive;
         public RatingBar rating;
 
         public ViewHolder(View itemView) {
@@ -95,6 +95,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             dairy = itemView.findViewById(R.id.dairyIcon);
             vegan = itemView.findViewById(R.id.veganIcon);
             veggie = itemView.findViewById(R.id.veggieIcon);
+            interactive = itemView.findViewById(R.id.interactiveIcon);
         }
 
         // Personalizamos un ViewHolder a partir de un lugar
@@ -109,6 +110,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
             if (recipe.getExtra().get("vegan")) vegan.setVisibility(View.VISIBLE);
             if (recipe.getExtra().get("dairy")) dairy.setVisibility(View.VISIBLE);
             if (recipe.getExtra().get("gluten")) gluten.setVisibility(View.VISIBLE);
+            if (recipe.isInteractive()) interactive.setVisibility(View.VISIBLE);
 
             UserViewModel userModel = ViewModelProviders.of((FragmentActivity) app).get(UserViewModel.class);
             User user = userModel.getCurrentUser();

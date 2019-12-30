@@ -2,9 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     android:orientation="vertical"
     android:padding="5dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="10dp">
+
+        <ImageView
+            android:id="@+id/recipePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/img_recipe"
+            android:background="#F5F5F5"
+            android:scaleType="centerInside"
+            app:srcCompat="@mipmap/camera_colored" />
+    </androidx.cardview.widget.CardView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_horizontal_margin" />
 
     <EditText
         android:id="@+id/recipeName"
@@ -19,16 +39,18 @@
     <EditText
         android:id="@+id/recipeDescription"
         android:layout_width="match_parent"
-        android:layout_height="125dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="start"
         android:hint="Description..."
         android:inputType="textMultiLine"
+        android:minHeight="125dp"
         android:padding="2.5dp"
         android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
@@ -40,9 +62,11 @@
 
         <Spinner
             android:id="@+id/recipeSpinner"
+            style="@android:style/Widget.Holo.Light.Spinner"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:popupBackground="@drawable/border" />
 
         <EditText
             android:id="@+id/recipeDuration"
@@ -55,4 +79,5 @@
             android:inputType="number"
             android:padding="5dp" />
     </LinearLayout>
+
 </LinearLayout>

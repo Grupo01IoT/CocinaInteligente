@@ -17,4 +17,8 @@
         <item>Postre</item>
         <item>Especial</item>
     </string-array>
+    <string-array name="interactive_options">
+        <item>Temperature</item>
+        <item>Weight</item>
+    </string-array>
 </resources>

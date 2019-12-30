@@ -18,9 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@drawable/border"
         android:fitsSystemWindows="true"
 
         app:headerLayout="@layout/nav_header_main"
+        app:itemTextAppearance="@style/TextAppearance.AppCompat.Body1"
         app:menu="@menu/activity_main_drawer" />
 
     <!--app:itemIconTint="@color/drawerTextColor"

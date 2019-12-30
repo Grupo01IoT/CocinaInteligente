@@ -8,7 +8,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:cardBackgroundColor="#DBDBDB"
         app:cardCornerRadius="10dp">
 
@@ -23,7 +23,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:id="@+id/ingredientNumberMin"
+                    android:id="@+id/stepNumberMin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -33,7 +33,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/ingredientNameMin"
+                    android:id="@+id/stepNameMin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

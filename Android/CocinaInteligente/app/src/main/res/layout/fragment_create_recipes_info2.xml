@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
     android:padding="5dp">
@@ -61,15 +61,14 @@
             android:layout_height="match_parent">
 
             <androidx.cardview.widget.CardView
-                android:layout_width="30dp"
-                android:layout_height="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:elevation="5dp"
                 android:paddingRight="10dp"
                 app:cardBackgroundColor="@color/colorAccent"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <Button
                     android:id="@+id/addIngredient"
@@ -77,21 +76,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="+"
-                    android:textSize="20sp" />
+                    android:text="Añadir"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
-                android:layout_width="30dp"
-                android:layout_height="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:elevation="5dp"
                 android:paddingLeft="10dp"
                 app:cardBackgroundColor="@color/colorAccent"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <Button
                     android:id="@+id/rmvIngredient"
@@ -99,68 +98,88 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="-"
-                    android:textSize="24sp" />
+                    android:text="Quitar"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
             </androidx.cardview.widget.CardView>
 
+
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="157dp"
+                android:elevation="-1dp"
+                android:gravity="center"
+                android:text="Empty ingredient list, please add some ingredient"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/linearLayout2" />
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="35dp"
+                android:layout_height="0dp"
                 android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.cardview.widget.CardView
+                <ViewFlipper
+                    android:id="@+id/ingredientsFlipper"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="10dp">
+                    android:layout_height="wrap_content"
+                    android:inAnimation="@anim/view_transition_fade_in"
+                    android:outAnimation="@anim/view_transition_fade_out"
+                    android:padding="7.5dp">
 
-                    <ViewFlipper
-                        android:id="@+id/ingredientsFlipper"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="wrap_content"
                         android:layout_height="100dp"
-                        android:layout_weight="1"
-                        android:inAnimation="@anim/view_transition_fade_in"
-                        android:outAnimation="@anim/view_transition_fade_out"
-                        android:padding="7.5dp">
-
-                        <TextView
-                            android:id="@+id/textView12"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="Add ingredients..." />
-                    </ViewFlipper>
-                </androidx.cardview.widget.CardView>
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Add ingredients..." />
+                </ViewFlipper>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <HorizontalScrollView
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
+                    <TextView
+                        android:id="@+id/textView22"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-smallcaps"
+                        android:text="Lista"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textSize="30dp" />
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_weight="1">
 
                         <LinearLayout
                             android:id="@+id/currentIngredients"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal" />
-                    </HorizontalScrollView>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+                    </ScrollView>
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/lastIngredient"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:visibility="invisible"
                         app:cardBackgroundColor="#FFFFFF"
                         app:cardCornerRadius="10dp">

@@ -17,9 +17,10 @@ public class Recipe {
     public String picture;
     public String tipo;
     public ArrayList<String> ingredients;
-    public ArrayList<String> steps;
+    public ArrayList<Object> steps;
     public HashMap<String,Long> ratings;
     public HashMap<String,Boolean> extra;
+    public boolean interactive;
     public String user;
     public int duration;
 
@@ -28,7 +29,7 @@ public class Recipe {
         this.name = name;
         this.description = description;
         this.picture ="";
-        this.steps = new ArrayList<String>();
+        this.steps = new ArrayList<Object>();
         this.ratings =new HashMap<String,Long>();
         this.user = "Paco";
         this.duration = duracion;
@@ -46,7 +47,7 @@ public class Recipe {
     }
 
     public Recipe(String uid, String name, String description, Timestamp creationDate, String picture,
-                  ArrayList<String> steps, HashMap<String,Long> rating, String user, String tipo,int duracion) {
+                  ArrayList<Object> steps, HashMap<String,Long> rating, String user, String tipo,int duracion) {
         this.uid = uid;
         this.name = name;
         this.description = description;
@@ -57,6 +58,31 @@ public class Recipe {
         this.user = user;
         this.tipo = tipo;
         this.duration = duracion;
+    }
+
+    public Recipe(String id, String name, String description, Timestamp creationDate, String picture, HashMap<String, Boolean> extra, ArrayList<Object> steps, Boolean interactive, ArrayList<String> ingredients, HashMap<String, Long> ratings, String user, String tipo, int duration) {
+
+        this.extra = extra;
+        this.ingredients = ingredients;
+        this.uid = id;
+        this.name = name;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.picture = picture;
+        this.steps = steps;
+        this.interactive = interactive;
+        this.ratings = (ratings==null?new HashMap<String,Long>():ratings);
+        this.user = user;
+        this.tipo = tipo;
+        this.duration = duration;
+    }
+
+    public boolean isInteractive() {
+        return interactive;
+    }
+
+    public void setInteractive(boolean interactive) {
+        this.interactive = interactive;
     }
 
     public Recipe() {
@@ -88,7 +114,7 @@ public class Recipe {
         this.uid = id;
     }
 
-    public Recipe(String id, String name, String description, Timestamp creationDate, String picture, HashMap<String, Boolean> extra, ArrayList<String> steps,
+    public Recipe(String id, String name, String description, Timestamp creationDate, String picture, HashMap<String, Boolean> extra, ArrayList<Object> steps,
                   ArrayList<String> ingredients, HashMap<String, Long> ratings, String user, String tipo, int duration) {
         this.extra = extra;
         this.ingredients = ingredients;
@@ -144,11 +170,11 @@ public class Recipe {
         this.picture = picture;
     }
 
-    public ArrayList<String> getSteps() {
+    public ArrayList<Object> getSteps() {
         return steps;
     }
 
-    public void setSteps(ArrayList<String> steps) {
+    public void setSteps(ArrayList<Object> steps) {
         this.steps = steps;
     }
 

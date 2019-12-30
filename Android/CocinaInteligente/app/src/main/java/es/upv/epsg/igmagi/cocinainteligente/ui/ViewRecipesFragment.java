@@ -112,51 +112,7 @@ public class ViewRecipesFragment extends Fragment {
                 ((ProgressBar) root.findViewById(R.id.recipeProgress)).setVisibility(View.GONE);
             }
         });
-        /*
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w("AA", "listen:error", e);
-                    return;
-                }
 
-                for (DocumentChange dc : queryDocumentSnapshots.getDocumentChanges()) {
-                    Recipe temp;
-                    switch (dc.getType()) {
-                        case ADDED:
-                            try {
-                                temp = getRecipeFromDoc(dc);
-                                if (!recipes.contains(temp)) {
-                                    recipes.add(temp);
-                                }
-                            } catch (ClassCastException ex)
-                            {
-                                Toast.makeText(getContext(),"ESTAS FLIPANt",Toast.LENGTH_SHORT);
-                            }
-                            break;
-                        case MODIFIED:
-                            Log.d("asdd", "" + recipes.indexOf(new Recipe(dc.getDocument().getId())));
-                            recipes.remove(recipes.indexOf(new Recipe(dc.getDocument().getId())));
-                            try {
-                                temp = getRecipeFromDoc(dc);
-                            recipes.add(temp);
-                            } catch (ClassCastException ex)
-                            {
-                                Toast.makeText(getContext(),"ESTAS FLIPANt",Toast.LENGTH_SHORT);
-                            }
-                            break;
-                        case REMOVED:
-                            Log.d("asdd", "" + recipes.indexOf(new Recipe(dc.getDocument().getId())));
-                            recipes.remove(recipes.indexOf(new Recipe(dc.getDocument().getId())));
-                            break;
-                    }
-                }
-                adapter.notifyDataSetChanged();
-                ((ProgressBar) root.findViewById(R.id.recipeProgress)).setVisibility(View.GONE);
-            }
-        });
-*/
         adapter = new RecipeListAdapter(recipes, getContext(), getActivity(), getView());
 
         recyclerView.setAdapter(adapter);
@@ -199,7 +155,8 @@ public class ViewRecipesFragment extends Fragment {
                 (Timestamp) dc.get("creationDate"),
                 (String) dc.get("picture"),
                 (HashMap<String, Boolean>) dc.get("extra"),
-                (ArrayList<String>) dc.get("steps"),
+                (ArrayList<Object>) dc.get("steps"),
+                (Boolean) dc.get("interactive"),
                 (ArrayList<String>) dc.get("ingredients"),
                 (HashMap<String, Long>) dc.get("ratings"),
                 (String) dc.get("user"),

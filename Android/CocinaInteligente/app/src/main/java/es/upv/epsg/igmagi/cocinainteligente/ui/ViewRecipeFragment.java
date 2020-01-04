@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -61,7 +62,7 @@ public class ViewRecipeFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("Comments"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         final ViewPager viewPager = (ViewPager) root.findViewById(R.id.recipeContainer);
-        TabsAdapter tabsAdapter = new TabsAdapter(this.getFragmentManager(), tabLayout.getTabCount());
+        TabsAdapter tabsAdapter = new TabsAdapter(this.getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(tabsAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -80,6 +81,7 @@ public class ViewRecipeFragment extends Fragment {
         });
 
 //        ivfoto.setImageDrawable(photo.getDrawable());
+
         return root;
     }
 

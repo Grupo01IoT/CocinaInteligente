@@ -86,32 +86,24 @@ public class ViewRecipesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         root = inflater.inflate(R.layout.fragment_view_recipes, container, false);
         sp = root.findViewById(R.id.filterSpinner);
 
         filtermodel = ViewModelProviders.of(getActivity()).get(FilterViewModel.class);
 
-
-
         //FastButtons select
         if(!filtermodel.hasBeenSelected()){
-
             initialIndexOfSpinner = filtermodel.getIndex();
             filtermodel.setSelected(true);
         }else{
             initialIndexOfSpinner = 0;
         }
 
-
         createFAB = root.findViewById(R.id.createFAB);
         createFAB.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_create, null));
 
-
         setUpRecycleViewByFirestore();
-
         //sp.setSelection(initialIndexOfSpinner);
-
 
         return root;
     }
@@ -150,7 +142,6 @@ public class ViewRecipesFragment extends Fragment {
         adapter = new RecipeListAdapter(recipes, getContext(), getActivity(), getView());
 
         recyclerView.setAdapter(adapter);
-
 
         ArrayAdapter<CharSequence> spAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.recipe_type, android.R.layout.simple_spinner_item);

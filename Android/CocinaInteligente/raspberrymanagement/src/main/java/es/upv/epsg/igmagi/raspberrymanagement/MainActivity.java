@@ -12,13 +12,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
@@ -32,10 +32,11 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
 import static com.example.igmagi.shared.Mqtt.broker;
-import static com.example.igmagi.shared.Mqtt.clientId;
-import static com.example.igmagi.shared.Mqtt.enUso;
+import static com.example.igmagi.shared.Mqtt.presence;
 import static com.example.igmagi.shared.Mqtt.qos;
+import static com.example.igmagi.shared.Mqtt.serverId;
 import static com.example.igmagi.shared.Mqtt.topicRoot;
+import static com.example.igmagi.shared.Mqtt.weight;
 
 /**
  * Skeleton o   f an Android Things activity.
@@ -57,6 +58,7 @@ import static com.example.igmagi.shared.Mqtt.topicRoot;
  * @see <a href="https://github.com/androidthings/contrib-drivers#readme">https://github.com/androidthings/contrib-drivers#readme</a>
  */
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MQTT";
     private MqttClient client;
     private SharedPreferences prefs;
     private ArduinoUart uart;
@@ -73,23 +75,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //MQTT
-
         try {
-            Log.i("EE", "Conectando al broker " + broker);
-            MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setCleanSession(true);
-            connOpts.setKeepAliveInterval(60);
-            connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),
-                    qos, false);
-            client = new MqttClient(broker, clientId, new MemoryPersistence());
-            client.connect(connOpts);
-            //client.connect();
+            Log.i(TAG, "Conectando al broker " + broker);
+            client = new MqttClient(broker, serverId, new MemoryPersistence());
+            client.connect();
         } catch (MqttException e) {
-            Log.e("EE", "Error al conectar.", e);
+            Log.e(TAG, "Error al conectar.", e);
         }
-
-
-
 
         TextView tv = findViewById(R.id.testText);
         lightsbutton = findViewById(R.id.btnLightsOnOff);
@@ -145,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                                     MqttMessage message = new MqttMessage("false".getBytes());
                                     message.setQos(qos);
                                     message.setRetained(false);
-                                    client.publish(topicRoot+enUso, message);
+                                    client.publish(topicRoot + presence, message);
                                 } catch (MqttException e) {
                                     Log.e("ESCRI", "Error al publicar.", e);
                                 }
@@ -157,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                                     MqttMessage message = new MqttMessage("true".getBytes());
                                     message.setQos(qos);
                                     message.setRetained(false);
-                                    client.publish(topicRoot+enUso, message);
+                                    client.publish(topicRoot + presence, message);
                                 } catch (MqttException e) {
                                     Log.e("ESCRI", "Error al publicar.", e);
                                 }
@@ -172,11 +164,11 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             //TEMPERATURES
-                            Log.d("TAG", "TemperaturaMaxima: "+cadenas[2]);
-                            Log.d("TAG", "Temperatura1: "+cadenas[3]);
-                            Log.d("TAG", "Temperatura2: "+cadenas[4]);
-                            Log.d("TAG", "Temperatura3: "+cadenas[5]);
-                            Log.d("TAG", "Temperatura4: "+cadenas[6]);
+                            Log.d("TAG", "TemperaturaMaxima: " + cadenas[2]);
+                            Log.d("TAG", "Temperatura1: " + cadenas[3]);
+                            Log.d("TAG", "Temperatura2: " + cadenas[4]);
+                            Log.d("TAG", "Temperatura3: " + cadenas[5]);
+                            Log.d("TAG", "Temperatura4: " + cadenas[6]);
 
                             temps.clear();
 
@@ -198,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                                 updateBD("leak", false);
                             }
 
-                            updateWeightBD(Integer.parseInt(cadenas[8]));
+                            updateWeight(Integer.parseInt(cadenas[8]));
 
                         }
                         //String numero= (cadenas[2].split(":"))[1].replace("\"", "0");
@@ -241,38 +233,56 @@ public class MainActivity extends AppCompatActivity {
         mBD.collection("devices").document("conet_kitchen").update(map);
     }
 
-    private void updateWeightBD(int value) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("weight", value);
-        mBD.collection("devices").document("conet_kitchen").update(map);
+    private void updateWeight(int value) {
+        try {
+            MqttMessage message = new MqttMessage((value + "").getBytes());
+            message.setQos(qos);
+            message.setRetained(false);
+            client.publish(topicRoot + weight, message);
+        } catch (MqttException e) {
+            Log.e(TAG, "Error al publicar.", e);
+        }
+        Snackbar.make(getCurrentFocus(), "Publicando en MQTT", Snackbar.LENGTH_LONG);
+        //Map<String, Object> map = new HashMap<>();
+        //map.put("weight", value);
+        //mBD.collection("devices").document("conet_kitchen").update(map);
     }
 
-    private void updateTemperaturesBD(List<Integer> t){
+    private void updateTemperaturesBD(List<Integer> t) {
         Map<String, Object> map = new HashMap<>();
         map.put("cooktop", t);
         mBD.collection("devices").document("conet_kitchen").update(map);
     }
+
     private void refreshView() {
         mBD.collection("devices").document("conet_kitchen").addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (lights = documentSnapshot.getBoolean("lights")) {
                     lightsbutton.setImageResource(R.drawable.btnluzon);
-                    if (!flag) {uart.escribir("O");
-                    Log.d("ASDASDASD", "LEIDOS: " + uart.leer());}
+                    if (!flag) {
+                        uart.escribir("O");
+                        Log.d("ASDASDASD", "LEIDOS: " + uart.leer());
+                    }
                 } else {
                     lightsbutton.setImageResource(R.drawable.btnluzoff);
-                    if (!flag) {uart.escribir("C");
-                    Log.d("ASDASDASD", "LEIDOS: " + uart.leer());}
+                    if (!flag) {
+                        uart.escribir("C");
+                        Log.d("ASDASDASD", "LEIDOS: " + uart.leer());
+                    }
                 }
                 if (extrac = documentSnapshot.getBoolean("fan")) {
                     extractionbutton.setImageResource(R.drawable.btnextraon);
-                    if (!flag){ uart.escribir("F");
-                Log.d("ASDASDASD", "LEIDOS: " + uart.leer());}
+                    if (!flag) {
+                        uart.escribir("F");
+                        Log.d("ASDASDASD", "LEIDOS: " + uart.leer());
+                    }
                 } else {
                     extractionbutton.setImageResource(R.drawable.btnextraoff);
-                    if (!flag){ uart.escribir("N");
-            Log.d("ASDASDASD", "LEIDOS: " + uart.leer());}
+                    if (!flag) {
+                        uart.escribir("N");
+                        Log.d("ASDASDASD", "LEIDOS: " + uart.leer());
+                    }
                 }
             }
         });
@@ -281,6 +291,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        try {
+            Log.i(TAG, "Desconectado");
+            client.disconnect();
+        } catch (MqttException e) {
+            Log.e(TAG, "Error al desconectar.", e);
+        }
         super.onDestroy();
         uart.cerrar();
     }

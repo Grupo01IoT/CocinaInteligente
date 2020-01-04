@@ -1,5 +1,7 @@
 package es.upv.epsg.igmagi.cocinainteligente.model;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import com.google.firebase.Timestamp;
@@ -269,4 +271,12 @@ public class Recipe {
         return equals;
     }
 
+    public ArrayList<Step> getStepsToHashMap() {
+        ArrayList<Step> steps = new ArrayList<>();
+        for(Object item: this.steps) {
+            String[] items = item.toString().split(",");
+            steps.add(new Step(items[0].substring(items[0].indexOf("=")+1),items[1].substring(items[1].indexOf("=")+1),items[2].substring(items[2].indexOf("=")+1, items[2].length()-1)));
+        }
+        return steps;
+    }
 }

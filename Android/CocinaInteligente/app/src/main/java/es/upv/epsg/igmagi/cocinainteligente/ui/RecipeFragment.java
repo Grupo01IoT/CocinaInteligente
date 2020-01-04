@@ -1,57 +1,52 @@
 package es.upv.epsg.igmagi.cocinainteligente.ui;
 
-import android.graphics.drawable.Drawable;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.lang.reflect.Field;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import es.upv.epsg.igmagi.cocinainteligente.MainActivity;
 import es.upv.epsg.igmagi.cocinainteligente.R;
-import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
-import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
-import es.upv.epsg.igmagi.cocinainteligente.model.User;
-import es.upv.epsg.igmagi.cocinainteligente.model.UserViewModel;
+import es.upv.epsg.igmagi.cocinainteligente.model.*;
 
-public class RecipeFragment extends Fragment {
-    FirebaseFirestore mBD = FirebaseFirestore.getInstance();
+import static com.example.igmagi.shared.Mqtt.*;
 
-    String TAG = "RECIPEFRAGMENT";
+public class RecipeFragment extends Fragment implements org.eclipse.paho.client.mqttv3.MqttCallback{
+    private static final String TAG = "RECIPEFRAGMENT";
     TextView tvname, tvdescription, tvtiempo, tvusername;
     RatingBar rbrating;
     ImageView vegan, veggie, dairy, gluten;
@@ -63,6 +58,8 @@ public class RecipeFragment extends Fragment {
     private ListView lvIngr, lvSteps;
     private ArrayAdapter<String> ingrAdapter, stepsAdapter;
     private ArrayList<String> ingrList, stepsList;
+
+    private FirebaseFirestore mBD = FirebaseFirestore.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,6 +87,16 @@ public class RecipeFragment extends Fragment {
         user = userModel.getCurrentUser();
 
 
+        if (!recipe.isInteractive()) root.findViewById(R.id.fabPlay).setVisibility(View.GONE);
+        root.findViewById(R.id.fabPlay).setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_nav_view_recipe_to_nav_interactive));
+        /*
+        root.findViewById(R.id.fabPlay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInteractiveDialog();
+            }
+        });*/
+
         tvname = root.findViewById(R.id.name);
         tvdescription = root.findViewById(R.id.description);
         tvtiempo = root.findViewById(R.id.tiempo);
@@ -116,28 +123,11 @@ public class RecipeFragment extends Fragment {
             }
         });
 
-
-
-
         // Inflate the layout for this fragment
         recipePhoto = root.findViewById(R.id.recipephoto);
         recipePhoto.setBackground(model.getCurrentRecipeImage());
         rbrating = root.findViewById(R.id.showRating);
         rbrating.setRating(recipe.getRatingValue());
-
-
-        /*rbrating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                HashMap<String, Long> userRat = recipe.getRatings();
-                userRat.put(user.getUid(), (long)rbrating.getRating());
-                recipe.setRatings(userRat);
-                //FirebaseFirestore.getInstance().collection("recipes").document(recipe.getUid()).update("ratings",userRat);
-            }
-        });
-        */
-        //ingredientList = root.findViewById(R.id.ingredientList);
-
 
         gluten = root.findViewById(R.id.glutenIcon);
         dairy = root.findViewById(R.id.dairyIcon);
@@ -154,26 +144,8 @@ public class RecipeFragment extends Fragment {
             veggie.setVisibility(View.GONE);
             vegan.setVisibility(View.VISIBLE);
         }
-
-
         createStepsList();
         createIngredientsList();
-        /*
-        stepsContainer = root.findViewById(R.id.stepFlipper);
-
-        if(recipe.steps != null){
-            for (int i = 0; i < recipe.getSteps().size(); i++){
-                LayoutInflater li = LayoutInflater.from(getContext());
-                View theview = li.inflate(R.layout.fragment_steps, null);
-                ((TextView) theview.findViewById(R.id.stepNumber)).setText((i+1)+".");
-                if (!recipe.isInteractive())((TextView) theview.findViewById(R.id.stepInfo)).setText(recipe.getSteps().get(i).toString());
-                else ((TextView) theview.findViewById(R.id.stepInfo)).setText(recipe.getSteps().get(i).toString());
-                stepsContainer.addView(theview);
-            }
-            stepsContainer.setAutoStart(true);
-        }
-
-        */
 
         // -------- LIKE BUTTON -----------
         like = root.findViewById(R.id.likeButton);
@@ -190,17 +162,9 @@ public class RecipeFragment extends Fragment {
                     ArrayList<String> fav = (user.getFavouriteReceipts());
                     boolean res = fav.remove(recipe.getUid());
                     user.setFavouriteReceipts(fav);
-                    /*
                     Map<String, Object> map = new HashMap<>();
-                    map.put("cooktop", t);
-                    mBD.collection("devices").document("conet_kitchen").update(map);
-                    */
-                    Map<String, Object> map = new HashMap<>();
-
                     map.put("favouriteReceips", user.getFavouriteReceipts());
-
                     mBD.collection("users").document(user.getUid()).update(map);
-                    //item.setIcon(R.drawable.baseline_favorite_border_24);
                     like.setBackgroundResource(R.drawable.like);
                 } else {//Si no es favorita
 
@@ -211,10 +175,7 @@ public class RecipeFragment extends Fragment {
                     Map<String, Object> map = new HashMap<>();
                     map.put("favouriteReceips", user.getFavouriteReceipts());
 
-
                     mBD.collection("users").document(user.getUid()).update(map);
-                    //mBD.collection("users").document(user.getUid()).update("favouriteReceips",user.getFavouriteReceipts());
-                    //item.setIcon(R.drawable.baseline_favorite_24);
                     like.setBackgroundResource(R.drawable.liked);
 
                 }
@@ -232,7 +193,6 @@ public class RecipeFragment extends Fragment {
             n++;
         }
         ViewGroup.LayoutParams params = lvIngr.getLayoutParams();
-
         params.height = 55 * n;
         lvIngr.setLayoutParams(params);
         lvIngr.requestLayout();
@@ -240,7 +200,6 @@ public class RecipeFragment extends Fragment {
     }
 
     private void createStepsList() {
-
         int n = 1;
         if (!recipe.isInteractive()) {
             for (int i = 0; i < recipe.getSteps().size(); i++) {
@@ -248,41 +207,129 @@ public class RecipeFragment extends Fragment {
                 //Log.d("OOO", (String)recipe.getSteps().get(i));
                 n++;
             }
-            //Log.d("OOO", stepsAdapter.getItem(1));
-
-
             ViewGroup.LayoutParams params = lvSteps.getLayoutParams();
-
             params.height = 55 * n;
             lvSteps.setLayoutParams(params);
             lvSteps.requestLayout();
-
-
         } else {
             for (int i = 0; i < recipe.getSteps().size(); i++) {
                 HashMap map = (HashMap) recipe.getSteps().get(i);
-
-
                 stepsAdapter.add((n + ". " + map.get("step")));
                 n++;
             }
-            //Log.d("OOO", stepsAdapter.getItem(1));
-
-
             ViewGroup.LayoutParams params = lvSteps.getLayoutParams();
-
             params.height = 55 * n;
             lvSteps.setLayoutParams(params);
             lvSteps.requestLayout();
+        }
+    }
 
+    private AlertDialog alertDialog;
+
+    ViewFlipper steps;
+    MqttClient client = null;
+
+    private void showInteractiveDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        View layoutView = interactiveSetup();
+        dialogBuilder.setView(layoutView);
+        alertDialog = dialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        alertDialog.show();
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                try {
+                    client.disconnect();
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private View interactiveSetup(){
+        View layoutView = getLayoutInflater().inflate(R.layout.fragment_interactive_recipe_dialog, null);
+        Button dialogButton = layoutView.findViewById(R.id.closeBtn);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+        steps = layoutView.findViewById(R.id.interactiveStepsFlipper);
+        ArrayList<Step> stepArrayList =  recipe.getStepsToHashMap();
+
+        //MQTT
+        try {
+            Log.i(TAG, "Conectando al broker " + broker);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            connOpts.setKeepAliveInterval(60);
+            connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),
+                    qos, false);
+            client = new MqttClient(broker, clientId, new MemoryPersistence());
+            client.connect(connOpts);
+            //client.connect();
+        } catch (MqttException e) {
+            Log.e(TAG, "Error al conectar.", e);
         }
 
+        int cont = 0;
+        for (Step s: stepArrayList) {
+            LayoutInflater li = LayoutInflater.from(getContext());
+            final View theview = li.inflate(R.layout.fragment_interactive_steps, null);
+            ((TextView)theview.findViewById(R.id.stepsInteractiveTxt)).setText("Paso "+ cont++ + " de " + stepArrayList.size() + ". " + s.getMode());
+            ((TextView)theview.findViewById(R.id.informationInteractiveTxt)).setText(s.getStep());
+            ((TextView)theview.findViewById(R.id.fromInteractiveTxt)).setText("De 0");
+            ((TextView)theview.findViewById(R.id.toInteractiveTxt)).setText("hasta " + s.getTrigger());
+                //LEER
+                try {
+                    client.subscribe(topicRoot+s.getMode()+"/#", qos);
+                    client.setCallback(RecipeFragment.this);
+                    Log.i(TAG, "Suscrito a " + topicRoot+weight);
+                } catch (MqttException e) {
+                    Log.e(TAG, "Error al suscribir.", e);
+                }
+            steps.addView(theview);
+        }
+
+        return layoutView;
+    }
+
+    private void computeValue(int value, int pos) {
+        Step s = recipe.getStepsToHashMap().get(pos);
+        Log.d(TAG, "VALOR: " + value + " - " + steps.getChildCount());
+        ((TextView)steps.getChildAt(0).findViewById(R.id.fromInteractiveTxt)).setText("De " + value);
+        if (Integer.parseInt(s.getTrigger()) == value){
+            steps.showNext();
+        }
+    }
+
+    @Override
+    public void connectionLost(Throwable cause) {
 
     }
 
-    /*
-    public class PasosInteractivos{
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        View current = steps.getCurrentView();
+        int pos = steps.getDisplayedChild();
+        String val = topic.substring(topic.lastIndexOf('/')+1);
+
+        Log.i(TAG, "LLEGó - " + "De " + val);
+        Log.i(TAG, "c");
+
+        Log.i(TAG, "pretexto - " +  ((TextView)current.findViewById(R.id.fromInteractiveTxt)).getText());
+        Log.i(TAG, "posttexto - " +  ((TextView)current.findViewById(R.id.fromInteractiveTxt)).getText());
+
+        // computeValue(val, pos);
+    }
+
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken token) {
 
     }
-    */
 }

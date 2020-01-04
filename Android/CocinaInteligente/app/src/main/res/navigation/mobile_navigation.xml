@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.slideshow.SlideshowFragment"
+        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.interactive.InteractiveRecipeFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
 
@@ -76,10 +76,10 @@
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/nav_send"
-        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
+        android:id="@+id/nav_interactive"
+        android:name="es.upv.epsg.igmagi.cocinainteligente.ui.interactive.InteractiveRecipeFragment"
+        android:label="@string/menu_interactive"
+        tools:layout="@layout/fragment_interactive_recipe_dialog" />
     <fragment
         android:id="@+id/nav_kitchen"
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.MyKitchenFragment"
@@ -100,7 +100,11 @@
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.ViewRecipeFragment"
         android:label="View Recipe"
         tools:layout="@layout/fragment_view_recipe"
-        />
+        >
+        <action
+            android:id="@+id/action_nav_view_recipe_to_nav_interactive"
+            app:destination="@id/nav_interactive" />
+    </fragment>
     <fragment
         android:id="@+id/nav_create"
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.create.CreateRecipesFragment"

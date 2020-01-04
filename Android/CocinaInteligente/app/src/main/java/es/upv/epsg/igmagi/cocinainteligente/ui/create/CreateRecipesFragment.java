@@ -5,8 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -99,7 +101,6 @@ public class CreateRecipesFragment extends Fragment {
     // INGREDIENTS
 
 
-
     // STEPS & INTERACTIVE RECIPE
 
 
@@ -139,14 +140,11 @@ public class CreateRecipesFragment extends Fragment {
             public void onClick(View v) {
                 LayoutInflater li = LayoutInflater.from(getContext());
                 View theview = li.inflate(R.layout.fragment_add_ingredients, null);
-                ((TextView) theview.findViewById(R.id.addIngredientNumber)).setText(ingredients.getChildCount() + "");
-                if (ingredients.getChildCount() == 1) {
-                    vista.findViewById(R.id.lastIngredient).setVisibility(View.VISIBLE);
-                    ingredients.addView(theview);
-                    ingredients.setDisplayedChild(ingredients.getChildCount() - 1);
-                }
-                if (ingredients.getChildCount() > 1) {
-                    if (!((EditText) ingredients.getCurrentView().findViewById(R.id.addIngredientName)).getText().toString().equals("")) {
+                ((TextView) theview.findViewById(R.id.addIngredientNumber)).setText(ingredients.getChildCount()+1 + ". ");
+                if (ingredients.getChildCount() >= 1) {
+                    if (((EditText) ingredients.getCurrentView().findViewById(R.id.addIngredientName)).getText().toString().matches("[A-Za-z]+ ?|[A-Z] ?|[a-z] ?")) {
+                        vista.findViewById(R.id.lastIngredient).setVisibility(View.VISIBLE);
+                        vista.findViewById(R.id.rmvIngredient).setVisibility(View.VISIBLE);
                         final View preview = li.inflate(R.layout.fragment_ingredients_min, null);
                         ((TextView) preview.findViewById(R.id.ingredientNameMin)).setText(((EditText) ingredients.getCurrentView().findViewById(R.id.addIngredientName)).getText().toString());
                         ((TextView) preview.findViewById(R.id.ingredientNumberMin)).setText(((TextView) ingredients.getCurrentView().findViewById(R.id.addIngredientNumber)).getText().toString());
@@ -202,8 +200,8 @@ public class CreateRecipesFragment extends Fragment {
             public void onClick(View v) {
                 LayoutInflater li = LayoutInflater.from(getContext());
                 View theview = li.inflate(R.layout.fragment_add_steps, null);
-                if (interactive.isChecked()){
-                    if(steps.getDisplayedChild()>0 && !(((EditText)steps.getCurrentView().findViewById(R.id.interactiveTrigger)).getText().toString().matches("[0-9]+")))
+                if (interactive.isChecked()) {
+                    if (steps.getDisplayedChild() > 0 && !(((EditText) steps.getCurrentView().findViewById(R.id.interactiveTrigger)).getText().toString().matches("[0-9]+")))
                         return;
                     theview.findViewById(R.id.interactiveSide).setVisibility(View.VISIBLE);
                 }
@@ -255,33 +253,6 @@ public class CreateRecipesFragment extends Fragment {
             }
         });
 
-/*
-        addStep = vista.findViewById(R.id.addStep);
-        addStep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LayoutInflater li = LayoutInflater.from(getContext());
-                View theview = li.inflate(R.layout.fragment_add_steps, null);
-                ((TextView) theview.findViewById(R.id.addStepNumber)).setText(steps.getChildCount() + "");
-                if (steps.getChildCount() == 1) {
-                    steps.addView(theview);
-                    steps.showNext();
-                }
-                if (steps.getChildCount() > 1)
-                    if (!((EditText) steps.getCurrentView().findViewById(R.id.addStepName)).getText().toString().equals("")) {
-                        steps.addView(theview);
-                        steps.showNext();
-                    }
-            }
-        });
-        rmvStep = vista.findViewById(R.id.rmvStep);
-        rmvStep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (steps.getChildCount() > 1)
-                    steps.removeViewAt(steps.getChildCount() - 1);
-            }
-        });*/
         recipeSp = vista.findViewById(R.id.recipeSpinner);
         ArrayAdapter<CharSequence> spAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.create_recipe_type, android.R.layout.simple_spinner_item);
@@ -321,9 +292,33 @@ public class CreateRecipesFragment extends Fragment {
         });
 
         veggie = vista.findViewById(R.id.veggieCB);
+        veggie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackground(v);
+            }
+        });
         vegan = vista.findViewById(R.id.veganCB);
+        vegan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackground(v);
+            }
+        });
         dairy = vista.findViewById(R.id.dairyCB);
+        dairy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackground(v);
+            }
+        });
         gluten = vista.findViewById(R.id.glutenCB);
+        gluten.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackground(v);
+            }
+        });
 
         progressTxt = vista.findViewById(R.id.stepWise);
         progressBar = vista.findViewById(R.id.stepProgress);
@@ -368,7 +363,7 @@ public class CreateRecipesFragment extends Fragment {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "WATCHOUT!", Toast.LENGTH_SHORT).show();
+                guardarReceta();
             }
         });
 
@@ -391,8 +386,8 @@ public class CreateRecipesFragment extends Fragment {
     }
 
     public boolean checkFields() {
-        if (recipeDescription.getText().toString().matches("[A-Za-z]+|[A-Z]+")) {
-            if (recipeName.getText().toString().matches("[A-Za-z]+|[A-Z]+")) {
+        if (recipeDescription.getText().toString().matches("[A-Za-z]+ ?|[A-Z] ?|[a-z] ?")) {
+            if (recipeName.getText().toString().matches("[A-Za-z]+ ?|[A-Z] ?|[a-z] ?")) {
                 if (recipeDuration.getText().toString().matches("[0-9]+")) {
                     if (steps.getChildCount() > 1 && ingredients.getChildCount() > 1) {
                         //for(int i = 1; i<ingredients.getChildCount(); i++){
@@ -455,7 +450,7 @@ public class CreateRecipesFragment extends Fragment {
                             String step = ((EditText) steps.getChildAt(i).findViewById(R.id.addStepName)).getText().toString();
                             if (!interactive.isChecked()) {
                                 if (!step.equals("")) stepList.add(step);
-                            }else {
+                            } else {
                                 String trigger = ((EditText) steps.getChildAt(i).findViewById(R.id.interactiveTrigger)).getText().toString();
                                 String mode = ((Spinner) steps.getChildAt(i).findViewById(R.id.interactiveSpinner)).getSelectedItem().toString();
                                 HashMap<String, String> stepMap = new HashMap<>();
@@ -538,25 +533,16 @@ public class CreateRecipesFragment extends Fragment {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_upload:
-                guardarReceta();
-                return true;
-            default:
-                break;
+    public void changeBackground(View v) {
+        if (((CheckBox) v).isChecked()) {
+            v.setBackgroundResource(R.drawable.border_checkbox_selected);
+            ((CheckBox) v).setButtonTintList(ColorStateList.valueOf(Color.BLACK));
+            ((CheckBox) v).setTextColor(Color.BLACK);
+        } else {
+            v.setBackgroundResource(R.drawable.border_checkbox_unselected);
+            ((CheckBox) v).setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFAAAAAA")));
+            ((CheckBox) v).setTextColor(Color.parseColor("#FFAAAAAA"));
         }
-
-        return false;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Do something that differs the Activity's menu here
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuItem item = menu.findItem(R.id.action_upload);
-        item.setVisible(true);
     }
 
     class CustomGestureDetector extends GestureDetector.SimpleOnGestureListener {

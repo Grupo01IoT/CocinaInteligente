@@ -18,7 +18,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,8 +35,9 @@ import javax.annotation.Nullable;
 
 import es.upv.epsg.igmagi.cocinainteligente.R;
 
-//public class MyKitchenFragment extends Fragment implements org.eclipse.paho.client.mqttv3.MqttCallback{
-public class MyKitchenFragment extends Fragment{
+import static com.example.igmagi.shared.Mqtt.*;
+
+public class MyKitchenFragment extends Fragment implements org.eclipse.paho.client.mqttv3.MqttCallback{
     private MqttClient client;
     private static final String TAG = "KitchenFragment";
 
@@ -85,56 +92,37 @@ public class MyKitchenFragment extends Fragment{
         txtextracswitch = (TextView) root.findViewById(R.id.tvExtraccionOnOff);
         txtlightswitch = (TextView) root.findViewById(R.id.tvLuzOnOff);
 
-        //MQTT
-        /*
-        try {
-            Log.i(TAG, "Conectando al broker " + broker);
-            MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setCleanSession(true);
-            connOpts.setKeepAliveInterval(60);
-            connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),
-                    qos, false);
-            client = new MqttClient(broker, clientId, new MemoryPersistence());
-            client.connect(connOpts);
-            //client.connect();
-        } catch (MqttException e) {
-            Log.e(TAG, "Error al conectar.", e);
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
+                //MQTT
+                try {
+                    Log.i(TAG, "Conectando al broker " + broker);
+                    MqttConnectOptions connOpts = new MqttConnectOptions();
+                    connOpts.setCleanSession(true);
+                    connOpts.setKeepAliveInterval(60);
+                    connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),
+                            qos, false);
+                    client = new MqttClient(broker, clientId, new MemoryPersistence());
+                    client.connect(connOpts);
+                    //client.connect();
+                } catch (MqttException e) {
+                    Log.e(TAG, "Error al conectar.", e);
+                }
 
-        //ESCRIBIR
-        try {
-            Log.i(TAG, "Publicando mensaje: " + "hola");
-            MqttMessage message = new MqttMessage("true".getBytes());
-            message.setQos(qos);
-            message.setRetained(false);
-            client.publish(topicRoot+enUso, message);
-        } catch (MqttException e) {
-            Log.e(TAG, "Error al publicar.", e);
-        }*/
-        //CONEXION
-       /* try{
-            MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setCleanSession(true);
-            connOpts.setKeepAliveInterval(60);
-            connOpts.setWill(topicRoot+"WillTopic", "App desconectada".getBytes(),
-                    qos, false);
-            client.connect(connOpts);
+                //LEER
+                try {
+                    client.subscribe(topicRoot+weight+"/#", qos);
+                    client.setCallback(MyKitchenFragment.this);
+                    Log.i(TAG, "Suscrito a " + topicRoot+weight);
+                } catch (MqttException e) {
+                    Log.e(TAG, "Error al suscribir.", e);
+                }
 
-        }catch(MqttException e) {
-            Log.e(TAG, "Error al conectarESTE.", e);
-        }*/
-        //LEER
-        /*try {
-            Log.i(TAG, "Suscrito a " + topicRoot+enUso);
-            client.subscribe(topicRoot+enUso, qos);
-            client.setCallback(this);
-        } catch (MqttException e) {
-            Log.e(TAG, "Error al suscribir.", e);
-        }
+            }
+        }).start();
 
-
-         */
         refreshView();
 
         // Inflate the layout for this fragment
@@ -240,7 +228,7 @@ public class MyKitchenFragment extends Fragment{
             }
         });
     }
-/*
+
     @Override public void onDestroy() {
         try {
             Log.i(TAG, "Desconectado");
@@ -261,12 +249,7 @@ public class MyKitchenFragment extends Fragment{
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         String payload = new String(message.getPayload());
-        if(payload=="true"){
-            mqtt.setVisibility(View.VISIBLE);
-        }else{
-            mqtt.setVisibility(View.GONE);
-        }
-        Log.d(TAG, "messageArrived:"+payload);
+        txtweight.setText(topic.substring(topic.lastIndexOf('/')+1) + " gr.");
     }
 
     @Override
@@ -279,5 +262,5 @@ public class MyKitchenFragment extends Fragment{
         }
     }
 
- */
+
 }

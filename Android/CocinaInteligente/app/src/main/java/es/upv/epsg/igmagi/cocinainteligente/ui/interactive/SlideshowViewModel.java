@@ -1,4 +1,4 @@
-package es.upv.epsg.igmagi.cocinainteligente.ui.slideshow;
+package es.upv.epsg.igmagi.cocinainteligente.ui.interactive;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

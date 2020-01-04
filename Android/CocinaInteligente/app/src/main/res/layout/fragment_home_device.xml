@@ -6,7 +6,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="122dp">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -16,75 +16,75 @@
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/cocina" />
 
-        <TextView
-            android:id="@+id/includeDeviceName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/device_info_paired"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingStart="10dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="10dp">
-
-            <ImageView
-                android:id="@+id/includeDeviceLights"
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/lightoff" />
-
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
-
-            <ImageView
-                android:id="@+id/includeDeviceFan"
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/fanoff" />
-
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingRight="6dp">
 
                 <TextView
-                    android:id="@+id/includeDeviceT1"
-                    android:layout_width="match_parent"
+                    android:id="@+id/includeDeviceName"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Temperatura 1:" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/device_info_paired"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/includeDeviceT2"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Temperatura 2:" />
-
-                <TextView
-                    android:id="@+id/includeDeviceT3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Temperatura 3:" />
-
-                <TextView
-                    android:id="@+id/includeDeviceT4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Temperatura 4:" />
+                    app:srcCompat="@android:drawable/radiobutton_off_background" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/includeCurrentRecipeName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Current Recipe" />
+
+                <TextView
+                    android:id="@+id/includeRecipeTimeLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/includeDeviceLights"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    app:srcCompat="@drawable/lightoff" />
+
+                <ImageView
+                    android:id="@+id/includeDeviceFan"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    app:srcCompat="@drawable/fanoff" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </FrameLayout>

@@ -8,13 +8,13 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="122dp">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha=".3"
+            android:alpha=".1"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/cocina" />
 
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="@string/device_info"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -32,8 +32,10 @@
             android:id="@+id/pairDevice"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
+            android:layout_marginBottom="20dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
+            android:background="@drawable/border"
             android:text="@string/device_pair"
             android:textSize="16sp" />
     </FrameLayout>

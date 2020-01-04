@@ -14,6 +14,19 @@
         android:background="@drawable/ingredients"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/colorPrimaryDarkTransparent"
+            android:gravity="center"
+            android:text="@string/top_recipe_label"
+            android:textAllCaps="true"
+            android:textColor="@color/mainBackgroundColor"
+            android:textSize="18sp"
+            android:textStyle="normal" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

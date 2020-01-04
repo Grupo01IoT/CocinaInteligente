@@ -51,6 +51,7 @@ public class ViewRecipeFragment extends Fragment {
 
         RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
         UserViewModel userModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+
         recipe = model.getCurrentRecipe();
         user = userModel.getCurrentUser();
         setHasOptionsMenu(true);
@@ -91,7 +92,7 @@ public class ViewRecipeFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_favorite:
+            /*case R.id.action_favorite:
                 if (user.getFavouriteReceipts().contains(recipe.getUid())) {
                     ArrayList<String> fav = (user.getFavouriteReceipts());
                     boolean res = fav.remove(recipe.getUid());
@@ -108,6 +109,8 @@ public class ViewRecipeFragment extends Fragment {
                 return true;
             default:
                 break;
+
+             */
         }
 
         return false;
@@ -117,13 +120,13 @@ public class ViewRecipeFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Do something that differs the Activity's menu here
         super.onCreateOptionsMenu(menu, inflater);
-        MenuItem item = menu.findItem(R.id.action_favorite);
+        /*MenuItem item = menu.findItem(R.id.action_favorite);
         item.setVisible(true);
         if (user.getFavouriteReceipts().contains(recipe.getUid())) {
             item.setIcon(R.drawable.baseline_favorite_24);
         } else {
             item.setIcon(R.drawable.baseline_favorite_border_24);
-        }
+        }*/
 
     }
 

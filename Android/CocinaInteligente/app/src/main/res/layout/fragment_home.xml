@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D8CC63E">
+    android:background="@color/mainBackgroundColor">
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -98,7 +98,7 @@
                 <ViewFlipper
                     android:id="@+id/viewFlipper1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="120dp"
                     android:background="@drawable/border">
 
 
@@ -119,104 +119,175 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="match_parent"
+                android:background="@drawable/fbgradient"
+                android:orientation="vertical">
 
-                <HorizontalScrollView
+                <TextView
+                    android:id="@+id/textView26"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    >
+                    android:gravity="center"
+                    android:paddingBottom="3dp"
+                    android:text="@string/fast_buttons_label"
+                    android:textSize="16sp"
+                    android:textStyle="normal|bold" />
 
-                    <LinearLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
+                        android:fadeScrollbars="false"
+                        android:paddingBottom="10dp"
+                        android:scrollbarStyle="outsideOverlay">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
 
-                        <ImageButton
-                            android:id="@+id/fbAll"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginRight="15dp"
-                            android:src="@drawable/fanoff">
+                            <Button
+                                android:id="@+id/fbAll"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fball"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:text="@string/type_all"
+                                android:textColor="#fff">
 
-                        </ImageButton>
+                            </Button>
 
-                        <ImageButton
-                            android:id="@+id/fbMain"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginRight="15dp"
-                            android:src="@drawable/fanoff">
+                            <Button
+                                android:id="@+id/fbMain"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fbmain"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:text="@string/type_main"
+                                android:textColor="#fff">
 
-                        </ImageButton>
 
-                        <ImageButton
-                            android:id="@+id/fbStarter"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginRight="15dp"
-                            android:src="@drawable/fanoff">
+                            </Button>
 
-                        </ImageButton>
+                            <Button
+                                android:id="@+id/fbStarter"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fbstarter"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:text="@string/type_starter"
+                                android:textColor="#fff">
 
-                        <ImageButton
-                            android:id="@+id/fbDessert"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginRight="15dp"
-                            android:src="@drawable/fanoff">
 
-                        </ImageButton>
+                            </Button>
 
-                        <ImageButton
-                            android:id="@+id/fbSpecial"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginRight="15dp"
-                            android:src="@drawable/fanoff">
+                            <Button
+                                android:id="@+id/fbDessert"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fbdessert"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:text="@string/type_dessert"
+                                android:textColor="#fff">
 
-                        </ImageButton>
 
-                        <ImageButton
-                            android:id="@+id/fbVeggie"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginRight="15dp"
-                            android:src="@drawable/fanoff">
+                            </Button>
 
-                        </ImageButton>
+                            <Button
+                                android:id="@+id/fbSpecial"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fbspecial"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:text="@string/type_special"
+                                android:textColor="#fff">
 
-                        <ImageButton
-                            android:id="@+id/fbVegan"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginRight="15dp"
-                            android:src="@drawable/fanoff">
 
-                        </ImageButton>
+                            </Button>
 
-                        <ImageButton
-                            android:id="@+id/fbDairy"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginRight="15dp"
-                            android:src="@drawable/fanoff">
+                            <Button
+                                android:id="@+id/fbVeggie"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fbveggie"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:text="@string/type_veggie"
+                                android:textColor="#fff">
 
-                        </ImageButton>
 
-                        <ImageButton
-                            android:id="@+id/fbGluten"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginRight="15dp"
-                            android:src="@drawable/fanoff">
+                            </Button>
 
-                        </ImageButton>
-                    </LinearLayout>
-                </HorizontalScrollView>
+                            <Button
+                                android:id="@+id/fbVegan"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fbvegan"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:text="@string/type_vegan"
+                                android:textColor="#fff">
+
+
+                            </Button>
+
+                            <Button
+                                android:id="@+id/fbDairy"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fbdairyfree"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:text="@string/type_dairyfree"
+                                android:textColor="#fff">
+
+
+                            </Button>
+
+                            <Button
+                                android:id="@+id/fbGluten"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:adjustViewBounds="false"
+                                android:background="@drawable/fbglutenfree"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:text="@string/type_glutenfree"
+                                android:textColor="#fff">
+
+
+                            </Button>
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
             </LinearLayout>
+
             <!--
                         <LinearLayout
                             android:layout_width="fill_parent"

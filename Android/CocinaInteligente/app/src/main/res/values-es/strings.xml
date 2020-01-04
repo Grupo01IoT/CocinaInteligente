@@ -36,4 +36,20 @@
     <string name="menu_kitchen">Mi Cocina</string>
     <string name="menu_vitro">Mi Vitrocerámica</string>
     <string name="menu_register">Mis registros</string>
+    <string name="action_favorite">Favorito</string>
+    <string name="action_upload">Subir</string>
+    <string name="fast_buttons_label">Acceso Directo</string>
+    <string name="type_main">Principal</string>
+    <string name="type_starter">Entrante</string>
+    <string name="type_dessert">Postre</string>
+    <string name="type_special">Especial</string>
+    <string name="type_veggie">Vegetariano</string>
+    <string name="type_vegan">Vegano</string>
+    <string name="type_dairyfree">Sin Lácteos</string>
+    <string name="type_glutenfree">Sin Gluten</string>
+    <string name="type_all">Todos</string>
+    <string name="top_recipe_label">Receta recomendada</string>
+    <string name="description_label">Descripción</string>
+    <string name="ingredients_label">Ingredientes</string>
+    <string name="steps_label">Pasos</string>
 </resources>

@@ -1,7 +1,6 @@
 package es.upv.epsg.igmagi.cocinainteligente.ui.home;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -23,19 +21,11 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.Window;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,10 +35,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,7 +47,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -72,15 +59,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import es.upv.epsg.igmagi.cocinainteligente.FirebaseService;
 import es.upv.epsg.igmagi.cocinainteligente.LoginActivity;
-import es.upv.epsg.igmagi.cocinainteligente.MainActivity;
 import es.upv.epsg.igmagi.cocinainteligente.R;
 import es.upv.epsg.igmagi.cocinainteligente.model.Device;
 import es.upv.epsg.igmagi.cocinainteligente.model.FilterViewModel;
@@ -88,11 +70,6 @@ import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
 import es.upv.epsg.igmagi.cocinainteligente.model.RecipeViewModel;
 import es.upv.epsg.igmagi.cocinainteligente.model.User;
 import es.upv.epsg.igmagi.cocinainteligente.model.UserViewModel;
-import es.upv.epsg.igmagi.cocinainteligente.ui.ProfileFragment;
-import es.upv.epsg.igmagi.cocinainteligente.utils.DownloadImageTask;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class HomeFragment extends Fragment {
 
@@ -124,13 +101,16 @@ public class HomeFragment extends Fragment {
     private TextView temp4;
 
     //Fast Buttons
-    private ImageButton fbAll, fbMain, fbStarter, fbDessert, fbSpecial, fbVeggie, fbVegan, fbDairy, fbGluten;
+    private Button  fbAll,fbMain, fbStarter, fbDessert, fbSpecial, fbVeggie, fbVegan, fbDairy, fbGluten;
 
     //Notificaciones
     private boolean notification = false;
     private NotificationManager notificationManager;
     static final String CANAL_ID = "mi_canal";
     static final int NOTIFICACION_ID = 1;
+
+    UserViewModel userViewModel;
+    RecipeViewModel model;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -157,6 +137,7 @@ public class HomeFragment extends Fragment {
         }, 1000);
 
 
+
         // getting the include of the User details
         includeTopRecipe = root.findViewById(R.id.includeTopRecipe);
         photo = includeTopRecipe.findViewById(R.id.topRecipe);
@@ -167,16 +148,13 @@ public class HomeFragment extends Fragment {
         topVegan = includeTopRecipe.findViewById(R.id.topVeganIcon);
         topVeggie = includeTopRecipe.findViewById(R.id.topVeggieIcon);
         topGluten = includeTopRecipe.findViewById(R.id.topGlutenIcon);
-        final RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+        model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
         final FilterViewModel filtermodel = ViewModelProviders.of(getActivity()).get(FilterViewModel.class);
-        includeTopRecipe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.setCurrentRecipeImage(photo.getBackground());
-                model.setCurrentRecipe(topRecipe);
-                Navigation.findNavController(v).navigate(R.id.nav_view_recipe);
-            }
-        });
+        //final RecipeViewModel recipeViewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+
+        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+
+
 
         // getting the references for fastbuttons
         //fbAll, fbMain, fbStarter, fbDessert, fbSpecial, fbVeggie, fbVegan, fbDairy, fbGluten;
@@ -293,10 +271,18 @@ public class HomeFragment extends Fragment {
         deviceName = device.findViewById(R.id.includeDeviceName);
         lights = device.findViewById(R.id.includeDeviceLights);
         fan = device.findViewById(R.id.includeDeviceFan);
-        temp1 = device.findViewById(R.id.includeDeviceT1);
+        /*temp1 = device.findViewById(R.id.includeDeviceT1);
         temp2 = device.findViewById(R.id.includeDeviceT2);
         temp3 = device.findViewById(R.id.includeDeviceT3);
-        temp4 = device.findViewById(R.id.includeDeviceT4);
+        temp4 = device.findViewById(R.id.includeDeviceT4);*/
+
+        device.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Navigation.findNavController(v).navigate(R.id.action_nav_home_to_nav_kitchen);
+            }
+        });
 
         if (pref.getBoolean("currencySummaryDeviceOnOff", true))
             includeDevice.setVisibility(View.VISIBLE);
@@ -304,17 +290,29 @@ public class HomeFragment extends Fragment {
             includeDevice.setVisibility(View.GONE);
         update();
 
+
+
+        includeTopRecipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Navigation.findNavController(v).navigate(R.id.nav_view_recipe);
+            }
+        });
+
+
         return root;
     }
 
     private void update() {
-        db.collection("recipes").whereEqualTo("name", "paella").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("recipes").whereEqualTo("name", "Pechuga").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         topRecipe = document.toObject(Recipe.class);
-                        name.setText(topRecipe.getName());
+                        topRecipe.setUid(document.getId());
+                        name.setText(topRecipe.getName().toUpperCase());
                         File localFile = null;
                         localFile = new File(getContext().getCacheDir().toString().concat("/" + document.getId().concat(".jpg")));
                         final String path = localFile.getAbsolutePath();
@@ -349,12 +347,21 @@ public class HomeFragment extends Fragment {
                         if (topRecipe.getExtra().get("dairy")) topDairy.setVisibility(View.VISIBLE);
                         if (topRecipe.getExtra().get("gluten")) topGluten.setVisibility(View.VISIBLE);
                     }
+
+                    model.setCurrentRecipeImage(photo.getBackground());
+                    model.setCurrentRecipe(topRecipe);
+                    model.setId(topRecipe.getUid());
+
+
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
+
+
             }
         });
         db.collection("users").document(mAuth.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 //user = documentSnapshot.toObject(User.class);
@@ -366,6 +373,10 @@ public class HomeFragment extends Fragment {
                         (ArrayList<String>) documentSnapshot.get("favouriteReceips"),
                         (ArrayList<String>) documentSnapshot.get("devices"));
 
+                userViewModel.setCurrentUser(user);
+
+
+                Log.d(TAG, "onCreateView: "+user.getUid());
 
                 db.collection("devices").addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -384,11 +395,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void refreshDevice() {
+        boolean isSmthOn;
         deviceName.setText(devices.get(0).getName());
-        temp1.setText("Temperatura 1: " + devices.get(0).getCooktop().get(0));
+/*        temp1.setText("Temperatura 1: " + devices.get(0).getCooktop().get(0));
         temp2.setText("Temperatura 2: " + devices.get(0).getCooktop().get(1));
         temp3.setText("Temperatura 3: " + devices.get(0).getCooktop().get(2));
-        temp4.setText("Temperatura 4: " + devices.get(0).getCooktop().get(3));
+        temp4.setText("Temperatura 4: " + devices.get(0).getCooktop().get(3));*/
 
         for (int i = 0; i < 4; i++) {
             if (devices.get(0).getCooktop().get(0) > 60 && notification == false) {
@@ -443,6 +455,7 @@ public class HomeFragment extends Fragment {
 
             final EditText id = d.findViewById(R.id.editText);
             final Button pair = d.findViewById(R.id.pairDevice);
+
             id.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -455,6 +468,7 @@ public class HomeFragment extends Fragment {
                         pair.setEnabled(false);
                     } else {
                         pair.setEnabled(true);
+
                     }
                 }
 
@@ -485,6 +499,7 @@ public class HomeFragment extends Fragment {
                                         public void onSuccess(Void documentReference) {
                                             Log.d(TAG, "DocumentSnapshot successfully written!");
                                             includeDevice.setDisplayedChild(1);
+                                            //TODO Canviar les preferències (?)
                                             d.cancel();
                                         }
                                     })

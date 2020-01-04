@@ -41,4 +41,18 @@
     <string name="action_favorite">Favourite</string>
     <string name="menu_register">My register</string>
     <string name="action_upload">Upload</string>
+    <string name="fast_buttons_label">Quick Access</string>
+    <string name="type_main">Main</string>
+    <string name="type_starter">Starter</string>
+    <string name="type_dessert">Dessert</string>
+    <string name="type_special">Special</string>
+    <string name="type_veggie">Veggie</string>
+    <string name="type_vegan">Vegan</string>
+    <string name="type_dairyfree">Dairy-Free</string>
+    <string name="type_glutenfree">Gluten-Free</string>
+    <string name="type_all">All</string>
+    <string name="top_recipe_label">Reccomended recipe</string>
+    <string name="description_label">Description</string>
+    <string name="ingredients_label">Ingredients</string>
+    <string name="steps_label">Steps</string>
 </resources>

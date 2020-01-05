@@ -71,8 +71,10 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!pinInput.getText().toString().equals("") && !nameInput.getText().toString().equals("")) login();
-                else Toast.makeText(getApplicationContext(), "Llena los campos!", Toast.LENGTH_LONG).show();
+                if (!pinInput.getText().toString().equals("") && !nameInput.getText().toString().equals(""))
+                    login();
+                else
+                    Toast.makeText(getApplicationContext(), "Llena los campos!", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -103,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor.commit();
                         Intent i = new Intent(getApplication(), MainActivity.class);
                         startActivity(i);
-                    }else if(document.exists() && !document.get("pin").toString().equals(pinInput.getText().toString())){
+                    } else if (document.exists() && !document.get("pin").toString().equals(pinInput.getText().toString())) {
                         Toast.makeText(getApplication(), "Wrong PIN!", Toast.LENGTH_LONG).show();
                     } else {
                         // Add a new document with a generated ID

@@ -1,14 +1,19 @@
 package es.upv.epsg.igmagi.cocinainteligente.model;
 
 public class Step {
+    public static int numSteps = 0;
     private String mode;
     private String step;
     private String trigger;
+    private int pos;
+
 
     public Step(String mode, String step, String trigger) {
         this.mode = mode;
         this.step = step;
         this.trigger = trigger;
+        pos = numSteps;
+        numSteps++;
     }
 
     public String getMode() {
@@ -33,5 +38,13 @@ public class Step {
 
     public void setTrigger(String trigger) {
         this.trigger = trigger;
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
     }
 }

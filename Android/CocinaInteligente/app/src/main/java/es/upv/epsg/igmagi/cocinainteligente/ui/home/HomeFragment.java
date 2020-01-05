@@ -59,6 +59,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 import javax.annotation.Nullable;
 
@@ -124,6 +125,7 @@ public class HomeFragment extends Fragment {
         final View root = localInflater.inflate(R.layout.fragment_home, container, false);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
 
         //getActivity().startService(new Intent(getContext(), FirebaseService.class));
 
@@ -283,7 +285,6 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_nav_home_to_nav_kitchen);
             }
         });
-
         if (pref.getBoolean("currencySummaryDeviceOnOff", true))
             includeDevice.setVisibility(View.VISIBLE);
         else
@@ -300,6 +301,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        //Check if the user has already paired the device
+        SharedPreferences pref2 = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String deviceId = pref2.getString("device_id", "empty");
+
+        if(!deviceId.equals("empty")){
+            //show
+            includeDevice.setDisplayedChild(1);
+        }else{
+            includeDevice.setDisplayedChild(0);
+        }
 
         return root;
     }
@@ -485,30 +496,59 @@ public class HomeFragment extends Fragment {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             DocumentSnapshot document = task.getResult();
                             ArrayList<String> group;
+                            boolean needsToBeUploaded = true;
                             if (user.getDevices().size() > 0) {
                                 group = (ArrayList<String>) document.get("devices");
                                 group.add(id.getText().toString());
+                                for(String s: user.getDevices()){
+                                    Log.d(TAG, "DB: "+s);
+                                    Log.d(TAG, "TextView: "+id.getText().toString());
+
+                                    if(s.equals(id.getText().toString())){
+                                        //Log.d(TAG, "onComplete: "+"AAAAAAAAAa");
+                                        needsToBeUploaded = false;
+                                    }
+                                }
                             } else {
                                 group = new ArrayList<String>();
                                 group.add(id.getText().toString());
                             }
-                            db.collection("users").document(mAuth.getUid())
-                                    .update("devices", group)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void documentReference) {
-                                            Log.d(TAG, "DocumentSnapshot successfully written!");
-                                            includeDevice.setDisplayedChild(1);
-                                            //TODO Canviar les preferències (?)
-                                            d.cancel();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "Error writing document", e);
-                                        }
-                                    });
+
+
+                            if(needsToBeUploaded) {
+                                db.collection("users").document(mAuth.getUid())
+                                        .update("devices", group)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void documentReference) {
+                                                Log.d(TAG, "DocumentSnapshot successfully written!");
+                                                includeDevice.setDisplayedChild(1);
+                                                //TODO Canviar les preferències (?)
+                                                SharedPreferences pref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                                                SharedPreferences.Editor edt = pref.edit();
+                                                edt.putString("device_id", id.getText().toString());
+                                                edt.commit();
+
+                                                d.cancel();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error writing document", e);
+                                            }
+                                        });
+                            }else{
+
+                                includeDevice.setDisplayedChild(1);
+
+                                SharedPreferences pref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                                SharedPreferences.Editor edt = pref.edit();
+                                edt.putString("device_id", id.getText().toString());
+                                edt.commit();
+
+                                d.cancel();
+                            }
                         }
                     });
                 }

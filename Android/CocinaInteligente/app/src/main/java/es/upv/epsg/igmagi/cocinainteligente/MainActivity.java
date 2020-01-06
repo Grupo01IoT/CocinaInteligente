@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +17,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,9 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
-    private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
 
-    private Uri imageUrl = mAuth.getPhotoUrl();
+    private Uri imageUrl;
     NavigationView navigationView;
 
     @Override
@@ -43,6 +45,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mAuth.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                imageUrl = (mAuth.isAnonymous()) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : mAuth.getPhotoUrl();
+                profileName.setText((mAuth.isAnonymous()) ? "Not signed in" : mAuth.getDisplayName());
+                profileEmail.setText((mAuth.isAnonymous()) ? "Empty email" : mAuth.getEmail());
+                new DownloadImageTask(profilePicture, getResources()).execute(imageUrl);
+            }
+        });
 
         // Including layout to activity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -65,10 +77,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         //Setting the layout items
-        imageUrl = (imageUrl == null) ? Uri.parse("https://image.flaticon.com/icons/png/512/16/16480.png") : imageUrl;
-        new DownloadImageTask(profilePicture, getResources()).execute(imageUrl);
-        profileName.setText((mAuth.isAnonymous()) ? "Anonymous" : mAuth.getDisplayName());
-        profileEmail.setText((mAuth.isAnonymous()) ? "Empty email" : mAuth.getEmail());
 
     }
 

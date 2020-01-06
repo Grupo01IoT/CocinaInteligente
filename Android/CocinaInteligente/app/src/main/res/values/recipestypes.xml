@@ -18,7 +18,8 @@
         <item>Especial</item>
     </string-array>
     <string-array name="interactive_options">
-        <item>Temperature</item>
-        <item>Weight</item>
+        <item>Manual</item>
+        <item>Tiempo</item>
+        <item>Temperatura</item>
     </string-array>
 </resources>

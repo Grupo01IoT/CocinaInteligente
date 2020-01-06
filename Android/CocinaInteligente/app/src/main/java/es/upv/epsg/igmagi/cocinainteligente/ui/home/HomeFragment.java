@@ -78,7 +78,6 @@ public class HomeFragment extends Fragment {
     private String TAG = "HomeFragment";
 
     private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
-    private Uri imgLink = mAuth.getPhotoUrl();
     private ViewFlipper includeDevice;
     private View includeTopRecipe;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();

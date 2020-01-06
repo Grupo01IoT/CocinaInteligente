@@ -138,7 +138,10 @@ public class InteractiveRecipeFragment extends Fragment {
         for (int i = 0; i < recipe.getSteps().size(); i++) {
             Step s;
             HashMap map = (HashMap) recipe.getSteps().get(i);
+            if(!map.get("mode").toString().equals("Manual"))
             steps.add(new Step( map.get("mode").toString(),map.get("step").toString(), map.get("trigger").toString()));
+            else
+                steps.add(new Step( map.get("mode").toString(),map.get("step").toString()));
             stepsToDO.add(steps.get(i).getPos());
         }
     }

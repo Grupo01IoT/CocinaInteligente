@@ -9,12 +9,13 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardBackgroundColor="#DBDBDB"
+        app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="10dp">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/border_list">
 
             <LinearLayout
                 android:layout_width="match_parent"

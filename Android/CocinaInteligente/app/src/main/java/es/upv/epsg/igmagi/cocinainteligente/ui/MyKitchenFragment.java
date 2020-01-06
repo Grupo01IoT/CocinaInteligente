@@ -179,12 +179,16 @@ public class MyKitchenFragment extends Fragment implements org.eclipse.paho.clie
                 txttemp3.setText(String.valueOf(temperatures.get(2)+"ºC"));
                 txttemp4.setText(String.valueOf(temperatures.get(3)+"ºC"));
 
+                /*
                 if(documentSnapshot.getLong("weight") < 0){
-                    txtweight.setText("0g");
+
+                    txtweight.setText("0gr");
                 }else{
 
                     txtweight.setText(documentSnapshot.getLong("weight").toString()+"g");
                 }
+
+                 */
 
                 if(Integer.parseInt(String.valueOf(temperatures.get(0))) > triggerTemperature){
                     temp1.setBackgroundResource(R.drawable.vitroon);
@@ -243,13 +247,25 @@ public class MyKitchenFragment extends Fragment implements org.eclipse.paho.clie
 
     @Override
     public void connectionLost(Throwable cause) {
-        Log.d(TAG, "connectionLost: ");
+        Log.d(TAG, "connectionLost: "+cause.getCause().getMessage());
     }
 
     @Override
-    public void messageArrived(String topic, MqttMessage message) throws Exception {
+    public void messageArrived(final String topic, MqttMessage message) throws Exception {
+
+        Log.d(TAG, "messageArrived: "+topic);
         String payload = new String(message.getPayload());
-        txtweight.setText(topic.substring(topic.lastIndexOf('/')+1) + " gr.");
+        getActivity().runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                // Stuff that updates the UI
+                txtweight.setText(topic.substring(topic.lastIndexOf('/')+1) + " gr");
+
+
+            }
+        });
     }
 
     @Override

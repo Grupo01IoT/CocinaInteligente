@@ -45,6 +45,9 @@
     <color name="colorAccent">#919191</color>
     <color name="mainBackgroundColor">#fff</color>
 
+
+    <color name="colorAccent">#FF7651</color>
+
 -->
 
     <color name="colorPrimary">#038C8C</color>
@@ -52,7 +55,9 @@
     <color name="colorPrimaryDark">#026E6E</color>
     <color name="colorAccent">#FF7651</color>
     <color name="mainBackgroundColor">#EDF5EF</color>
+    <color name="iconDarkerGray">#505050</color>
     <color name="colorPrimaryDarkTransparent">#bb026E6E</color>
+    <color name="redLikeIcon">#FD1D1D</color>
 
 
 

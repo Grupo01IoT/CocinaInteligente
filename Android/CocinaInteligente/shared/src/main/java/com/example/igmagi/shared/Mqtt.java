@@ -9,4 +9,5 @@ public class Mqtt {
     public static final String serverId = "329ee43108b44e82a3030cb195c29857";
     public static final String weight = "weight";
     public static final String presence = "presence";
+    public static final String playingRecipe = "playingRecipe";
 }

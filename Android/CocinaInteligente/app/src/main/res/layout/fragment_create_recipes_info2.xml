@@ -34,31 +34,50 @@
                 android:orientation="vertical"
                 android:paddingRight="2.5dp">
 
-                <CheckBox
-                    android:id="@+id/veganCB"
+                <LinearLayout
+                    android:id="@+id/llvegan"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="2.5dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_checkbox_unselected"
-                    android:button="@drawable/checkbox_vegan"
-                    android:buttonTint="@android:color/darker_gray"
-                    android:text="Vegan"
-                    android:textColor="@android:color/darker_gray" />
+                    android:gravity="center"
+                    android:paddingLeft="75px">
 
-                <CheckBox
-                    android:id="@+id/veggieCB"
+                    <CheckBox
+                        android:id="@+id/veganCB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="2.5dp"
+                        android:layout_weight="1"
+                        android:button="@drawable/checkbox_vegan"
+                        android:buttonTint="@android:color/darker_gray"
+                        android:paddingLeft="8dp"
+                        android:text="Vegan"
+                        android:textColor="@android:color/darker_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llveggie"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="2.5dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_checkbox_unselected"
-                    android:button="@drawable/checkbox_veggie"
-                    android:buttonTint="@android:color/darker_gray"
-                    android:text="Veggie"
-                    android:textColor="@android:color/darker_gray" />
+                    android:gravity="center"
+                    android:paddingLeft="75px">
+
+                    <CheckBox
+                        android:id="@+id/veggieCB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="2.5dp"
+                        android:layout_weight="1"
+                        android:button="@drawable/checkbox_veggie"
+                        android:buttonTint="@android:color/darker_gray"
+                        android:paddingLeft="8dp"
+                        android:text="Veggie"
+                        android:textColor="@android:color/darker_gray" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -68,31 +87,50 @@
                 android:orientation="vertical"
                 android:paddingLeft="2.5dp">
 
-                <CheckBox
-                    android:id="@+id/glutenCB"
+                <LinearLayout
+                    android:id="@+id/llgluten"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="2.5dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_checkbox_unselected"
-                    android:button="@drawable/checkbox_gluten"
-                    android:buttonTint="@android:color/darker_gray"
-                    android:text="Gluten free"
-                    android:textColor="@android:color/darker_gray" />
+                    android:gravity="center"
+                    android:paddingLeft="75px">
 
-                <CheckBox
-                    android:id="@+id/dairyCB"
+                    <CheckBox
+                        android:id="@+id/glutenCB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="2.5dp"
+                        android:layout_weight="1"
+                        android:button="@drawable/checkbox_gluten"
+                        android:buttonTint="@android:color/darker_gray"
+                        android:paddingLeft="8dp"
+                        android:text="Gluten free"
+                        android:textColor="@android:color/darker_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lldairy"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="2.5dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_checkbox_unselected"
-                    android:button="@drawable/checkbox_dairy"
-                    android:buttonTint="@android:color/darker_gray"
-                    android:text="Dairy free"
-                    android:textColor="@android:color/darker_gray" />
+                    android:gravity="center"
+                    android:paddingLeft="75px">
+
+                    <CheckBox
+                        android:id="@+id/dairyCB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="2.5dp"
+                        android:layout_weight="1"
+                        android:button="@drawable/checkbox_dairy"
+                        android:buttonTint="@android:color/darker_gray"
+                        android:paddingLeft="8dp"
+                        android:text="Dairy free"
+                        android:textColor="@android:color/darker_gray" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>

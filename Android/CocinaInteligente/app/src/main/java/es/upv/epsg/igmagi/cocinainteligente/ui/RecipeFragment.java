@@ -100,6 +100,8 @@ public class RecipeFragment extends Fragment implements org.eclipse.paho.client.
         }
 
         root.findViewById(R.id.fabPlay).setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_nav_view_recipe_to_nav_interactive));
+
+        // VERSIÓN CON MODAL
         /*
         root.findViewById(R.id.fabPlay).setOnClickListener(new View.OnClickListener() {
             @Override

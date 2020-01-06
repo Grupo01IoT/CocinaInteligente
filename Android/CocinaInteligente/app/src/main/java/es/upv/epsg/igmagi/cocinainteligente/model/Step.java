@@ -6,14 +6,34 @@ public class Step {
     private String step;
     private String trigger;
     private int pos;
+    private int status;
 
+
+    public Step(){}
 
     public Step(String mode, String step, String trigger) {
         this.mode = mode;
         this.step = step;
         this.trigger = trigger;
-        pos = numSteps;
-        numSteps++;
+        this.pos = numSteps;
+        this.numSteps++;
+        this.status = 0;
+    }
+
+    public Step(String mode, String step) {
+        this.mode = mode;
+        this.step = step;
+        this.pos = numSteps;
+        this.numSteps++;
+        this.status = 0;
+    }
+
+    public Step(String mode, String step, String trigger, int pos, int status) {
+        this.mode = mode;
+        this.step = step;
+        this.trigger = trigger;
+        this.pos = pos;
+        this.status = status;
     }
 
     public String getMode() {
@@ -47,4 +67,14 @@ public class Step {
     public void setPos(int pos) {
         this.pos = pos;
     }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+
 }

@@ -94,6 +94,7 @@ public class CreateRecipesFragment extends Fragment {
     private ImageView recipePhoto;
     private ViewFlipper infoRecipe, ingredients, steps;
     private CheckBox veggie, vegan, dairy, gluten, interactive;
+    private LinearLayout llveggie, llvegan, lldairy, llgluten, llinteractive;
     private Button next, prev, upload;
     private TextView progressTxt;
     private ProgressBar progressBar;
@@ -292,31 +293,73 @@ public class CreateRecipesFragment extends Fragment {
         });
 
         veggie = vista.findViewById(R.id.veggieCB);
+
         veggie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackground(v);
             }
         });
+
+
         vegan = vista.findViewById(R.id.veganCB);
+
         vegan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackground(v);
             }
         });
+
+
         dairy = vista.findViewById(R.id.dairyCB);
+
         dairy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackground(v);
             }
         });
+
+
         gluten = vista.findViewById(R.id.glutenCB);
+
         gluten.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackground(v);
+            }
+        });
+
+
+
+
+        llveggie = vista.findViewById(R.id.llveggie);
+        llveggie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackgroundNew(v);
+            }
+        });
+        llvegan = vista.findViewById(R.id.llvegan);
+        llvegan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackgroundNew(v);
+            }
+        });
+        lldairy = vista.findViewById(R.id.lldairy);
+        lldairy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackgroundNew(v);
+            }
+        });
+        llgluten = vista.findViewById(R.id.llgluten);
+        llgluten.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackgroundNew(v);
             }
         });
 
@@ -535,14 +578,49 @@ public class CreateRecipesFragment extends Fragment {
 
     public void changeBackground(View v) {
         if (((CheckBox) v).isChecked()) {
-            v.setBackgroundResource(R.drawable.border_checkbox_selected);
+            //v.setBackgroundResource(R.drawable.border_checkbox_selected);
+            ((LinearLayout)v.getParent()).setBackgroundResource(R.drawable.border_checkbox_selected);
+            ((LinearLayout)v.getParent()).setPadding(75,0,0,0);
+            //((LinearLayout)v.getParent()).getChildAt(0).set));
             ((CheckBox) v).setButtonTintList(ColorStateList.valueOf(Color.BLACK));
             ((CheckBox) v).setTextColor(Color.BLACK);
         } else {
-            v.setBackgroundResource(R.drawable.border_checkbox_unselected);
+            //v.setBackgroundResource(R.drawable.border_checkbox_unselected);
+            ((LinearLayout)v.getParent()).setBackgroundResource(R.drawable.border_checkbox_unselected);
+            ((LinearLayout)v.getParent()).setPadding(75,0,0,0);
+
             ((CheckBox) v).setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFAAAAAA")));
             ((CheckBox) v).setTextColor(Color.parseColor("#FFAAAAAA"));
         }
+    }
+
+    public void changeBackgroundNew(View v) {
+        if (((CheckBox)((LinearLayout)v).getChildAt(0)).isChecked()) {
+            Log.d("AA", "isCheckedWhenClicked");
+            v.setBackgroundResource(R.drawable.border_checkbox_unselected);
+            v.setPadding(75,0,0,0);
+
+            //((LinearLayout)v.setBackgroundResource(R.drawable.border_checkbox_selected);
+            //((LinearLayout)v.getParent()).getChildAt(0).set));
+            ((CheckBox)((LinearLayout)v).getChildAt(0)).setChecked(false);
+            ((CheckBox)((LinearLayout)v).getChildAt(0)).setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFAAAAAA")));
+            ((CheckBox)((LinearLayout)v).getChildAt(0)).setTextColor(Color.parseColor("#FFAAAAAA"));
+        } else {
+            Log.d("AA", "isNotCheckedWhenclicked");
+
+            v.setBackgroundResource(R.drawable.border_checkbox_selected);
+            v.setPadding(75,0,0,0);
+
+            //((LinearLayout)v.setBackgroundResource(R.drawable.border_checkbox_selected);
+            //((LinearLayout)v.getParent()).getChildAt(0).set));
+            Log.d("AA", "isCheckedWhenClicked"+((CheckBox)((LinearLayout)v).getChildAt(0)).getText());
+
+            ((CheckBox)((LinearLayout)v).getChildAt(0)).setChecked(true);
+            ((CheckBox)((LinearLayout)v).getChildAt(0)).setButtonTintList(ColorStateList.valueOf(Color.BLACK));
+            ((CheckBox)((LinearLayout)v).getChildAt(0)).setTextColor(Color.BLACK);
+        }
+
+
     }
 
     class CustomGestureDetector extends GestureDetector.SimpleOnGestureListener {

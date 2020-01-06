@@ -52,4 +52,9 @@
     <string name="description_label">Descripción</string>
     <string name="ingredients_label">Ingredientes</string>
     <string name="steps_label">Pasos</string>
+    <string name="menu_interactive">Receta interactiva</string>
+    <string name="interactive_alert_msg">Ya se está cocinando una receta interactiva. ¿Está seguro de que quiere pararla para reproducir la nueva? Si acepta se borrará el proceso de la receta actual.</string>
+    <string name="accept_modal">Aceptar</string>
+    <string name="deny_modal">Cancelar</string>
+    <string name="alert_modal">Alerta</string>
 </resources>

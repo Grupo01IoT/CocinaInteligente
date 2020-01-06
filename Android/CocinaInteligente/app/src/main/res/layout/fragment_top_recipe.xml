@@ -91,29 +91,35 @@
 
                 <ImageView
                     android:id="@+id/topVeggieIcon"
-                    android:layout_width="wrap_content"
+                    android:layout_width="25dp"
                     android:layout_height="match_parent"
+                    android:tint="@color/iconDarkerGray"
                     android:visibility="gone"
                     app:srcCompat="@drawable/veggie" />
 
                 <ImageView
                     android:id="@+id/topVeganIcon"
-                    android:layout_width="wrap_content"
+                    android:layout_width="25dp"
                     android:layout_height="match_parent"
+                    android:tint="@color/iconDarkerGray"
                     android:visibility="gone"
                     app:srcCompat="@drawable/vegan" />
 
                 <ImageView
                     android:id="@+id/topDairyIcon"
-                    android:layout_width="wrap_content"
+                    android:layout_width="25dp"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="2dp"
+                    android:tint="@color/iconDarkerGray"
                     android:visibility="gone"
                     app:srcCompat="@drawable/dairy" />
 
                 <ImageView
                     android:id="@+id/topGlutenIcon"
-                    android:layout_width="wrap_content"
+                    android:layout_width="25dp"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:tint="@color/iconDarkerGray"
                     android:visibility="gone"
                     app:srcCompat="@drawable/gluten" />
             </LinearLayout>

@@ -9,12 +9,13 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#DBDBDB"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="10dp">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/border_list">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,11 +39,27 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:text="Ingredient"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textSize="24sp"
                     android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/editIngredientBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/ic_menu_create" />
+
+                <ImageButton
+                    android:id="@+id/rmvIngredientBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:tint="@android:color/black"
+                    app:srcCompat="@drawable/baseline_delete_24" />
             </LinearLayout>
         </FrameLayout>
     </androidx.cardview.widget.CardView>

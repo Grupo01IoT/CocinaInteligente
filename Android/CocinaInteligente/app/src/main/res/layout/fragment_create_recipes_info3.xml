@@ -32,8 +32,12 @@
                 android:id="@+id/interactiveRecipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Receta interactiva" />
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:background="@drawable/border_checkbox_unselected"
+                android:button="@drawable/ic_menu_board"
+                android:buttonTint="@android:color/darker_gray"
+                android:text="Receta interactiva"
+                android:textColor="@android:color/darker_gray" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -114,12 +118,11 @@
                     android:inAnimation="@anim/view_transition_fade_in"
                     android:padding="7.5dp">
 
-                    <TextView
-                        android:id="@+id/textView14"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Add steps..." />
+                    <include
+                        layout="@layout/fragment_add_steps"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
                 </ViewFlipper>
 
                 <TextView

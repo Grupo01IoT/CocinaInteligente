@@ -23,6 +23,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -76,6 +79,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class CreateRecipesFragment extends Fragment {
 
+    private static final String TAG = "CREATerecipes";
     // GENERAL STUFF MAYBE USELESS
     private FirebaseUser mAuth = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
@@ -87,12 +91,11 @@ public class CreateRecipesFragment extends Fragment {
     private Context mContext;
 
     // RECIPE
-
     private EditText recipeName, recipeDescription, recipeDuration;
     private Button addIngredient, rmvIngredient, addStep, rmvStep;
     private Spinner recipeSp;
     private ImageView recipePhoto;
-    private ViewFlipper infoRecipe, ingredients, steps;
+    private ViewFlipper infoRecipe, steps;
     private CheckBox veggie, vegan, dairy, gluten, interactive;
     private LinearLayout llveggie, llvegan, lldairy, llgluten, llinteractive;
     private Button next, prev, upload;
@@ -100,10 +103,11 @@ public class CreateRecipesFragment extends Fragment {
     private ProgressBar progressBar;
 
     // INGREDIENTS
+    public View test;
 
 
     // STEPS & INTERACTIVE RECIPE
-
+    int past = 0;
 
     // OTHER STUFF AND LISTS
 
@@ -116,10 +120,8 @@ public class CreateRecipesFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        CustomGestureDetector customGestureDetector = new CustomGestureDetector();
-        final GestureDetector mGestureDetector = new GestureDetector(getActivity(), customGestureDetector);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        ingredients = vista.findViewById(R.id.ingredientsFlipper);
         steps = vista.findViewById(R.id.stepFlipper);
         infoRecipe = vista.findViewById(R.id.infoRecipe);
 
@@ -128,65 +130,91 @@ public class CreateRecipesFragment extends Fragment {
         recipeDuration = vista.findViewById(R.id.recipeDuration);
 
         currentIngredients = vista.findViewById(R.id.currentIngredients);
-        vista.findViewById(R.id.lastIngredient).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ingredients.setDisplayedChild(ingredients.getChildCount() - 1);
-            }
-        });
 
         addIngredient = vista.findViewById(R.id.addIngredient);
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater li = LayoutInflater.from(getContext());
-                View theview = li.inflate(R.layout.fragment_add_ingredients, null);
-                ((TextView) theview.findViewById(R.id.addIngredientNumber)).setText(ingredients.getChildCount()+1 + ". ");
-                if (ingredients.getChildCount() >= 1) {
-                    if (((EditText) ingredients.getCurrentView().findViewById(R.id.addIngredientName)).getText().toString().matches("[A-Za-z]+ ?|[A-Z] ?|[a-z] ?")) {
-                        vista.findViewById(R.id.lastIngredient).setVisibility(View.VISIBLE);
-                        vista.findViewById(R.id.rmvIngredient).setVisibility(View.VISIBLE);
+                final LayoutInflater li = LayoutInflater.from(getContext());
+                View ingredientView = li.inflate(R.layout.fragment_add_ingredients, null);
+                ((TextView) ingredientView.findViewById(R.id.addIngredientNumber)).setText(currentIngredients.getChildCount() + 1 + ". ");
+                if (currentIngredients.getChildCount() >= 1) {
+                    String modified = ((EditText) currentIngredients.getChildAt(past).findViewById(R.id.addIngredientName)).getText().toString();
+                    if (!modified.equals("")) {
                         final View preview = li.inflate(R.layout.fragment_ingredients_min, null);
-                        ((TextView) preview.findViewById(R.id.ingredientNameMin)).setText(((EditText) ingredients.getCurrentView().findViewById(R.id.addIngredientName)).getText().toString());
-                        ((TextView) preview.findViewById(R.id.ingredientNumberMin)).setText(((TextView) ingredients.getCurrentView().findViewById(R.id.addIngredientNumber)).getText().toString());
-                        preview.setTag(currentIngredients.getChildCount());
-                        preview.setOnClickListener(new View.OnClickListener() {
+                        ((TextView) preview.findViewById(R.id.ingredientNameMin)).setText(((EditText) currentIngredients.getChildAt(past).findViewById(R.id.addIngredientName)).getText().toString());
+                        ((TextView) preview.findViewById(R.id.ingredientNumberMin)).setText(((TextView) currentIngredients.getChildAt(past).findViewById(R.id.addIngredientNumber)).getText().toString());
+                        preview.findViewById(R.id.editIngredientBtn).setTag(past);
+                        preview.findViewById(R.id.editIngredientBtn).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ingredients.setDisplayedChild(((Integer) preview.getTag()) + 1);
+                                View temp;
+                                temp = li.inflate(R.layout.fragment_add_ingredients, null);
+                                ((TextView) temp.findViewById(R.id.addIngredientNumber)).setText(((TextView) currentIngredients.getChildAt((Integer) v.getTag()).findViewById(R.id.ingredientNumberMin)).getText().toString());
+                                ((EditText) temp.findViewById(R.id.addIngredientName)).setText(((TextView) currentIngredients.getChildAt((Integer) v.getTag()).findViewById(R.id.ingredientNameMin)).getText().toString());
+
+                                currentIngredients.removeViewAt((Integer) v.getTag());
+                                currentIngredients.addView(temp, (Integer) v.getTag());
+                                if (((EditText) currentIngredients.getChildAt(past).findViewById(R.id.addIngredientName)).getText().toString().matches("[ ]*")) {
+                                    currentIngredients.removeViewAt(past);
+                                } else {
+                                    temp = li.inflate(R.layout.fragment_ingredients_min, null);
+                                    ((TextView) temp.findViewById(R.id.ingredientNameMin)).setText(((EditText) currentIngredients.getChildAt(past).findViewById(R.id.addIngredientName)).getText().toString());
+                                    ((TextView) temp.findViewById(R.id.ingredientNumberMin)).setText(((TextView) currentIngredients.getChildAt(past).findViewById(R.id.addIngredientNumber)).getText().toString());
+                                    currentIngredients.removeViewAt(past);
+                                    temp.findViewById(R.id.editIngredientBtn).setTag(past);
+                                    temp.findViewById(R.id.editIngredientBtn).setOnClickListener(this);
+                                    currentIngredients.addView(temp, past);
+                                }
+                                past = (int) v.getTag();
                             }
                         });
-                        if (ingredients.getDisplayedChild() != 0 && currentIngredients.getChildCount() > 0)
-                            if (ingredients.getDisplayedChild() - 1 < currentIngredients.getChildCount()) {
-                                int pos = ingredients.getDisplayedChild() - 1;
-                                currentIngredients.removeViewAt(pos);
-                                preview.setTag(pos);
-                                currentIngredients.addView(preview);
-                                ingredients.setDisplayedChild(ingredients.getChildCount() - 1);
-                                return;
+                        preview.findViewById(R.id.rmvIngredientBtn).setTag(past);
+                        preview.findViewById(R.id.rmvIngredientBtn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(final View v) {
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("Delete entry")
+                                        .setMessage("Are you sure you want to delete this entry?")
+
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                for (int i = (int) v.getTag() + 1; i < currentIngredients.getChildCount(); i++) {
+                                                    try {
+                                                        TextView numero = currentIngredients.getChildAt(i).findViewById(R.id.ingredientNumberMin);
+                                                        int tag = (int) currentIngredients.getChildAt(i).findViewById(R.id.editIngredientBtn).getTag();
+                                                        currentIngredients.getChildAt(i).findViewById(R.id.editIngredientBtn).setTag(tag - 1);
+                                                        currentIngredients.getChildAt(i).findViewById(R.id.rmvIngredientBtn).setTag(tag - 1);
+                                                        numero.setText(tag + ". ");
+                                                    } catch (NullPointerException ex) {
+                                                        TextView numero = currentIngredients.getChildAt(i).findViewById(R.id.addIngredientNumber);
+                                                        numero.setText(i + ". ");
+                                                    }
+                                                }
+                                                currentIngredients.removeViewAt((Integer) v.getTag());
+                                                past = currentIngredients.getChildCount() - 1;
+                                            }
+                                        })
+
+                                        .setNegativeButton(android.R.string.no, null)
+                                        .setIcon(android.R.drawable.stat_sys_warning)
+                                        .show();
                             }
-                        currentIngredients.addView(preview);
-                        ingredients.addView(theview);
-                        ingredients.setDisplayedChild(ingredients.getChildCount() - 1);
+                        });
+                        currentIngredients.removeViewAt(past);
+                        currentIngredients.addView(preview, past);
+                        currentIngredients.addView(ingredientView);
+                        past = currentIngredients.getChildCount() - 1;
+
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
-                }
-            }
-        });
-        rmvIngredient = vista.findViewById(R.id.rmvIngredient);
-        rmvIngredient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ingredients.getChildCount() > 1) {
-                    ingredients.removeViewAt(ingredients.getChildCount() - 1);
-                    if (ingredients.getChildCount() - 1 == currentIngredients.getChildCount() && currentIngredients.getChildCount() != 0)
-                        currentIngredients.removeViewAt(currentIngredients.getChildCount() - 1);
                 } else {
-                    vista.findViewById(R.id.lastIngredient).setVisibility(View.INVISIBLE);
+                    currentIngredients.addView(ingredientView);
+                    past = currentIngredients.getChildCount() - 1;
                 }
             }
         });
-
-
         currentSteps = vista.findViewById(R.id.currentSteps);
         vista.findViewById(R.id.lastStep).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,39 +228,56 @@ public class CreateRecipesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 LayoutInflater li = LayoutInflater.from(getContext());
-                View theview = li.inflate(R.layout.fragment_add_steps, null);
+                final View theview = li.inflate(R.layout.fragment_add_steps, null);
                 if (interactive.isChecked()) {
-                    if (steps.getDisplayedChild() > 0 && !(((EditText) steps.getCurrentView().findViewById(R.id.interactiveTrigger)).getText().toString().matches("[0-9]+")))
-                        return;
+                    if (!((Spinner) steps.getCurrentView().findViewById(R.id.interactiveSpinner)).getSelectedItem().toString().equals("Manual"))
+                        if (steps.getDisplayedChild() > 0 && (!(((EditText) steps.getCurrentView().findViewById(R.id.interactiveTrigger)).getText().toString().matches("[0-9]+"))))
+                            return;
                     theview.findViewById(R.id.interactiveSide).setVisibility(View.VISIBLE);
+
+                    ((Spinner) theview.findViewById(R.id.interactiveSpinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String selectedItemText = (String) parent.getItemAtPosition(position);
+                            if (!selectedItemText.equals("Manual")) {
+                                theview.findViewById(R.id.interactiveSideSpec).setVisibility(View.VISIBLE);
+                            } else
+                                theview.findViewById(R.id.interactiveSideSpec).setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
                 }
-                ((TextView) theview.findViewById(R.id.addStepNumber)).setText(steps.getChildCount() + "");
-                if (steps.getChildCount() == 1) {
-                    vista.findViewById(R.id.lastStep).setVisibility(View.VISIBLE);
-                    steps.addView(theview);
-                    steps.setDisplayedChild(steps.getChildCount() - 1);
-                }
-                if (steps.getChildCount() > 1) {
+
+                ((TextView) theview.findViewById(R.id.addStepNumber)).setText(steps.getChildCount() + 1 + ".");
+                if (steps.getChildCount() >= 1) {
                     if (!((EditText) steps.getCurrentView().findViewById(R.id.addStepName)).getText().toString().equals("")) {
+                        vista.findViewById(R.id.lastStep).setVisibility(View.VISIBLE);
                         final View preview = li.inflate(R.layout.fragment_steps_min, null);
                         ((TextView) preview.findViewById(R.id.stepNameMin)).setText(((EditText) steps.getCurrentView().findViewById(R.id.addStepName)).getText().toString());
                         ((TextView) preview.findViewById(R.id.stepNumberMin)).setText(((TextView) steps.getCurrentView().findViewById(R.id.addStepNumber)).getText().toString());
-                        preview.setTag(currentSteps.getChildCount());
+                        preview.setTag(currentSteps.getChildCount() - 1);
                         preview.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 steps.setDisplayedChild(((Integer) preview.getTag()) + 1);
                             }
                         });
-                        if (steps.getDisplayedChild() != 0 && currentSteps.getChildCount() > 0)
-                            if (steps.getDisplayedChild() - 1 < currentSteps.getChildCount()) {
-                                int pos = steps.getDisplayedChild() - 1;
+
+                        Log.d(TAG, "DISPLAYED CHILD - " + (steps.getDisplayedChild() - 1));
+                        Log.d(TAG, "A");
+                        if (currentSteps.getChildCount() != 0)
+                            if ((steps.getDisplayedChild()) != currentSteps.getChildCount()) {
+                                int pos = steps.getDisplayedChild();
                                 currentSteps.removeViewAt(pos);
                                 preview.setTag(pos);
-                                currentSteps.addView(preview);
+                                currentSteps.addView(preview, pos);
                                 steps.setDisplayedChild(steps.getChildCount() - 1);
                                 return;
                             }
+
                         currentSteps.addView(preview);
                         steps.addView(theview);
                         steps.setDisplayedChild(steps.getChildCount() - 1);
@@ -246,7 +291,7 @@ public class CreateRecipesFragment extends Fragment {
             public void onClick(View v) {
                 if (steps.getChildCount() > 1) {
                     steps.removeViewAt(steps.getChildCount() - 1);
-                    if (steps.getChildCount() - 1 == currentSteps.getChildCount() && currentSteps.getChildCount() != 0)
+                    if (currentSteps.getChildCount() != 0)
                         currentSteps.removeViewAt(currentSteps.getChildCount() - 1);
                 } else {
                     vista.findViewById(R.id.lastStep).setVisibility(View.INVISIBLE);
@@ -293,37 +338,27 @@ public class CreateRecipesFragment extends Fragment {
         });
 
         veggie = vista.findViewById(R.id.veggieCB);
-
         veggie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackground(v);
             }
         });
-
-
         vegan = vista.findViewById(R.id.veganCB);
-
         vegan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackground(v);
             }
         });
-
-
         dairy = vista.findViewById(R.id.dairyCB);
-
         dairy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackground(v);
             }
         });
-
-
         gluten = vista.findViewById(R.id.glutenCB);
-
         gluten.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -413,15 +448,47 @@ public class CreateRecipesFragment extends Fragment {
         interactive = vista.findViewById(R.id.interactiveRecipe);
         interactiveOptions = vista.findViewById(R.id.interactiveSide);
 
+
+        interactive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackground(v);
+            }
+        });
+
         interactive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (steps.getChildCount() == 1) return;
-                for (int i = 1; i < steps.getChildCount(); i++) {
-                    interactiveOptions = steps.getChildAt(i).findViewById(R.id.interactiveSide);
-                    if (isChecked) interactiveOptions.setVisibility(View.VISIBLE);
-                    else interactiveOptions.setVisibility(View.GONE);
+                if (steps.getChildCount() > 1) {
+                    if (interactive.isChecked()){
+                        interactive.setChecked(false);
+                        Toast.makeText(getContext(), "You have steps created already", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                        for (int i = 0; i < steps.getChildCount(); i++){
+                            steps.getChildAt(i).findViewById(R.id.interactiveSide).setVisibility(View.GONE);
+                        }
+                } else {
+                    if (isChecked) {
+                        interactiveOptions.setVisibility(View.VISIBLE);
+                        ((Spinner) interactiveOptions.findViewById(R.id.interactiveSpinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                String selectedItemText = (String) parent.getItemAtPosition(position);
+                                Log.d(TAG, "ITEM - " + selectedItemText);
+                                if (!selectedItemText.equals("Manual")) {
+                                    interactiveOptions.findViewById(R.id.interactiveSideSpec).setVisibility(View.VISIBLE);
+                                } else
+                                    interactiveOptions.findViewById(R.id.interactiveSideSpec).setVisibility(View.GONE);
+                            }
 
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+                            }
+                        });
+                    } else {
+                        interactiveOptions.setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -432,7 +499,7 @@ public class CreateRecipesFragment extends Fragment {
         if (recipeDescription.getText().toString().matches("[A-Za-z]+ ?|[A-Z] ?|[a-z] ?")) {
             if (recipeName.getText().toString().matches("[A-Za-z]+ ?|[A-Z] ?|[a-z] ?")) {
                 if (recipeDuration.getText().toString().matches("[0-9]+")) {
-                    if (steps.getChildCount() > 1 && ingredients.getChildCount() > 1) {
+                    if (steps.getChildCount() > 1 && currentIngredients.getChildCount() > 1) {
                         //for(int i = 1; i<ingredients.getChildCount(); i++){
                         //    Log.d("CREATERECIPE",((EditText)ingredients.getChildAt(i).findViewById(R.id.interactiveSide).findViewById(R.id.interactiveTrigger)).getText().toString());
                         //    if (!(((EditText)ingredients.getChildAt(i).findViewById(R.id.interactiveSide).findViewById(R.id.interactiveTrigger)).getText().toString().matches("[0-9]+")) && interactive.isChecked()){
@@ -489,7 +556,7 @@ public class CreateRecipesFragment extends Fragment {
                         datos.put("ratings", new HashMap<String, Long>());
                         datos.put("interactive", interactive.isChecked());
                         ArrayList<Object> stepList = new ArrayList<>();
-                        for (int i = 1; i < steps.getChildCount(); i++) {
+                        for (int i = 0; i < steps.getChildCount(); i++) {
                             String step = ((EditText) steps.getChildAt(i).findViewById(R.id.addStepName)).getText().toString();
                             if (!interactive.isChecked()) {
                                 if (!step.equals("")) stepList.add(step);
@@ -499,8 +566,9 @@ public class CreateRecipesFragment extends Fragment {
                                 HashMap<String, String> stepMap = new HashMap<>();
                                 stepMap.put("step", step);
                                 stepMap.put("mode", mode);
-                                stepMap.put("trigger", trigger);
-                                stepList.add(stepMap);
+                                if (!mode.equals("Manual"))
+                                    stepMap.put("trigger", trigger);
+                                if (!step.equals("")) stepList.add(stepMap);
                             }
                         }
                         datos.put("steps", stepList);
@@ -513,8 +581,13 @@ public class CreateRecipesFragment extends Fragment {
                         extras.put("gluten", gluten.isChecked());
                         datos.put("extra", extras);
                         ArrayList<String> ingredientList = new ArrayList<>();
-                        for (int i = 1; i < ingredients.getChildCount(); i++) {
-                            String ingredient = ((EditText) ingredients.getChildAt(i).findViewById(R.id.addIngredientName)).getText().toString();
+                        for (int i = 0; i < currentIngredients.getChildCount(); i++) {
+                            String ingredient;
+                            try {
+                                ingredient = ((EditText) currentIngredients.getChildAt(i).findViewById(R.id.addIngredientName)).getText().toString();
+                            } catch (NullPointerException ex) {
+                                ingredient = ((TextView) currentIngredients.getChildAt(i).findViewById(R.id.ingredientNameMin)).getText().toString();
+                            }
                             if (!ingredient.equals("")) ingredientList.add(ingredient);
                         }
                         datos.put("ingredients", ingredientList);

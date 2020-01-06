@@ -220,6 +220,10 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
             }else{
                 steps.add(new Step( map.get("mode").toString(),map.get("step").toString()));
             }
+            if(!map.get("mode").toString().equals("Manual"))
+            steps.add(new Step( map.get("mode").toString(),map.get("step").toString(), map.get("trigger").toString()));
+            else
+                steps.add(new Step( map.get("mode").toString(),map.get("step").toString()));
             stepsToDO.add(steps.get(i).getPos());
         }
     }

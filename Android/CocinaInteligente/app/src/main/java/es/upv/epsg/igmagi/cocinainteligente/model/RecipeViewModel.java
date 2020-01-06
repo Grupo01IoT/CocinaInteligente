@@ -9,6 +9,7 @@ public class RecipeViewModel extends ViewModel {
     private Recipe recipe = new Recipe();
     private String id;
     private Drawable image;
+    private String userName;
 
     public String getId() {
         return id;
@@ -18,14 +19,28 @@ public class RecipeViewModel extends ViewModel {
         this.id = id;
     }
 
-    public void setCurrentRecipe(Recipe recipe){
+    public void setCurrentRecipe(Recipe recipe) {
         this.recipe = recipe;
     }
-    public void setCurrentRecipeImage(Drawable img){
+
+    public void setCurrentRecipeImage(Drawable img) {
         this.image = img;
     }
-    public Recipe getCurrentRecipe(){
+
+    public Recipe getCurrentRecipe() {
         return this.recipe;
     }
-    public Drawable getCurrentRecipeImage(){return this.image;}
+
+    public Drawable getCurrentRecipeImage() {
+        return this.image;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
 }

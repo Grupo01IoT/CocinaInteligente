@@ -1,7 +1,9 @@
 package es.upv.epsg.igmagi.cocinainteligente.ui;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -80,14 +82,23 @@ public class RecipeFragment extends Fragment implements org.eclipse.paho.client.
         lvSteps.setAdapter(stepsAdapter);
         //setHasOptionsMenu(true);
 
-        RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+        final RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
         UserViewModel userModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
         recipe = model.getCurrentRecipe();
         user = userModel.getCurrentUser();
 
+        //The fabPlay Button will not appear if the recipe isn't interactive or the user isn't paired
+        //Check if the user has already paired the device
+        SharedPreferences pref2 = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String deviceId = pref2.getString("device_id", "empty");
 
-        if (!recipe.isInteractive()) root.findViewById(R.id.fabPlay).setVisibility(View.GONE);
+        if(deviceId.equals("empty") || !recipe.isInteractive()){
+            root.findViewById(R.id.fabPlay).setVisibility(View.GONE);
+        }else{
+            root.findViewById(R.id.fabPlay).setVisibility(View.VISIBLE);
+        }
+
         root.findViewById(R.id.fabPlay).setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_nav_view_recipe_to_nav_interactive));
         /*
         root.findViewById(R.id.fabPlay).setOnClickListener(new View.OnClickListener() {
@@ -114,6 +125,7 @@ public class RecipeFragment extends Fragment implements org.eclipse.paho.client.
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         tvusername.setText("@" + document.getString("name"));
+                        model.setUserName(document.getString("name"));
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -251,7 +263,7 @@ public class RecipeFragment extends Fragment implements org.eclipse.paho.client.
 
     private View interactiveSetup(){
         View layoutView = getLayoutInflater().inflate(R.layout.fragment_interactive_recipe_dialog, null);
-        Button dialogButton = layoutView.findViewById(R.id.closeBtn);
+        Button dialogButton = layoutView.findViewById(R.id.intStopBtn);
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

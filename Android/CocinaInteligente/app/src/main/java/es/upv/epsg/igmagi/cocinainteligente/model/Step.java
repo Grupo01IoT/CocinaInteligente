@@ -35,16 +35,7 @@ public class Step {
         this.pos = pos;
         this.status = status;
     }
-
-    public Step(String mode, String step) {
-        this.mode = mode;
-        this.step = step;
-        pos = numSteps;
-        numSteps++;
-    }
-
-    public Step() {  }
-
+    
     public String getMode() {
         return mode;
     }

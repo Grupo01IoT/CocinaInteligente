@@ -44,6 +44,22 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textSize="24sp"
                     android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/editStepBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_menu_create" />
+
+                <ImageButton
+                    android:id="@+id/rmvStepBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:tint="@android:color/black"
+                    app:srcCompat="@drawable/baseline_delete_24" />
             </LinearLayout>
         </FrameLayout>
     </androidx.cardview.widget.CardView>

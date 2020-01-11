@@ -109,7 +109,7 @@
         android:id="@+id/nav_create"
         android:name="es.upv.epsg.igmagi.cocinainteligente.ui.create.CreateRecipesFragment"
         android:label="Create recipe"
-        tools:layout="@layout/fragment_crear_recetas" />
+        tools:layout="@layout/fragment_create_recipes" />
     <action
         android:id="@+id/action_nav_create_to_nav_home"
         app:destination="@id/nav_home" />

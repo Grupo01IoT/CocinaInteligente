@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -41,6 +42,7 @@ import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -95,12 +97,14 @@ public class CreateRecipesFragment extends Fragment {
     private Button addIngredient, rmvIngredient, addStep, rmvStep;
     private Spinner recipeSp;
     private ImageView recipePhoto;
-    private ViewFlipper infoRecipe, steps;
+    private ViewFlipper infoRecipe;
     private CheckBox veggie, vegan, dairy, gluten, interactive;
-    private LinearLayout llveggie, llvegan, lldairy, llgluten, llinteractive;
+    private FrameLayout fveggie, fvegan, fdairy, fgluten, finteractive;
     private Button next, prev, upload;
     private TextView progressTxt;
     private ProgressBar progressBar;
+
+    private LinearLayout llprova;
 
     // INGREDIENTS
     public View test;
@@ -122,8 +126,9 @@ public class CreateRecipesFragment extends Fragment {
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        steps = vista.findViewById(R.id.stepFlipper);
         infoRecipe = vista.findViewById(R.id.infoRecipe);
+
+        llprova = vista.findViewById(R.id.linearLayout8);
 
         recipeName = vista.findViewById(R.id.recipeName);
         recipeDescription = vista.findViewById(R.id.recipeDescription);
@@ -216,33 +221,35 @@ public class CreateRecipesFragment extends Fragment {
             }
         });
         currentSteps = vista.findViewById(R.id.currentSteps);
-        vista.findViewById(R.id.lastStep).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                steps.setDisplayedChild(steps.getChildCount() - 1);
-            }
-        });
 
         addStep = vista.findViewById(R.id.addStep);
         addStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater li = LayoutInflater.from(getContext());
-                final View theview = li.inflate(R.layout.fragment_add_steps, null);
-                if (interactive.isChecked()) {
-                    if (!((Spinner) steps.getCurrentView().findViewById(R.id.interactiveSpinner)).getSelectedItem().toString().equals("Manual"))
-                        if (steps.getDisplayedChild() > 0 && (!(((EditText) steps.getCurrentView().findViewById(R.id.interactiveTrigger)).getText().toString().matches("[0-9]+"))))
-                            return;
-                    theview.findViewById(R.id.interactiveSide).setVisibility(View.VISIBLE);
+                final LayoutInflater li = LayoutInflater.from(getContext());
+                final View stepView = li.inflate(R.layout.fragment_add_steps, null);
 
-                    ((Spinner) theview.findViewById(R.id.interactiveSpinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                if (interactive.isChecked()) {
+                    String trigger;
+                    String mode = ((Spinner) currentSteps.getChildAt(currentSteps.getChildCount()-1).findViewById(R.id.interactiveSpinner)).getSelectedItem().toString();
+                    if (!mode.equals("Manual")){
+                        trigger = ((EditText) currentSteps.getChildAt(currentSteps.getChildCount()-1).findViewById(R.id.interactiveTrigger)).getText().toString();
+                        if(trigger.equals("")) {
+                            Toast.makeText(getContext(), "Please add trigger action!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+
+                    stepView.findViewById(R.id.interactiveSide).setVisibility(View.VISIBLE);
+
+                    ((Spinner) stepView.findViewById(R.id.interactiveSpinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             String selectedItemText = (String) parent.getItemAtPosition(position);
                             if (!selectedItemText.equals("Manual")) {
-                                theview.findViewById(R.id.interactiveSideSpec).setVisibility(View.VISIBLE);
+                                stepView.findViewById(R.id.interactiveSideSpec).setVisibility(View.VISIBLE);
                             } else
-                                theview.findViewById(R.id.interactiveSideSpec).setVisibility(View.GONE);
+                                stepView.findViewById(R.id.interactiveSideSpec).setVisibility(View.GONE);
                         }
 
                         @Override
@@ -251,50 +258,81 @@ public class CreateRecipesFragment extends Fragment {
                     });
                 }
 
-                ((TextView) theview.findViewById(R.id.addStepNumber)).setText(steps.getChildCount() + 1 + ".");
-                if (steps.getChildCount() >= 1) {
-                    if (!((EditText) steps.getCurrentView().findViewById(R.id.addStepName)).getText().toString().equals("")) {
-                        vista.findViewById(R.id.lastStep).setVisibility(View.VISIBLE);
+                ((TextView) stepView.findViewById(R.id.addStepNumber)).setText(currentSteps.getChildCount() + 1 + ". ");
+                if (currentSteps.getChildCount() >= 1) {
+                    String modified = ((EditText) currentSteps.getChildAt(past).findViewById(R.id.addStepName)).getText().toString();
+                    if (!modified.equals("")) {
                         final View preview = li.inflate(R.layout.fragment_steps_min, null);
-                        ((TextView) preview.findViewById(R.id.stepNameMin)).setText(((EditText) steps.getCurrentView().findViewById(R.id.addStepName)).getText().toString());
-                        ((TextView) preview.findViewById(R.id.stepNumberMin)).setText(((TextView) steps.getCurrentView().findViewById(R.id.addStepNumber)).getText().toString());
-                        preview.setTag(currentSteps.getChildCount() - 1);
-                        preview.setOnClickListener(new View.OnClickListener() {
+                        ((TextView) preview.findViewById(R.id.stepNameMin)).setText(((EditText) currentSteps.getChildAt(past).findViewById(R.id.addStepName)).getText().toString());
+                        ((TextView) preview.findViewById(R.id.stepNumberMin)).setText(((TextView) currentSteps.getChildAt(past).findViewById(R.id.addStepNumber)).getText().toString());
+                        preview.findViewById(R.id.editStepBtn).setTag(past);
+                        preview.findViewById(R.id.editStepBtn).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                steps.setDisplayedChild(((Integer) preview.getTag()) + 1);
+                                View temp;
+                                temp = li.inflate(R.layout.fragment_add_steps, null);
+                                ((TextView) temp.findViewById(R.id.addStepNumber)).setText(((TextView) currentSteps.getChildAt((Integer) v.getTag()).findViewById(R.id.stepNumberMin)).getText().toString());
+                                ((EditText) temp.findViewById(R.id.addStepName)).setText(((TextView) currentSteps.getChildAt((Integer) v.getTag()).findViewById(R.id.stepNameMin)).getText().toString());
+
+                                currentSteps.removeViewAt((Integer) v.getTag());
+                                currentSteps.addView(temp, (Integer) v.getTag());
+                                if (((EditText) currentSteps.getChildAt(past).findViewById(R.id.addStepName)).getText().toString().matches("[ ]*")) {
+                                    currentSteps.removeViewAt(past);
+                                } else {
+                                    temp = li.inflate(R.layout.fragment_steps_min, null);
+                                    ((TextView) temp.findViewById(R.id.stepNameMin)).setText(((EditText) currentSteps.getChildAt(past).findViewById(R.id.addStepName)).getText().toString());
+                                    ((TextView) temp.findViewById(R.id.stepNumberMin)).setText(((TextView) currentSteps.getChildAt(past).findViewById(R.id.addStepNumber)).getText().toString());
+                                    currentSteps.removeViewAt(past);
+                                    temp.findViewById(R.id.editStepBtn).setTag(past);
+                                    temp.findViewById(R.id.editStepBtn).setOnClickListener(this);
+                                    currentSteps.addView(temp, past);
+                                }
+                                past = (int) v.getTag();
                             }
                         });
+                        preview.findViewById(R.id.rmvStepBtn).setTag(past);
+                        preview.findViewById(R.id.rmvStepBtn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(final View v) {
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("Delete entry")
+                                        .setMessage("Are you sure you want to delete this entry?")
 
-                        Log.d(TAG, "DISPLAYED CHILD - " + (steps.getDisplayedChild() - 1));
-                        Log.d(TAG, "A");
-                        if (currentSteps.getChildCount() != 0)
-                            if ((steps.getDisplayedChild()) != currentSteps.getChildCount()) {
-                                int pos = steps.getDisplayedChild();
-                                currentSteps.removeViewAt(pos);
-                                preview.setTag(pos);
-                                currentSteps.addView(preview, pos);
-                                steps.setDisplayedChild(steps.getChildCount() - 1);
-                                return;
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                for (int i = (int) v.getTag() + 1; i < currentSteps.getChildCount(); i++) {
+                                                    try {
+                                                        TextView numero = currentSteps.getChildAt(i).findViewById(R.id.stepNumberMin);
+                                                        int tag = (int) currentSteps.getChildAt(i).findViewById(R.id.editStepBtn).getTag();
+                                                        currentSteps.getChildAt(i).findViewById(R.id.editStepBtn).setTag(tag - 1);
+                                                        currentSteps.getChildAt(i).findViewById(R.id.rmvStepBtn).setTag(tag - 1);
+                                                        numero.setText(tag + ". ");
+                                                    } catch (NullPointerException ex) {
+                                                        TextView numero = currentSteps.getChildAt(i).findViewById(R.id.addStepNumber);
+                                                        numero.setText(i + ". ");
+                                                    }
+                                                }
+                                                currentSteps.removeViewAt((Integer) v.getTag());
+                                                past = currentSteps.getChildCount() - 1;
+                                            }
+                                        })
+
+                                        .setNegativeButton(android.R.string.no, null)
+                                        .setIcon(android.R.drawable.stat_sys_warning)
+                                        .show();
                             }
+                        });
+                        currentSteps.removeViewAt(past);
+                        currentSteps.addView(preview, past);
+                        currentSteps.addView(stepView);
+                        past = currentSteps.getChildCount() - 1;
 
-                        currentSteps.addView(preview);
-                        steps.addView(theview);
-                        steps.setDisplayedChild(steps.getChildCount() - 1);
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
-                }
-            }
-        });
-        rmvStep = vista.findViewById(R.id.rmvStep);
-        rmvStep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (steps.getChildCount() > 1) {
-                    steps.removeViewAt(steps.getChildCount() - 1);
-                    if (currentSteps.getChildCount() != 0)
-                        currentSteps.removeViewAt(currentSteps.getChildCount() - 1);
                 } else {
-                    vista.findViewById(R.id.lastStep).setVisibility(View.INVISIBLE);
+                    currentSteps.addView(stepView);
+                    past = currentSteps.getChildCount() - 1;
                 }
             }
         });
@@ -367,31 +405,36 @@ public class CreateRecipesFragment extends Fragment {
         });
 
 
-
-
-        llveggie = vista.findViewById(R.id.llveggie);
-        llveggie.setOnClickListener(new View.OnClickListener() {
+        fveggie = vista.findViewById(R.id.llveggie);
+        fveggie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackgroundNew(v);
             }
         });
-        llvegan = vista.findViewById(R.id.llvegan);
-        llvegan.setOnClickListener(new View.OnClickListener() {
+        fvegan = vista.findViewById(R.id.llvegan);
+        fvegan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackgroundNew(v);
             }
         });
-        lldairy = vista.findViewById(R.id.lldairy);
-        lldairy.setOnClickListener(new View.OnClickListener() {
+        fdairy = vista.findViewById(R.id.lldairy);
+        fdairy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackgroundNew(v);
             }
         });
-        llgluten = vista.findViewById(R.id.llgluten);
-        llgluten.setOnClickListener(new View.OnClickListener() {
+        fgluten = vista.findViewById(R.id.llgluten);
+        fgluten.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBackgroundNew(v);
+            }
+        });
+        finteractive = vista.findViewById(R.id.llinteractive);
+        finteractive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeBackgroundNew(v);
@@ -452,34 +495,33 @@ public class CreateRecipesFragment extends Fragment {
         interactive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeBackground(v);
+                changeBackground(v.findViewById(R.id.interactiveRecipe));
             }
         });
 
         interactive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (steps.getChildCount() > 1) {
-                    if (interactive.isChecked()){
+                if (currentSteps.getChildCount() > 1) {
+                    if (interactive.isChecked()) {
                         interactive.setChecked(false);
                         Toast.makeText(getContext(), "You have steps created already", Toast.LENGTH_SHORT).show();
+                    } else {
+                        interactive.setChecked(true);
+                        Toast.makeText(getContext(), "You have steps created already", Toast.LENGTH_SHORT).show();
                     }
-                    else
-                        for (int i = 0; i < steps.getChildCount(); i++){
-                            steps.getChildAt(i).findViewById(R.id.interactiveSide).setVisibility(View.GONE);
-                        }
-                } else {
-                    if (isChecked) {
-                        interactiveOptions.setVisibility(View.VISIBLE);
-                        ((Spinner) interactiveOptions.findViewById(R.id.interactiveSpinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                } else if (currentSteps.getChildCount() == 1) {
+                    if (interactive.isChecked()) {
+                        currentSteps.findViewById(R.id.interactiveSide).setVisibility(View.VISIBLE);
+
+                        ((Spinner) currentSteps.findViewById(R.id.interactiveSpinner)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 String selectedItemText = (String) parent.getItemAtPosition(position);
-                                Log.d(TAG, "ITEM - " + selectedItemText);
                                 if (!selectedItemText.equals("Manual")) {
-                                    interactiveOptions.findViewById(R.id.interactiveSideSpec).setVisibility(View.VISIBLE);
+                                    currentSteps.findViewById(R.id.interactiveSideSpec).setVisibility(View.VISIBLE);
                                 } else
-                                    interactiveOptions.findViewById(R.id.interactiveSideSpec).setVisibility(View.GONE);
+                                    currentSteps.findViewById(R.id.interactiveSideSpec).setVisibility(View.GONE);
                             }
 
                             @Override
@@ -487,19 +529,28 @@ public class CreateRecipesFragment extends Fragment {
                             }
                         });
                     } else {
-                        interactiveOptions.setVisibility(View.GONE);
+                        currentSteps.findViewById(R.id.interactiveSide).setVisibility(View.GONE);
                     }
                 }
             }
         });
+
+        verifyFields();
+
         return vista;
     }
 
+    public void verifyFields(){
+        recipeName.addTextChangedListener(new MyTextWatcher(recipeName, getContext()));
+        recipeDescription.addTextChangedListener(new MyTextWatcher(recipeDescription, getContext()));
+        recipeDuration.addTextChangedListener(new MyTextWatcher(llprova, getContext()));
+    }
+
     public boolean checkFields() {
-        if (recipeDescription.getText().toString().matches("[A-Za-z]+ ?|[A-Z] ?|[a-z] ?")) {
-            if (recipeName.getText().toString().matches("[A-Za-z]+ ?|[A-Z] ?|[a-z] ?")) {
+        if (!recipeDescription.getText().toString().matches("\"^(?!\\s*$).+\"")) {
+            if (!recipeName.getText().toString().matches("\"^(?!\\s*$).+\"")) {
                 if (recipeDuration.getText().toString().matches("[0-9]+")) {
-                    if (steps.getChildCount() > 1 && currentIngredients.getChildCount() > 1) {
+                    if (currentSteps.getChildCount() > 1 && currentIngredients.getChildCount() > 1) {
                         //for(int i = 1; i<ingredients.getChildCount(); i++){
                         //    Log.d("CREATERECIPE",((EditText)ingredients.getChildAt(i).findViewById(R.id.interactiveSide).findViewById(R.id.interactiveTrigger)).getText().toString());
                         //    if (!(((EditText)ingredients.getChildAt(i).findViewById(R.id.interactiveSide).findViewById(R.id.interactiveTrigger)).getText().toString().matches("[0-9]+")) && interactive.isChecked()){
@@ -556,13 +607,15 @@ public class CreateRecipesFragment extends Fragment {
                         datos.put("ratings", new HashMap<String, Long>());
                         datos.put("interactive", interactive.isChecked());
                         ArrayList<Object> stepList = new ArrayList<>();
-                        for (int i = 0; i < steps.getChildCount(); i++) {
-                            String step = ((EditText) steps.getChildAt(i).findViewById(R.id.addStepName)).getText().toString();
+                        for (int i = 0; i < currentSteps.getChildCount() - 1; i++) {
+                            String step = ((TextView) currentSteps.getChildAt(i).findViewById(R.id.stepNameMin)).getText().toString();
                             if (!interactive.isChecked()) {
                                 if (!step.equals("")) stepList.add(step);
                             } else {
-                                String trigger = ((EditText) steps.getChildAt(i).findViewById(R.id.interactiveTrigger)).getText().toString();
-                                String mode = ((Spinner) steps.getChildAt(i).findViewById(R.id.interactiveSpinner)).getSelectedItem().toString();
+                                String trigger = "";
+                                String mode = ((Spinner) currentSteps.getChildAt(i).findViewById(R.id.interactiveSpinner)).getSelectedItem().toString();
+                                if (!mode.equals("manual"))
+                                    trigger = ((EditText) currentSteps.getChildAt(i).findViewById(R.id.interactiveTrigger)).getText().toString();
                                 HashMap<String, String> stepMap = new HashMap<>();
                                 stepMap.put("step", step);
                                 stepMap.put("mode", mode);
@@ -634,12 +687,11 @@ public class CreateRecipesFragment extends Fragment {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
                 Bitmap comp = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
                 // Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(selectedImageUri));
-                ImageView imageView = (ImageView) getView().findViewById(R.id.crear_imagen_imagen);//write the bytes in file
                 FileOutputStream fos = new FileOutputStream(file);
                 fos.write(out.toByteArray());
                 fos.flush();
                 fos.close();
-                imageView.setImageBitmap(comp);
+                recipePhoto.setImageBitmap(comp);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -652,15 +704,15 @@ public class CreateRecipesFragment extends Fragment {
     public void changeBackground(View v) {
         if (((CheckBox) v).isChecked()) {
             //v.setBackgroundResource(R.drawable.border_checkbox_selected);
-            ((LinearLayout)v.getParent()).setBackgroundResource(R.drawable.border_checkbox_selected);
-            ((LinearLayout)v.getParent()).setPadding(75,0,0,0);
+            ((FrameLayout) v.getParent()).setBackgroundResource(R.drawable.border_checkbox_selected);
+            // ((FrameLayout) v.getParent()).setPadding(75, 0, 0, 0);
             //((LinearLayout)v.getParent()).getChildAt(0).set));
             ((CheckBox) v).setButtonTintList(ColorStateList.valueOf(Color.BLACK));
             ((CheckBox) v).setTextColor(Color.BLACK);
         } else {
             //v.setBackgroundResource(R.drawable.border_checkbox_unselected);
-            ((LinearLayout)v.getParent()).setBackgroundResource(R.drawable.border_checkbox_unselected);
-            ((LinearLayout)v.getParent()).setPadding(75,0,0,0);
+            ((FrameLayout) v.getParent()).setBackgroundResource(R.drawable.border_checkbox_unselected);
+            // ((FrameLayout) v.getParent()).setPadding(75, 0, 0, 0);
 
             ((CheckBox) v).setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFAAAAAA")));
             ((CheckBox) v).setTextColor(Color.parseColor("#FFAAAAAA"));
@@ -668,29 +720,29 @@ public class CreateRecipesFragment extends Fragment {
     }
 
     public void changeBackgroundNew(View v) {
-        if (((CheckBox)((LinearLayout)v).getChildAt(0)).isChecked()) {
+        if (((CheckBox) ((FrameLayout) v).getChildAt(0)).isChecked()) {
             Log.d("AA", "isCheckedWhenClicked");
             v.setBackgroundResource(R.drawable.border_checkbox_unselected);
-            v.setPadding(75,0,0,0);
+            //v.setPadding(75, 0, 0, 0);
 
             //((LinearLayout)v.setBackgroundResource(R.drawable.border_checkbox_selected);
             //((LinearLayout)v.getParent()).getChildAt(0).set));
-            ((CheckBox)((LinearLayout)v).getChildAt(0)).setChecked(false);
-            ((CheckBox)((LinearLayout)v).getChildAt(0)).setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFAAAAAA")));
-            ((CheckBox)((LinearLayout)v).getChildAt(0)).setTextColor(Color.parseColor("#FFAAAAAA"));
+            ((CheckBox) ((FrameLayout) v).getChildAt(0)).setChecked(false);
+            ((CheckBox) ((FrameLayout) v).getChildAt(0)).setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFAAAAAA")));
+            ((CheckBox) ((FrameLayout) v).getChildAt(0)).setTextColor(Color.parseColor("#FFAAAAAA"));
         } else {
             Log.d("AA", "isNotCheckedWhenclicked");
 
             v.setBackgroundResource(R.drawable.border_checkbox_selected);
-            v.setPadding(75,0,0,0);
+            //v.setPadding(75, 0, 0, 0);
 
             //((LinearLayout)v.setBackgroundResource(R.drawable.border_checkbox_selected);
             //((LinearLayout)v.getParent()).getChildAt(0).set));
-            Log.d("AA", "isCheckedWhenClicked"+((CheckBox)((LinearLayout)v).getChildAt(0)).getText());
+            Log.d("AA", "isCheckedWhenClicked" + ((CheckBox) ((FrameLayout) v).getChildAt(0)).getText());
 
-            ((CheckBox)((LinearLayout)v).getChildAt(0)).setChecked(true);
-            ((CheckBox)((LinearLayout)v).getChildAt(0)).setButtonTintList(ColorStateList.valueOf(Color.BLACK));
-            ((CheckBox)((LinearLayout)v).getChildAt(0)).setTextColor(Color.BLACK);
+            ((CheckBox) ((FrameLayout) v).getChildAt(0)).setChecked(true);
+            ((CheckBox) ((FrameLayout) v).getChildAt(0)).setButtonTintList(ColorStateList.valueOf(Color.BLACK));
+            ((CheckBox) ((FrameLayout) v).getChildAt(0)).setTextColor(Color.BLACK);
         }
 
 
@@ -713,4 +765,37 @@ public class CreateRecipesFragment extends Fragment {
             return super.onFling(e1, e2, velocityX, velocityY);
         }
     }
+
+}
+
+class MyTextWatcher implements TextWatcher {
+
+    private View mEditText;
+    private Context mContext;
+    String oldText;
+
+    public MyTextWatcher(View editText, Context context) {
+        mEditText = editText;
+        mContext = context;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s.toString().matches("^(?!\\s*$).+")){
+            mEditText.setBackground(ContextCompat.getDrawable(mContext, R.drawable.border_item_completed));
+        } else {
+            mEditText.setBackground(ContextCompat.getDrawable(mContext, R.drawable.border_checkbox_unselected));
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
 }

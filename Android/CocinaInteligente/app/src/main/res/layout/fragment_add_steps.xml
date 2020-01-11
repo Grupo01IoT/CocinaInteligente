@@ -6,7 +6,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="150dp"
+        android:background="@drawable/border">
 
         <LinearLayout
             android:layout_width="match_parent"

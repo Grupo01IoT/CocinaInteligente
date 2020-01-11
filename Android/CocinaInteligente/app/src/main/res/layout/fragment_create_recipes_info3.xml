@@ -22,36 +22,44 @@
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-smallcaps"
-                android:text="Steps"
+                android:text="Lista de pasos"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textSize="30dp" />
 
-            <CheckBox
-                android:id="@+id/interactiveRecipe"
+            <FrameLayout
+                android:id="@+id/llinteractive"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:background="@drawable/border_checkbox_unselected"
-                android:button="@drawable/ic_menu_board"
-                android:buttonTint="@android:color/darker_gray"
-                android:text="Receta interactiva"
-                android:textColor="@android:color/darker_gray" />
+                android:layout_height="50dp"
+                android:background="@drawable/border_checkbox_unselected">
+
+                <CheckBox
+                    android:id="@+id/interactiveRecipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:button="@drawable/ic_menu_board"
+                    android:buttonTint="@android:color/darker_gray"
+                    android:paddingLeft="5dp"
+                    android:text="Receta interactiva"
+                    android:textColor="@android:color/darker_gray" />
+            </FrameLayout>
+
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="@+id/rmvStep"
-            app:layout_constraintTop_toTopOf="@+id/rmvStep">
+            android:layout_marginTop="5dp">
 
             <TextView
                 android:id="@+id/textView25"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="202dp"
+                android:layout_marginTop="32dp"
                 android:gravity="center"
                 android:text="Empty step list, please add some step"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -61,8 +69,11 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:elevation="5dp"
                 android:paddingRight="10dp"
+                android:scaleX=".95"
+                android:scaleY=".95"
                 app:cardBackgroundColor="@color/colorAccent"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -79,60 +90,16 @@
                     android:textSize="18sp" />
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:elevation="5dp"
-                android:paddingLeft="10dp"
-                app:cardBackgroundColor="@color/colorAccent"
-                app:cardCornerRadius="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <Button
-                    android:id="@+id/rmvStep"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="Quitar"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp" />
-            </androidx.cardview.widget.CardView>
-
             <LinearLayout
                 android:id="@+id/linearLayout4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginBottom="55dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
-                <ViewFlipper
-                    android:id="@+id/stepFlipper"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:inAnimation="@anim/view_transition_fade_in"
-                    android:padding="7.5dp">
-
-                    <include
-                        layout="@layout/fragment_add_steps"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </ViewFlipper>
-
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-smallcaps"
-                    android:text="Lista"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="30dp" />
 
                 <ScrollView
                     android:layout_width="match_parent"
@@ -145,27 +112,6 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical" />
                 </ScrollView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/lastStep"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="invisible"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="10dp">
-
-                    <TextView
-                        android:id="@+id/textView19"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="sans-serif-smallcaps"
-                        android:padding="10dp"
-                        android:text="Ultimo"
-                        android:textSize="20sp" />
-
-                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 

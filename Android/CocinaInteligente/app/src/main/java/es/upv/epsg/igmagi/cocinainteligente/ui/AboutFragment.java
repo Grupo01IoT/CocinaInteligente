@@ -35,6 +35,14 @@ public class AboutFragment extends Fragment {
                 }
             }
         });
+        Button chat = root.findViewById(R.id.buttonChat);
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), ChatActivity.class);
+                startActivity(i);
+            }
+        });
         return root;
     }
 

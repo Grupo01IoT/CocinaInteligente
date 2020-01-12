@@ -2,6 +2,7 @@ var mqtt = require('mqtt');
 
 var hostname = "mqtt://raspberrypi.local";
 var client  = mqtt.connect(hostname);
+const exec = require('child_process').exec;
 
 client.on('connect', function () {
     console.log("[Snips Log] Connected to MQTT broker " + hostname);
@@ -26,6 +27,16 @@ function onIntentDetected(intent) {
 
 function onHotwordDetected() {
     console.log("[Snips Log] Hotword detected");
+    
+    
+    exec('/home/pi/Desktop/CocinaInteligente/Arduino/pinRasp/blink', (e, stdout, stderr)=> {
+    if (e instanceof Error) {
+        console.error(e);
+        throw e;
+    }
+    console.log('stdout ', stdout);
+    console.log('stderr ', stderr);
+    });
 }
 
 function onListeningStateChanged(listening) {

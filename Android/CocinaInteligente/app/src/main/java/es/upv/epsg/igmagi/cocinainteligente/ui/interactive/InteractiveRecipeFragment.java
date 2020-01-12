@@ -369,6 +369,8 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
             }
         } catch (MqttException e) {
             Log.e(TAG, "Error al desconectar.", e);
+        } catch (NullPointerException e) {
+            Log.e(TAG, "No conectado.");
         }
         super.onDestroy();
     }

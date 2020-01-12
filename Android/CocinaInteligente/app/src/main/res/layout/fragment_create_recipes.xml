@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,12 +8,13 @@
     android:background="#0D8CC63E"
     android:orientation="vertical">
 
-    <ViewFlipper
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/infoRecipe"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="50dp"
         android:layout_weight="1"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="20dp">
 
@@ -53,14 +54,14 @@
                 android:layout_height="match_parent" />
         </androidx.cardview.widget.CardView>
 
-    </ViewFlipper>
+    </androidx.viewpager.widget.ViewPager>
 
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:background="@drawable/rounded_fg"
+        android:background="@android:color/white"
         android:elevation="10dp"
         android:gravity="bottom"
         android:orientation="horizontal"
@@ -74,7 +75,6 @@
             android:layout_weight="1"
             android:enabled="true"
             android:text="Previous"
-            android:textColor="@android:color/white"
             android:visibility="invisible" />
 
         <ProgressBar
@@ -95,8 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Paso 1 de 3"
-            android:textColor="@android:color/white" />
+            android:text="Paso 1 de 3" />
 
         <Button
             android:id="@+id/nextBtn"
@@ -104,8 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="next"
-            android:textColor="@android:color/white" />
+            android:text="next" />
 
         <Button
             android:id="@+id/uploadBtn"
@@ -114,8 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/action_upload"
-            android:textColor="@android:color/white"
             android:visibility="gone" />
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

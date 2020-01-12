@@ -47,6 +47,9 @@
 
 
     <color name="colorAccent">#FF7651</color>
+    <color name="redLikeIcon">#FD1D1D</color>FF4E1B
+
+    primary 038C8C
 
 -->
 
@@ -56,8 +59,17 @@
     <color name="colorAccent">#FF7651</color>
     <color name="mainBackgroundColor">#EDF5EF</color>
     <color name="iconDarkerGray">#505050</color>
-    <color name="colorPrimaryDarkTransparent">#bb026E6E</color>
-    <color name="redLikeIcon">#FD1D1D</color>
+    <color name="colorPrimaryDarkTransparent">#BB026E6E</color>
+    <color name="redLikeIcon">#FF4E1B</color>
+    <color name="black">#454545</color>
+    <color name="blacker">#757575</color>
+    <color name="whiter">#ffffff</color>
+    <color name="white">#F2F2F2</color>
+    <color name="darker">#eeeeee</color>
+    <color name="darkerer">#dddddd</color>
+    <color name="darkest">#888888</color>
+
+
 
 
 

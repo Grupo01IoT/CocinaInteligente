@@ -60,4 +60,8 @@
     <string name="accept_modal">Accept</string>
     <string name="deny_modal">Cancel</string>
     <string name="alert_modal">Alert</string>
+    <string name="active">Active</string>
+    <string name="coming_next">Coming Next</string>
+    <string name="finished_recipe">Rate the recipe if you liked it!</string>
+    <string name="interactive_stop_alert">Do you want to stop cooking this recipe?</string>
 </resources>

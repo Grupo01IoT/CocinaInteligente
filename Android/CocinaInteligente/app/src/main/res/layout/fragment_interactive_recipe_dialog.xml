@@ -24,12 +24,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
                 android:fontFamily="sans-serif-smallcaps"
                 android:gravity="center_vertical"
                 android:text="Receta interactiva"
                 android:textColor="@color/common_google_signin_btn_text_dark_default"
                 android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/stepCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_default"
+                android:textSize="22sp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"

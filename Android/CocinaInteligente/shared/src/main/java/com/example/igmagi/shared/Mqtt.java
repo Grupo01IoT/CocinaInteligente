@@ -10,4 +10,5 @@ public class Mqtt {
     public static final String weight = "weight";
     public static final String presence = "presence";
     public static final String playingRecipe = "playingRecipe";
+    public static final String listenChannel = "listenChannel";
 }

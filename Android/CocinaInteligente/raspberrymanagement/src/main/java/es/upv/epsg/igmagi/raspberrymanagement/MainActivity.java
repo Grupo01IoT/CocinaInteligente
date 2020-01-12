@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
 import static com.example.igmagi.shared.Mqtt.broker;
+import static com.example.igmagi.shared.Mqtt.listenChannel;
 import static com.example.igmagi.shared.Mqtt.presence;
 import static com.example.igmagi.shared.Mqtt.qos;
 import static com.example.igmagi.shared.Mqtt.serverId;
@@ -238,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             MqttMessage message = new MqttMessage((value + "").getBytes());
             message.setQos(qos);
             message.setRetained(false);
-            client.publish(topicRoot + weight, message);
+            client.publish(topicRoot + listenChannel, message);
         } catch (MqttException e) {
             Log.e(TAG, "Error al publicar.", e);
         }

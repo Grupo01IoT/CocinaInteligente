@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/stepContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="2dp"
+    android:layout_marginBottom="5dp"
     android:background="@drawable/background_interactive_step"
     android:orientation="horizontal"
     android:paddingLeft="13dp"
@@ -23,18 +24,25 @@
         android:textAllCaps="true"
         android:textSize="18sp" />
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        app:cardBackgroundColor="@color/colorAccent"
-        app:cardCornerRadius="10dp">
+        app:cardBackgroundColor="#cccccc"
+        app:strokeColor="@color/darkest"
+        app:strokeWidth="3dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
 
         <ImageButton
-            style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:id="@+id/intNextStep"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@android:drawable/ic_media_play" />
-    </androidx.cardview.widget.CardView>
+            android:backgroundTint="#cccccc"
+            android:foregroundTintMode="screen"
+            android:scaleType="fitXY"
+            android:src="@drawable/tick"
+            android:tint="@color/darkest" />
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

@@ -315,7 +315,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void update() {
-        db.collection("recipes").whereEqualTo("name", "Pechuga").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("recipes").whereEqualTo("name", "prubea").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

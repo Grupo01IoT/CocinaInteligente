@@ -53,8 +53,12 @@
     <string name="ingredients_label">Ingredientes</string>
     <string name="steps_label">Pasos</string>
     <string name="menu_interactive">Receta interactiva</string>
-    <string name="interactive_alert_msg">Ya se está cocinando una receta interactiva. ¿Está seguro de que quiere pararla para reproducir la nueva? Si acepta se borrará el proceso de la receta actual.</string>
+    <string name="interactive_alert_msg">El progreso de la receta que se está cocinando se perderá. Seguro que quiere empezar esta nueva receta?</string>
     <string name="accept_modal">Aceptar</string>
     <string name="deny_modal">Cancelar</string>
     <string name="alert_modal">Alerta</string>
+    <string name="active">Pasos Activos</string>
+    <string name="coming_next">A Continuación</string>
+    <string name="finished_recipe">¡No olvides puntuar la receta! ¡Que aproveche!</string>
+    <string name="interactive_stop_alert">¿Seguro que quiere dejar de cocinar?</string>
 </resources>

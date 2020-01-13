@@ -413,9 +413,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (MqttException e) {
             Log.e(TAG, "Error al suscribir.", e);
         }
-
-
-/*
+        
+         */
 
         new Thread(new Runnable() {
             public void run() {
@@ -508,8 +507,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
-
- */
         prefs =
 
                 getSharedPreferences("Preferences", Context.MODE_PRIVATE);

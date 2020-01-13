@@ -67,41 +67,43 @@ public class RecipeFragment extends Fragment implements org.eclipse.paho.client.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_info_recipe, container, false);
+        View root = null;
+        try {
+            root = inflater.inflate(R.layout.fragment_info_recipe, container, false);
 
-        lvIngr = (ListView) root.findViewById(R.id.ingredientslist);
-        lvSteps = (ListView) root.findViewById(R.id.stepslist);
+            lvIngr = (ListView) root.findViewById(R.id.ingredientslist);
+            lvSteps = (ListView) root.findViewById(R.id.stepslist);
 
-        ingrList = new ArrayList<String>();
-        stepsList = new ArrayList<String>();
+            ingrList = new ArrayList<String>();
+            stepsList = new ArrayList<String>();
 
-        ingrAdapter = new ArrayAdapter<String>(getContext(), R.layout.listview_item, ingrList);
-        stepsAdapter = new ArrayAdapter<String>(getContext(), R.layout.listview_item, stepsList);
+            ingrAdapter = new ArrayAdapter<String>(getContext(), R.layout.listview_item, ingrList);
+            stepsAdapter = new ArrayAdapter<String>(getContext(), R.layout.listview_item, stepsList);
 
-        lvIngr.setAdapter(ingrAdapter);
-        lvSteps.setAdapter(stepsAdapter);
-        //setHasOptionsMenu(true);
+            lvIngr.setAdapter(ingrAdapter);
+            lvSteps.setAdapter(stepsAdapter);
+            //setHasOptionsMenu(true);
 
-        final RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
-        UserViewModel userModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+            final RecipeViewModel model = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+            UserViewModel userModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
-        recipe = model.getCurrentRecipe();
-        user = userModel.getCurrentUser();
+            recipe = model.getCurrentRecipe();
+            user = userModel.getCurrentUser();
 
-        //The fabPlay Button will not appear if the recipe isn't interactive or the user isn't paired
-        //Check if the user has already paired the device
-        SharedPreferences pref2 = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String deviceId = pref2.getString("device_id", "empty");
+            //The fabPlay Button will not appear if the recipe isn't interactive or the user isn't paired
+            //Check if the user has already paired the device
+            SharedPreferences pref2 = getActivity().getPreferences(Context.MODE_PRIVATE);
+            String deviceId = pref2.getString("device_id", "empty");
 
-        if(deviceId.equals("empty") || !recipe.isInteractive()){
-            root.findViewById(R.id.fabPlay).setVisibility(View.GONE);
-        }else{
-            root.findViewById(R.id.fabPlay).setVisibility(View.VISIBLE);
-        }
+            if(deviceId.equals("empty") || !recipe.isInteractive()){
+                root.findViewById(R.id.fabPlay).setVisibility(View.GONE);
+            }else{
+                root.findViewById(R.id.fabPlay).setVisibility(View.VISIBLE);
+            }
 
-        root.findViewById(R.id.fabPlay).setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_nav_view_recipe_to_nav_interactive));
+            root.findViewById(R.id.fabPlay).setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_nav_view_recipe_to_nav_interactive));
 
-        // VERSIÓN CON MODAL
+            // VERSIÓN CON MODAL
         /*
         root.findViewById(R.id.fabPlay).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,93 +112,97 @@ public class RecipeFragment extends Fragment implements org.eclipse.paho.client.
             }
         });*/
 
-        tvname = root.findViewById(R.id.name);
-        tvdescription = root.findViewById(R.id.description);
-        tvtiempo = root.findViewById(R.id.tiempo);
-        tvusername = root.findViewById(R.id.userName);
+            tvname = root.findViewById(R.id.name);
+            tvdescription = root.findViewById(R.id.description);
+            tvtiempo = root.findViewById(R.id.tiempo);
+            tvusername = root.findViewById(R.id.userName);
 
-        tvname.setText(recipe.getName());
-        tvdescription.setText(recipe.getDescription());
-        tvtiempo.setText(recipe.getFormattedDuration());
+            tvname.setText(recipe.getName());
+            tvdescription.setText(recipe.getDescription());
+            tvtiempo.setText(recipe.getFormattedDuration());
 
-        //SET USER NAME OF THE USER WHO CREATED THE RECIPE
-        mBD.collection("users").document(recipe.getUser()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        tvusername.setText("@" + document.getString("name"));
-                        model.setUserName(document.getString("name"));
+            //SET USER NAME OF THE USER WHO CREATED THE RECIPE
+            mBD.collection("users").document(recipe.getUser()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            tvusername.setText("@" + document.getString("name"));
+                            model.setUserName(document.getString("name"));
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
                     } else {
-                        Log.d(TAG, "No such document");
+                        Log.d(TAG, "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
                 }
+            });
+
+            // Inflate the layout for this fragment
+            recipePhoto = root.findViewById(R.id.recipephoto);
+            recipePhoto.setBackground(model.getCurrentRecipeImage());
+            rbrating = root.findViewById(R.id.showRating);
+            rbrating.setRating(recipe.getRatingValue());
+
+            gluten = root.findViewById(R.id.glutenIcon);
+            dairy = root.findViewById(R.id.dairyIcon);
+            vegan = root.findViewById(R.id.veganIcon);
+            veggie = root.findViewById(R.id.veggieIcon);
+
+            if (recipe.getExtra().get("veggie")) veggie.setVisibility(View.VISIBLE);
+            if (recipe.getExtra().get("vegan")) vegan.setVisibility(View.VISIBLE);
+            if (recipe.getExtra().get("dairy")) dairy.setVisibility(View.VISIBLE);
+            if (recipe.getExtra().get("gluten")) gluten.setVisibility(View.VISIBLE);
+
+            // If the recipe is vegan, it is veggetarian
+            if (recipe.getExtra().get("veggie") && recipe.getExtra().get("vegan")) {
+                veggie.setVisibility(View.GONE);
+                vegan.setVisibility(View.VISIBLE);
             }
-        });
+            createStepsList();
+            createIngredientsList();
 
-        // Inflate the layout for this fragment
-        recipePhoto = root.findViewById(R.id.recipephoto);
-        recipePhoto.setBackground(model.getCurrentRecipeImage());
-        rbrating = root.findViewById(R.id.showRating);
-        rbrating.setRating(recipe.getRatingValue());
+            // -------- LIKE BUTTON -----------
+            like = root.findViewById(R.id.likeButton);
+            //SET INITIAL STATE OF THE LIKE BUTTON
+            if (user.getFavouriteReceipts().contains(recipe.getUid())) {//Si es favorita
+                like.setBackgroundResource(R.drawable.liked);
+            } else {
+                like.setBackgroundResource(R.drawable.like);
+            }
+            like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (user.getFavouriteReceipts().contains(recipe.getUid())) {//Si es favorita
+                        ArrayList<String> fav = (user.getFavouriteReceipts());
+                        boolean res = fav.remove(recipe.getUid());
+                        user.setFavouriteReceipts(fav);
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("favouriteReceips", user.getFavouriteReceipts());
+                        mBD.collection("users").document(user.getUid()).update(map);
+                        like.setBackgroundResource(R.drawable.like);
+                    } else {//Si no es favorita
 
-        gluten = root.findViewById(R.id.glutenIcon);
-        dairy = root.findViewById(R.id.dairyIcon);
-        vegan = root.findViewById(R.id.veganIcon);
-        veggie = root.findViewById(R.id.veggieIcon);
+                        ArrayList<String> fav = (user.getFavouriteReceipts());
+                        boolean res = fav.add(recipe.getUid());
+                        user.setFavouriteReceipts(fav);
 
-        if (recipe.getExtra().get("veggie")) veggie.setVisibility(View.VISIBLE);
-        if (recipe.getExtra().get("vegan")) vegan.setVisibility(View.VISIBLE);
-        if (recipe.getExtra().get("dairy")) dairy.setVisibility(View.VISIBLE);
-        if (recipe.getExtra().get("gluten")) gluten.setVisibility(View.VISIBLE);
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("favouriteReceips", user.getFavouriteReceipts());
 
-        // If the recipe is vegan, it is veggetarian
-        if (recipe.getExtra().get("veggie") && recipe.getExtra().get("vegan")) {
-            veggie.setVisibility(View.GONE);
-            vegan.setVisibility(View.VISIBLE);
-        }
-        createStepsList();
-        createIngredientsList();
+                        mBD.collection("users").document(user.getUid()).update(map);
+                        like.setBackgroundResource(R.drawable.liked);
 
-        // -------- LIKE BUTTON -----------
-        like = root.findViewById(R.id.likeButton);
-        //SET INITIAL STATE OF THE LIKE BUTTON
-        if (user.getFavouriteReceipts().contains(recipe.getUid())) {//Si es favorita
-            like.setBackgroundResource(R.drawable.liked);
-        } else {
-            like.setBackgroundResource(R.drawable.like);
-        }
-        like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (user.getFavouriteReceipts().contains(recipe.getUid())) {//Si es favorita
-                    ArrayList<String> fav = (user.getFavouriteReceipts());
-                    boolean res = fav.remove(recipe.getUid());
-                    user.setFavouriteReceipts(fav);
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("favouriteReceips", user.getFavouriteReceipts());
-                    mBD.collection("users").document(user.getUid()).update(map);
-                    like.setBackgroundResource(R.drawable.like);
-                } else {//Si no es favorita
-
-                    ArrayList<String> fav = (user.getFavouriteReceipts());
-                    boolean res = fav.add(recipe.getUid());
-                    user.setFavouriteReceipts(fav);
-
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("favouriteReceips", user.getFavouriteReceipts());
-
-                    mBD.collection("users").document(user.getUid()).update(map);
-                    like.setBackgroundResource(R.drawable.liked);
-
+                    }
                 }
-            }
 
-        });
-        return root;
+            });
+
+        }catch (Exception e){} finally {
+
+            return root;
+        }
     }
 
     private void createIngredientsList() {

@@ -58,6 +58,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import es.upv.epsg.igmagi.cocinainteligente.R;
 import es.upv.epsg.igmagi.cocinainteligente.model.Recipe;
@@ -199,16 +200,16 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
 
                             if (mapped.containsKey("playingRecipe")) {
                                 if ((Boolean) ((Map) mapped.get("playingRecipe")).get("isPlaying")) {
-                                    Log.d(TAG, "Se está playeando una receta");
+                                    Log.d(TAG, "Se estÃ¡ playeando una receta");
                                     recipeIdPlayingOnDB = (String) ((Map) mapped.get("playingRecipe")).get("id");
                                     continueInteractiveRecipe(recipeIdPlayingOnDB);
 
                                 } else {
-                                    Log.d(TAG, "No se está playeando nada");
+                                    Log.d(TAG, "No se estÃ¡ playeando nada");
                                     startInteractiveRecipe();
                                 }
                             } else {
-                                Log.d(TAG, "No se está playeando nada");
+                                Log.d(TAG, "No se estÃ¡ playeando nada");
                                 startInteractiveRecipe();
                             }
 
@@ -384,7 +385,7 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
 
     private void setupInitialContinueViews() {
         if (firstTimeInitialContinueViews) {
-            stepsContainer.setVisibility(View.GONE);
+            //stepsContainer.setVisibility(View.GONE);
             setupInitialViews();
             firstTimeInitialContinueViews = false;
         }
@@ -416,7 +417,6 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
 
         int finishedCounter = 0;
         int currentSteps = 0;
-
         for (Step s : steps) {
             Log.d(TAG, "refresh: " + s.getStep());
             LinearLayout curr = (LinearLayout) root.findViewWithTag("step" + s.getPos());
@@ -430,6 +430,16 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
 
             }
 
+            if (s.getStatus() == 0) {
+                //curr.getBackground().setTint(getResources().getColor(R.color.colorPrimaryDark));
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(10, 0, 10, 10);
+                ((LinearLayout) curr.getParent()).removeView(curr);
+
+                stepsContainer.addView(curr, 0, layoutParams);
+
+
+            }
             if (s.getStatus() > 0) {
                 //curr.getBackground().setTint(getResources().getColor(R.color.colorPrimaryDark));
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -528,7 +538,6 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
         linearLayout.addView(rating);
 
 
-
         popDialog.setTitle(getResources().getString(R.string.finished_recipe));
         popDialog.setCancelable(false);
         //add linearLayout to dailog
@@ -554,7 +563,7 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
                                 if (task.isSuccessful()) {
                                     DocumentSnapshot document = task.getResult();
                                     if (document.exists()) {
-                                        HashMap<String, Long> map = (HashMap<String, Long>)document.get("ratings");
+                                        HashMap<String, Long> map = (HashMap<String, Long>) document.get("ratings");
                                         map.put(String.valueOf(map.size()), Long.valueOf(rating.getProgress()));
                                         Map<String, Object> data = new HashMap<>();
                                         data.put("ratings", map);
@@ -595,7 +604,7 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
     }
 
     private void nextStep(View v, int pos, int status, String trigger) {
-        //TODO: Escribir el MQTT para los demás dispositivos (Si recibe el mismo dispositivo el nuevo layout que ha modificado él, que no se cambie
+        //TODO: Escribir el MQTT para los demÃ¡s dispositivos (Si recibe el mismo dispositivo el nuevo layout que ha modificado Ã©l, que no se cambie
         try {
             MqttMessage message = new MqttMessage(Integer.toString(pos).getBytes());
             message.setQos(qos);
@@ -709,7 +718,7 @@ public class InteractiveRecipeFragment extends Fragment implements org.eclipse.p
                     connOpts.setKeepAliveInterval(60);
                     connOpts.setWill(topicRoot + "WillTopic", "App desconectada".getBytes(),
                             qos, false);
-                    client = new MqttClient(broker, clientId, new MemoryPersistence());
+                    client = new MqttClient(broker, UUID.randomUUID().toString(), new MemoryPersistence());
                     client.connect(connOpts);
                     //client.connect();
                 } catch (MqttException e) {

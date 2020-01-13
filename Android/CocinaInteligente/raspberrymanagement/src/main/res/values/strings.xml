@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">RaspberryManagement</string>
+    <string name="app_name">itCooks</string>
+    <string name="top_recipe_label">Top recipe</string>
 </resources>

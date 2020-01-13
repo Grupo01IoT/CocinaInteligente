@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -95,7 +96,6 @@ public class MyKitchenFragment extends Fragment implements org.eclipse.paho.clie
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 //MQTT
                 try {
                     Log.i(TAG, "Conectando al broker " + broker);
@@ -224,9 +224,6 @@ public class MyKitchenFragment extends Fragment implements org.eclipse.paho.clie
                     txttemp4.setTypeface(null, Typeface.NORMAL);
 
                 }
-
-
-
 
 
             }

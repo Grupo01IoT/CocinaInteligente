@@ -42,14 +42,22 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
     implementation 'com.google.firebase:firebase-firestore:17.1.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     compileOnly 'com.google.android.things:androidthings:+'
-    implementation 'com.google.firebase:firebase-firestore:21.2.1'
     //MQTT
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.1'
     implementation project(path: ':shared')
+
+
+    //JACKSON
+    compile (
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.2'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.2'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2']
+    )
 }
 
 apply plugin: 'com.google.gms.google-services'

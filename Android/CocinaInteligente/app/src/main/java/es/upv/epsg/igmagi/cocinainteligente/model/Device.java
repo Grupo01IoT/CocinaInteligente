@@ -10,6 +10,32 @@ public class Device extends Model{
     public String name;
     public String id;
     public int pin;
+    public Object playingRecipe, leak, weight;
+
+
+    public Object getPlayingRecipe() {
+        return playingRecipe;
+    }
+
+    public void setPlayingRecipe(Object playingRecipe) {
+        this.playingRecipe = playingRecipe;
+    }
+
+    public Object getLeak() {
+        return leak;
+    }
+
+    public void setLeak(Object leak) {
+        this.leak = leak;
+    }
+
+    public Object getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Object weight) {
+        this.weight = weight;
+    }
 
     public ArrayList<Float> getCooktop() {
         return cooktop;

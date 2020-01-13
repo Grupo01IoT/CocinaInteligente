@@ -14,10 +14,15 @@ int main (void)
   pinMode (LED, OUTPUT) ;
 
 
-  digitalWrite (LED, HIGH) ;	// On
-  delay (500) ;		// mS
+//  digitalWrite (LED, HIGH) ;	// On
+//  delay (2000) ;		// mS
   digitalWrite (LED, LOW) ;	// Off
-  delay (500) ;
+  delay (3300) ;
+  digitalWrite (LED, HIGH) ;  // On
+//  delay (2000) ;              // mS
+
+
+
   
   return 0 ;
 }
